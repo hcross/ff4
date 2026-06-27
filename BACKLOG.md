@@ -12,12 +12,12 @@
 - [x] 🤖 Créer `ff4/` avec `CLAUDE.md` (`@AGENTS.md`) et `AGENTS.md`
 - [x] 🤖 Rédiger les documents de suivi (`DISPATCH_REGISTRY`, `BACKLOG`, `REPRISE`)
 - [x] 🤖 Rédiger les workflows (`WF-DECOMP`, `WF-VALID`, `WF-RELEASE`)
-- [ ] 🧑 Pousser les commits locaux `ff4-gnw` (6 commits d'avance sur `origin/main`)
-- [ ] 🧑 Pousser les commits locaux `ff4-port` (vérifier l'état du remote)
-- [ ] 🤖 Initialiser `ff4/` comme repo git
-- [ ] 🤖 Ajouter `ff4-gnw` et `ff4-port` en sous-modules (dépend des push ci-dessus)
-- [ ] 🤖 Ajuster les chemins relatifs si nécessaire (`FF4GNW ?= ../../ff4-gnw`
-      reste valide si les chemins relatifs sont préservés)
+- [x] 🤖 Pousser les commits locaux `ff4-gnw` (→ `origin/main` bf685b5)
+- [x] 🤖 Pousser les commits locaux `ff4-port` (→ `origin/main` da2e5dc)
+- [x] 🤖 Initialiser `ff4/` comme repo git + créer `hcross/ff4` (public) sur GitHub
+- [x] 🤖 Déplacer les working trees sous `ff4/` et les monter en sous-modules
+- [x] 🤖 Chemins relatifs préservés (`FF4GNW ?= ../../ff4-gnw` → `ff4/ff4-gnw` ✓,
+      savestates `../*.lss` déplacés avec `ff4-port` ✓)
 
 ## 2. Registre des dispatches
 
