@@ -26,13 +26,18 @@
 - [ ] 🤖 Renseigner la Table 2 (validation oracle) au fil de WF-VALID
 - [ ] 🤖 Renseigner la Table 3 (releases) au fil de WF-RELEASE
 
-## 3. Infrastructure de tests formels *(workflows incomplets)*
+## 3. Équivalence runtime & tests *(infra largement EXISTANTE)*
 
-- [ ] 🤖 **WF-DECOMP §4** — chaîne de recompilation ASM c65 + comparaison bit-à-bit
-      (toolchain c65 à choisir/intégrer). *Bloque l'atteinte de L2 par la
-      décompilation.*
-- [ ] 🤖 **WF-DECOMP §5** — framework de tests unitaires C + ASM c65 aux limites
-- [ ] 🤖 Définir le format de cas de test (entrées WRAM/registres, sorties attendues)
+- [x] 🤖 ~~Recompilation ASM c65 bit-à-bit~~ — **abandonnée** (cc65 cible le 6502,
+      inatteignable ; preuve = équivalence runtime, cf. ADR oracle/WF-DECOMP)
+- [x] 🤖 Harnais d'équivalence **runtime par routine** : `parity/` +
+      `translator/generate_spike.py` (spike C vs asm-interprétée) — EXISTE
+- [x] 🤖 Équivalence **ROM/frame** : `ff4-parity-compare` + `oracle_ab` — EXISTE
+- [ ] 🤖 **WF-DECOMP §5** — étendre le harnais spike pour injecter des **états
+      d'entrée synthétiques** (cas aux limites : 0, max, carry, débordements,
+      indices extrêmes) que les savestates ne traversent pas
+- [ ] 🤖 Brancher `generate_spike.py` sur l'arbre `port/` courant et re-valider
+      en masse (créditer les L2 dans le registre — cf. §5 Reprise)
 - [ ] 🤖 Automatiser l'oracle de release (GDB batch) pour minimiser l'humain (WF-RELEASE §5)
 
 ## 4. Documentation MemPalace

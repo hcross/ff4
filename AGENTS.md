@@ -103,13 +103,27 @@ device, hook `ff4_dispatch_try` dans `cpu.c`). `make all` produit :
 |---------|------|-----------|
 | `ff4-desktop-headless` | Exécution N frames, dump frame | `--frames N`, `--load f.lss`, `--out f.ppm`, `--no-dispatch`, `--watch-wram ADDR [--watch-wram-hi HI]`, `--trace-frame N` |
 | `ff4-desktop-sdl` | Fenêtre interactive | `--load`, `--save-prefix`, `--scale`. Touches : flèches=d-pad, x=A z=B a=Y s=X d=L c=R, RShift=Select, Return=Start, Espace=pause, `.`=step, `g`=toggle interpréteur (input+son restent natifs), `5`=save slot, `9`=reload, `0`=screenshot |
-| `ff4-desktop-oracle` (`oracle_ab.c`) | Comparaison A/B dispatch vs interpréteur, frame par frame | `--load SEED`, `--frames N`, `--exclude HEX` (répétable) |
+| `ff4-desktop-oracle` (`oracle_ab.c`) | Comparaison A/B dispatch vs interpréteur, frame par frame ; passe de calibration + **facturation des cycles** (durcissement) | `--load SEED`, `--frames N`, `--exclude HEX` (répétable), `--no-charge` |
 | `wram_diff` | Diff byte-exact WRAM entre deux passes | masque la région stack |
 | `proof_cyc` | Analyse cycles + progression PC par frame | |
 | `miss_profiler` | Tally des PC en miss → liste des routines chaudes à porter | |
 
 Cibles `make` utiles : `make oracle SEED=…`, `make oracle-baseline SEED=…`
 (exclut les routines à DMA-bypass intentionnel : `15cadc 048004 03fe03 15ca5e`).
+
+#### Décompilation & équivalence runtime par routine (`ff4-port/`)
+
+| Composant | Rôle |
+|-----------|------|
+| `ca65-bridge/` | Pont Python de **lecture** du désassemblage ca65 : `get-asm`, `xrefs-from/to`, `search`, `classify` (translate vs delegate, ADR-003). |
+| `translator/` | Traduction **asm → C** assistée LLM (`batch_translate.py`, provider enfichable claude-cli / anthropic-sdk / openai-compat ; `--dry-run`, `--budget-usd`). Sortie : `port/<module>/<func>.c`. |
+| `parity/` | Équivalence **runtime**. `generate_spike.py` → `spike__<addr>_*.c` : C porté vs `run_emulated_func` (asm interprétée) à état d'entrée identique → compare l'état de sortie (**preuve L2**). `ff4-parity-compare` : deux ROMs en lock-step, memcmp WRAM/SRAM/VRAM/OAM/CGRAM par frame. |
+
+> `ca65`/`cl65` (suite cc65) sont installés mais servent au sous-module
+> `upstream` à réassembler le désassemblage en **ROM vanilla de référence** — pas
+> à recompiler le C porté. Il n'y a **pas** de comparaison bit-à-bit C→ASM (voie
+> abandonnée, cf. §B.2). `port/` est la zone de traduction ; une routine validée
+> par son spike est promue vers `ff4-gnw/<domaine>/`.
 
 #### Particularités LakeSnes (fork dans `ff4-gnw/snes/`)
 
@@ -158,14 +172,19 @@ Niveau **cumulatif** : un dispatch ne passe à `Ln+1` qu'après avoir satisfait 
 |--------|---------------|--------------------|
 | **L0** | Stub no-op | Présent dans la table mais corps vide / `_emu` no-op. À traiter ou retirer. |
 | **L1** | Portée, non testée | Corps C écrit, compile, mais aucune preuve d'équivalence. |
-| **L2** | Tests unitaires OK | Tests C + ASM c65 aux limites passants, comparaison bit-à-bit. *(infra à construire — voir [BACKLOG.md](BACKLOG.md))* |
+| **L2** | Équivalence runtime par routine | Le **spike** passe : C vs asm-interprétée à état d'entrée identique → mêmes sorties (`parity/`, `generate_spike.py`). Couverture aux limites à formaliser. |
 | **L3** | Validation oracle | Savestate isolé (seul ce dispatch actif), `wram_diff = 0`, pas de dérive. |
 | **L4** | Validée device | Intégrée au build G&W, testée sur device (oracle liveness + screenshot), pas de crash. |
 
-> Tant que l'infra de tests formels (recompilation ASM c65, tests unitaires)
-> n'existe pas, **la quasi-totalité du registre est honnêtement à L1** — y
-> compris des routines qui ont des findings oracle mais pas la chaîne complète.
-> C'est le point de départ assumé de la [reprise](REPRISE.md).
+> **Pas de recompilation bit-à-bit C→ASM** : voie abandonnée (cc65 cible le
+> 6502, jamais d'égalité d'octets avec l'asm 65816 écrit à la main). La preuve
+> d'équivalence est *runtime* (spike par routine, puis oracle en jeu), méthode
+> zelda3/snesrev. L'infra spike **existe déjà** (`parity/`, `translator/`).
+>
+> Le registre est encore majoritairement marqué **L1** par prudence, mais
+> l'historique des spikes (juin) montre que beaucoup de routines ont déjà une
+> équivalence runtime par routine — l'[audit](REPRISE.md) pourra créditer ces
+> validations en L2.
 
 ### B.3 Workflows (résumé)
 
@@ -175,7 +194,7 @@ Chaque workflow utilise **MemPalace** pour le suivi long-terme et
 
 | Workflow | But | Détail |
 |----------|-----|--------|
-| **WF-DECOMP** | Décompiler une routine ASM → C, la valider formellement (recompil ASM c65 bit-à-bit + tests unitaires), la consigner | [workflows/WF-DECOMP.md](workflows/WF-DECOMP.md) |
+| **WF-DECOMP** | Décompiler une routine ASM → C (manuel ou LLM), prouver l'**équivalence runtime** par routine via le spike, la consigner (L2) | [workflows/WF-DECOMP.md](workflows/WF-DECOMP.md) |
 | **WF-VALID** | Valider le comportement en jeu via l'oracle (savestate isolé, CRC/screenshot, GDB si besoin) | [workflows/WF-VALID.md](workflows/WF-VALID.md) |
 | **WF-RELEASE** | Construire et tester la version G&W, mesurer la qualité (vitesse, fidélité, crash-free) | [workflows/WF-RELEASE.md](workflows/WF-RELEASE.md) |
 

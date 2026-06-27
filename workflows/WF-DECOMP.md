@@ -1,12 +1,19 @@
-# WF-DECOMP — Routine decompilation & formal validation
+# WF-DECOMP — Routine decompilation & runtime equivalence
 
-> Turn a 65816 ASM routine into equivalent native C, **proven** by
-> bit-exact recompilation and boundary unit tests. Produces a dispatch at
-> level **L2**. Prerequisite for the [WF-VALID](WF-VALID.md) workflow (which
-> pushes it to L3).
+> Turn a 65816 ASM routine into equivalent native C, **proven by per-routine
+> runtime equivalence** (the *spike* harness: C vs interpreted-asm from an
+> identical entry state). Produces a dispatch at level **L2**. Prerequisite for
+> the [WF-VALID](WF-VALID.md) workflow (which pushes it to L3 via in-game validation).
+>
+> ⚠ The proof is **not** a bit-exact recompilation of the C back into ca65
+> asm — abandoned path (cc65 targets the 6502, not the 65816; never byte-equal
+> with hand-written asm). The proof is *runtime*, as in zelda3/snesrev.
 
 **Main skill**: `snes-re:asm-to-c-port` (+ `snes-re:snes-asm`,
 `snes-re:disasm-trace`). **Agent**: `snes-reverse-engineer`.
+**Tools**: `ca65-bridge` (asm extraction/classification), `translator/`
+(LLM asm→C translation), `parity/` (`generate_spike.py`, `ff4-spike-*`,
+`ff4-parity-compare`).
 
 ---
 
@@ -18,9 +25,10 @@
 
 ## Output
 
-- A ported C file `ff4-gnw/<domain>/<Name>.c`.
+- A ported C file: first `port/<module>/<func>.c` (translation staging area),
+  then promoted to `ff4-gnw/<domain>/<Name>.c` once the spike is green.
+- A passing runtime-equivalence spike (`parity/src/spike__<addr>_*.c`).
 - An up-to-date entry in [DISPATCH_REGISTRY.md](../DISPATCH_REGISTRY.md) Table 1.
-- *(once the infra exists)* a C unit test + its c65 ASM equivalent.
 
 ---
 
@@ -41,7 +49,15 @@ Read the routine in `ff4j-sfc.asm`. Verify every `jsr/jsl/jmp` target
 **against the ROM bytes**, not the disassembly labels. Follow the m/x
 flags (REP/SEP) to size immediates and opcode lengths.
 
-### 3. Produce the C (sequential-thinking for the reasoning)
+### 3. Produce the C (manual or LLM-assisted)
+Two paths, same output contract (`port/<module>/<func>.c`):
+- **Manual**: port by hand, using `sequential-thinking` for the reasoning.
+- **Assisted**: `translator/batch_translate.py` (pluggable LLM provider:
+  claude-cli / anthropic-sdk / openai-compat) translates asm → C, after
+  translate/delegate classification by `ca65-bridge classify`. Always start
+  with `--dry-run`, cap with `--budget-usd`.
+
+Porting rules (identical for both paths):
 - One C function per ASM routine; **original ROM address as a comment**.
 - Variables at their **original WRAM addresses** (`snes->ram[...]`).
 - Irreducible control flow → transcribe as `goto`+labels **faithfully
@@ -52,29 +68,40 @@ flags (REP/SEP) to size immediates and opcode lengths.
 - **Sync the CPU registers before any `run_emulated_func`**: if the ASM
   does `LDA $xx` before a `JSR`, set `cpu->a` before the call (the cause of the F12 bug).
 
-### 4. c65 ASM recompilation + bit-exact comparison ⚠ *(infra to be built)*
-> This step is **not yet implemented**. Target:
-> 1. Recompile the C routine to 65816 via a c65 toolchain.
-> 2. Compare the produced binary **byte for byte** against the original ROM
->    range (or its functional equivalent after address normalisation).
-> 3. Any discrepancy = either a porting bug, or a documented original bug
->    (assert-guarded ROM patch on the harness side).
->
-> Until it exists, a routine caps at **L1** on the decompilation criterion
-> and can only reach L2 through the unit tests (step 5) alone — to be
-> marked explicitly in the registry. Tracked in [BACKLOG.md](../BACKLOG.md).
+### 4. Per-routine runtime equivalence — the spike *(EXISTING infra)*
+> **Methodology note (ADR to be recorded).** The original target — "recompile
+> the C to c65 asm and compare bit-for-bit against the ROM" — is **abandoned**:
+> it is unreachable by construction (cc65 targets the 6502, not the 65816, and
+> never reproduces FF4's hand-written asm). The **real** proof of equivalence
+> is *runtime*, exactly as in zelda3/snesrev — and it's already tooled.
 
-### 5. Boundary unit tests (C + c65 ASM) ⚠ *(infra to be built)*
-> Target: for each routine, edge cases (0, max values, incoming carry,
-> overflows, extreme indices) executed **in C** and **in c65 ASM**,
-> with output comparison (targeted WRAM + registers). Validates boundary
-> behaviour that the in-game oracle doesn't necessarily cover.
+Generate and run the routine's spike:
+```sh
+python translator/generate_spike.py port/<module>/<func>.c   # → parity/src/spike__<addr>_*.c
+cd parity && make ff4-spike-<name> && ./ff4-spike-<name> ../upstream/rom/ff4-jp1.sfc [frames]
+```
+The spike inlines the ported C and compares it, **from an identical entry
+state**, against `run_emulated_func` (the original asm executed in the
+interpreter): same WRAM/register entry state → run C *vs* asm → compare the
+exit state. Green ⇒ the routine's runtime equivalence is proven. `ca65`
+(cc65 suite, installed) is used by the `upstream` submodule to
+**reassemble the disassembly into the reference vanilla ROM** (the "golden"
+ROM for `parity_compare`), not to recompile the C.
+
+### 5. Boundary coverage *(to be formalised on top of the spikes)*
+The spike covers the state reached by the test savestate(s). For **edge
+cases** (0, max values, incoming carry, overflows, extreme indices)
+that these states may not exercise: extend the spike harness to
+inject synthetic entry states before the call and compare the C vs
+interpreter outputs. This is an **extension** of the existing spike infra
+(`generate_spike.py`), not a separate ASM chain. Tracked in [BACKLOG.md](../BACKLOG.md).
 
 ### 6. Log in the registry
 Update [DISPATCH_REGISTRY.md](../DISPATCH_REGISTRY.md) Table 1:
 `ID | address | routine | domain | level | notes`. Level reached:
-- **L1** if only the C body is written;
-- **L2** if C+ASM unit tests pass (and ideally bit-exact recompilation is OK).
+- **L1** if only the C body is written (unvalidated);
+- **L2** if the runtime-equivalence spike passes (and, eventually, the
+  boundary coverage from step 5).
 
 ### 7. Closure
 Update the `[TASK:*]` (→ `checkpoint` if continuing, `done` otherwise).
@@ -88,5 +115,6 @@ or obstacle (`room=obstacles-and-solutions`). Write a diary entry.
 - **Direct page first** (§1) — FF4's #1 cause of bugs.
 - **ROM bytes = truth** (§2).
 - **Sync CPU registers before `run_emulated_func`** (§3, the F12 lesson).
+- **Proof = runtime equivalence (spike), not bit-exact recompilation** (§4).
 - A routine is **never** L3 here — that's [WF-VALID](WF-VALID.md)'s job.
 - Don't port more than one routine at a time without making it verifiable.

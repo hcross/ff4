@@ -21,11 +21,13 @@ requalify in order via [WF-DECOMP](workflows/WF-DECOMP.md) +
 4. **Document** every keep/remove/requalify decision, so the "why" is never
    lost again.
 
-> ⚠ Honest starting state: **all 206 dispatches are at L1** (except 1 L0 stub).
-> None has gone through the full formal chain (c65 ASM recompilation + unit
-> tests + isolated oracle), even though some have partial oracle findings.
-> The restart's whole point is to turn this "default L1" into **earned**
-> levels.
+> ⚠ Honest starting state: **the registry is marked L1 by default** (except 1
+> L0 stub) — caution, not truth. The runtime-equivalence infra already exists
+> (`parity/` spikes + oracle), and the spike history (June) shows that
+> many routines already have a per-routine runtime equivalence. The audit
+> consists of **crediting** these validations (→ L2) and driving the missing
+> ones to L2/L3, not redoing everything from scratch. (No bit-exact
+> recompilation: abandoned path — see [AGENTS.md](AGENTS.md) §B.2.)
 
 ---
 
