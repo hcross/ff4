@@ -22,7 +22,11 @@
 ## 2. Registre des dispatches
 
 - [x] 🤖 Peupler la Table 1 depuis `dispatch_all.c` (206 entrées, niveau initial L1/L0)
-- [ ] 🤖 Auditer chaque dispatch pour confirmer son niveau **réel** (vs L1 par défaut)
+- [x] 🤖 Auditer chaque dispatch (2026-06-27) — niveaux fondés sur preuves :
+      L0=1 · L1=190 · L2=7 · L3=5 · EXCL=3. Sources : hardcore_log PASS,
+      KNOWN_FINDINGS (wram_diff=0), fixes F10/F12, DMA-bypass exclus.
+- [ ] 🤖 Promotion L1→L2 en masse : rebrancher `generate_spike.py` sur les corps
+      `ff4-gnw` et créditer les routines à spike vert (190 candidates)
 - [ ] 🤖 Renseigner la Table 2 (validation oracle) au fil de WF-VALID
 - [ ] 🤖 Renseigner la Table 3 (releases) au fil de WF-RELEASE
 
@@ -50,7 +54,8 @@
 
 Voir [REPRISE.md](REPRISE.md) — chantier dédié, suivi séparément.
 
-- [ ] 🤖 Audit de classification L0→L4 des 206 dispatches (état réel)
+- [x] 🤖 Audit de classification L0→L4 des 206 dispatches (état réel) — voir
+      [DISPATCH_REGISTRY.md](DISPATCH_REGISTRY.md) Table 1
 - [ ] 🤖 Liste ordonnée de requalification (priorité chemin critique combat)
 
 ## 6. Dette technique connue (depuis KNOWN_FINDINGS + dispatch_all.c)
