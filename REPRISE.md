@@ -31,18 +31,42 @@ requalify in order via [WF-DECOMP](workflows/WF-DECOMP.md) +
 
 ---
 
-## Classification audit (to be done)
+## Classification audit (DONE — 2026-06-27)
 
-For each of the 206 dispatches, determine the **real** state:
+See [DISPATCH_REGISTRY.md](DISPATCH_REGISTRY.md). Distribution:
+**L0=1 · L1=56 · L2=141 · L3=5 · EXCL=3**. 134 routines promoted L1→L2 by the spike
+batch (fuzzed runtime equivalence). 2 isolated FAILs (`CheckMenu_c`, `TfrBGAnimGfx_c`).
 
-- [ ] Classify as L0 / L1 / L2 / L3 / L4 per the AGENTS §B.2 criteria
-- [ ] Identify **residual no-op stubs** in the table (empty body or a
-      no-op `_emu` call) — candidates for immediate removal
-- [ ] Spot **compensating fixes** (a fix that masks another
-      bug) — to be decorrelated
-- [ ] Flag dispatches with **intentional DMA-bypass** (excluded from baseline:
-      `D15CADC`, `D048004`, `D03FE03`, `D15CA5E`) — special status, not strictly
-      L3
+## Stabilisation decision (step 3 — 2026-06-27)
+
+> **Conclusion: no reversion.** The audit invalidated the RESTART's initial
+> premise ("revert the unproven L0/L1s to regain a sound base"). With
+> 146 proven routines (L2+L3) and only 2 isolated real divergences, the
+> base is **already stable**. Above all, **reverting is neither free nor always safe**:
+
+- **DMA**: reverting a DMA routine to the interpreter path **hardfaults
+  post-savestate on device** (F3). `TfrBGAnimGfx_c` (1 of the 2 FAILs) is a
+  DMA routine (`output_ram` = `$43xx`/`$420B`/`$211x`) → **do NOT revert**.
+- **WaitVblank / NMI**: some routines are dispatched *because* the interpreter
+  path loops or is too slow (see F10). Reverting them reintroduces the hang.
+- **Input (F5)**: `UpdateCtrlField_ext` & co. are intentional reimplementations
+  incompatible with the interpreter harness.
+
+Decision by category:
+
+| Category | Count | Decision | Why |
+|-----------|----|----------|-----|
+| L2 (spike) + L3 (oracle) | 146 | **keep** | proven equivalence |
+| EXCL (DMA-bypass) | 3 | **keep** | intentional divergence, device-safe |
+| L0 stub (`ExecSound_ext_stub`) | 1 | **keep** | deliberate stub (unblocks the title) |
+| FAIL `CheckMenu_c` (D0081F4) | 1 | **keep + investigate** | 1/400, rare-entry flow — likely artefact (WF-VALID) |
+| FAIL `TfrBGAnimGfx_c` (D00CB5F) | 1 | **keep + investigate** | DMA → dangerous to revert; 2/400 |
+| L1 build_error | 35 | **keep** | not-spikable ≠ broken; make the spike self-contained |
+| L1 no_source (btlgfx) | 11 | **keep** | bundled bodies; custom spike required |
+| L1 no_contract | 8 | **keep** | add a CONTRACT block, then spike |
+
+The effort **shifts**: from "revert" to "closing the 56 L1s" (fixing the
+build_errors, spiking the btlgfx, investigating the 2 FAILs). That's the real next step.
 
 ## Priority order — combat critical path
 
@@ -63,12 +87,14 @@ leaves:
 
 ## Requalification tracking
 
-| Routine (ID) | Level before | Action | Level after | Date | Ref |
-|--------------|--------------|--------|--------------|------|-----|
-| _(to be populated as the restart proceeds)_ | | | | | |
+| Batch (date) | Action | Detail |
+|------------|--------|--------|
+| Spike batch 2026-06-27 | requalify | 134 × L1→L2 (fuzzed runtime equivalence) |
+| Step 3 2026-06-27 | keep | 0 reversion (stable base; DMA/WaitVblank revert dangerous) |
 
-**Possible actions**: `keep` (already proven) · `requalify` (L1→L2/L3 via
-workflows) · `remove` (revert to interpreter) · `port` (stub → real C).
+**Possible actions**: `keep` (already proven / risky to revert) · `requalify`
+(L1→L2/L3 via workflows) · `remove` (revert to interpreter — **only if
+safe**: not DMA, not WaitVblank, not input) · `port` (stub → real C).
 
 ---
 
