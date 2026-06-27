@@ -181,10 +181,12 @@ Niveau **cumulatif** : un dispatch ne passe à `Ln+1` qu'après avoir satisfait 
 > d'équivalence est *runtime* (spike par routine, puis oracle en jeu), méthode
 > zelda3/snesrev. L'infra spike **existe déjà** (`parity/`, `translator/`).
 >
-> Le registre est encore majoritairement marqué **L1** par prudence, mais
-> l'historique des spikes (juin) montre que beaucoup de routines ont déjà une
-> équivalence runtime par routine — l'[audit](REPRISE.md) pourra créditer ces
-> validations en L2.
+> **Audit 2026-06-27** (niveaux fondés sur preuves) : L0=1 · L1=190 · L2=7 ·
+> L3=5 · EXCL=3. La majorité reste **L1 honnêtement** — pas un jugement de
+> qualité, mais l'absence de preuve d'équivalence par routine sur registre. La
+> promotion L1→L2 en masse (rebrancher le spike sur les corps `ff4-gnw`) est le
+> prochain gros chantier ([BACKLOG](BACKLOG.md) §2). Détail :
+> [DISPATCH_REGISTRY.md](DISPATCH_REGISTRY.md).
 
 ### B.3 Workflows (résumé)
 

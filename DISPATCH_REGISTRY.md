@@ -6,21 +6,32 @@
 
 **Convention d'ID** : `D<bank><addr>` (6 hex majuscules de la PC SNES).
 **Échelle** : `L0` stub · `L1` portée non testée · `L2` équivalence runtime (spike) ·
-`L3` validation oracle (`wram_diff=0`) · `L4` testée device.
+`L3` validation oracle (`wram_diff=0`) · `L4` testée device ·
+`EXCL` DMA-bypass intentionnel (hors échelle — divergent par conception, exclu baseline).
 
-État initial (généré depuis `ff4-gnw/dispatch_all.c`, 206 entrées) : tout est à
-**L1** par défaut sauf les stubs explicites (`L0`). Les annotations renvoient aux
-findings de `ff4-port/desktop/KNOWN_FINDINGS.md`. La montée en L2/L3/L4 se fait
-via les workflows et se consigne ici.
+## Méthodologie de l'audit (2026-06-27)
+
+Niveaux **fondés sur les preuves disponibles**, pas sur un blanc-seing :
+- **L0** : corps stub explicite (`ExecSound_ext_stub`).
+- **L2** : équivalence runtime sur registre — routines `pass`/`delegate_pass` de
+  `translator/runs/hardcore_log.jsonl` (spike), ou fix à équivalence
+  fonctionnelle démontrée en jeu (F10, F12).
+- **L3** : `wram_diff=0` vérifié et consigné dans `KNOWN_FINDINGS.md`
+  (section oracle-artifact : Mult16/InitHWRegs/InitCharRows/_15c23d ; F7 _15c163).
+- **EXCL** : DMA-bypass intentionnel exclu de la baseline (F3/F6/F11-KF).
+- **L1** : tout le reste — **honnêtement**, faute de preuve d'équivalence par
+  routine sur registre. Ce n'est pas un jugement de qualité, c'est l'absence de
+  preuve formalisée. La voie de promotion L1→L2 est le spike (cf.
+  [WF-DECOMP](workflows/WF-DECOMP.md)), à mener en masse (cf. [BACKLOG](BACKLOG.md) §3).
+
+**Distribution actuelle** : L0=1 · L1=190 · L2=7 · L3=5 · EXCL=3 (total 206).
 
 ---
 
-## Table 1 — Décompilation & tests
+## Table 1 — Décompilation & maturité
 
-Maturité statique de chaque routine (existence du code C, état des tests).
-
-| ID | Adresse SNES | Routine C | Domaine | Niveau | Notes / findings |
-|----|--------------|-----------|---------|--------|------------------|
+| ID | Adresse SNES | Routine C | Domaine | Niveau | Preuve / notes |
+|----|--------------|-----------|---------|--------|----------------|
 | `D00808E` | $00:808E | `AfterBattle_c` | field | L1 |  |
 | `D0080A0` | $00:80A0 | `FieldMain_c` | field | L1 |  |
 | `D0081F4` | $00:81F4 | `CheckMenu_c` | field | L1 |  |
@@ -38,13 +49,13 @@ Maturité statique de chaque routine (existence du code C, état des tests).
 | `D00CB5F` | $00:CB5F | `TfrBGAnimGfx_c` | field | L1 |  |
 | `D00F533` | $00:F533 | `UpdateBG2Scroll_c` | field | L1 |  |
 | `D00F535` | $00:F535 | `UpdateBG2ScrollSkip_c` | field | L1 |  |
-| `D00FFBC` | $00:FFBC | `InitCharProp_ext_c` | field | L1 |  |
+| `D00FFBC` | $00:FFBC | `InitCharProp_ext_c` | field | L2 | hardcore PASS (spike runtime) |
 | `D00FFE0` | $00:FFE0 | `Vectors_c` | field | L1 |  |
-| `D018010` | $01:8010 | `UpdateCtrlField_ext_c` | menu | L1 |  |
+| `D018010` | $01:8010 | `UpdateCtrlField_ext_c` | menu | L2 | hardcore PASS (spike) ; réimpl. intentionnelle input (F5) |
 | `D01CA85` | $01:CA85 | `TfrVRAM_c` | field | L1 |  |
 | `D01D718` | $01:D718 | `FadeIn_c` | field | L1 |  |
-| `D01DFD2` | $01:DFD2 | `LoadBattleSpeedPosText_c` | menu | L1 |  |
-| `D028560` | $02:8560 | `Mult8_btlgfx_c` | btlgfx | L1 | Mult8 — carry chain complète + sauvegarde cpu->c (NMI) |
+| `D01DFD2` | $01:DFD2 | `LoadBattleSpeedPosText_c` | menu | L2 | hardcore PASS (spike runtime) |
+| `D028560` | $02:8560 | `Mult8_btlgfx_c` | btlgfx | L1 |  |
 | `D0285D2` | $02:85D2 | `HardMult_btlgfx_c` | btlgfx | L1 |  |
 | `D0290A0` | $02:90A0 | `TfrBG2MenuTile_c` | btlgfx | L1 |  |
 | `D02A491` | $02:A491 | `IncrTextPtr_c` | btlgfx | L1 |  |
@@ -57,10 +68,10 @@ Maturité statique de chaque routine (existence du code C, état des tests).
 | `D02DDDC` | $02:DDDC | `UpdateMonsterAnim_c` | btlgfx | L1 |  |
 | `D038009` | $03:8009 | `ExecBattle_c` | battle | L1 |  |
 | `D03805F` | $03:805F | `DrawMP_c` | battle | L1 |  |
-| `D038085` | $03:8085 | `ExecBtlGfx_c` | battle | L1 | F10 — ExecBtlGfx_ext via run_emulated_func ; mf non forcé |
-| `D0382CB` | $03:82CB | `InitHWRegs_c` | field | L1 |  |
+| `D038085` | $03:8085 | `ExecBtlGfx_c` | battle | L2 | F10 — corrigé, WaitVblank/NMI corrects en jeu |
+| `D0382CB` | $03:82CB | `InitHWRegs_c` | field | L3 | wram_diff=0 vérifié (oracle-artifact) + hardcore PASS |
 | `D038379` | $03:8379 | `RandXA_c` | battle | L1 |  |
-| `D0383B9` | $03:83B9 | `Mult16_c` | battle | L1 |  |
+| `D0383B9` | $03:83B9 | `Mult16_c` | battle | L3 | wram_diff=0 vérifié (oracle-artifact) |
 | `D0383E0` | $03:83E0 | `Mult8_c` | battle | L1 |  |
 | `D038407` | $03:8407 | `Div16_c` | battle | L1 |  |
 | `D0384E3` | $03:84E3 | `Add16_c` | battle | L1 |  |
@@ -73,15 +84,15 @@ Maturité statique de chaque routine (existence du code C, état des tests).
 | `D0387D8` | $03:87D8 | `CheckFanfare_c` | battle | L1 |  |
 | `D0387E4` | $03:87E4 | `CheckBattleList_c` | battle | L1 |  |
 | `D038803` | $03:8803 | `CheckWinAnim_c` | battle | L1 |  |
-| `D0395CE` | $03:95CE | `InitCharRows_c` | battle | L1 |  |
-| `D039741` | $03:9741 | `GetPendingAction_c` | battle | L1 | GetPendingAction — chemin ATB (arc F11/F12) |
-| `D039788` | $03:9788 | `CheckTimer_c` | battle | L1 | cpu->a sync avant select_obj_emu (arc F12) |
-| `D0397B3` | $03:97B3 | `InitAction_c` | battle | L1 | F12 — cpu->a sync avant get_timer_ptr_emu |
-| `D039E65` | $03:9E65 | `TimerDur_00_c` | battle | L1 | TimerDur — durée ATB (F11) |
-| `D039E71` | $03:9E71 | `TimerDur_02_c` | battle | L1 | TimerDur — durée ATB (F11) |
-| `D039F1C` | $03:9F1C | `TimerDur_08_c` | battle | L1 | TimerDur — durée ATB (F11) |
-| `D039F75` | $03:9F75 | `TimerDur_0a_c` | battle | L1 | TimerDur — durée ATB (F11) |
-| `D039FD8` | $03:9FD8 | `ApplySpeedMod_c` | battle | L1 | ApplySpeedMod — modulateur vitesse ATB (F11) |
+| `D0395CE` | $03:95CE | `InitCharRows_c` | battle | L3 | wram_diff=0 vérifié (oracle-artifact) |
+| `D039741` | $03:9741 | `GetPendingAction_c` | battle | L1 |  |
+| `D039788` | $03:9788 | `CheckTimer_c` | battle | L1 |  |
+| `D0397B3` | $03:97B3 | `InitAction_c` | battle | L2 | F12 — équivalence fonctionnelle en jeu (combat se termine) |
+| `D039E65` | $03:9E65 | `TimerDur_00_c` | battle | L1 |  |
+| `D039E71` | $03:9E71 | `TimerDur_02_c` | battle | L1 |  |
+| `D039F1C` | $03:9F1C | `TimerDur_08_c` | battle | L1 |  |
+| `D039F75` | $03:9F75 | `TimerDur_0a_c` | battle | L1 |  |
+| `D039FD8` | $03:9FD8 | `ApplySpeedMod_c` | battle | L1 |  |
 | `D03B33F` | $03:B33F | `Cmd_21_c` | battle | L1 |  |
 | `D03BA04` | $03:BA04 | `AITarget_1e_c` | battle | L1 |  |
 | `D03BA67` | $03:BA67 | `AITarget_1f_c` | battle | L1 |  |
@@ -126,13 +137,13 @@ Maturité statique de chaque routine (existence du code C, état des tests).
 | `D03E133` | $03:E133 | `CheckWeakElem_c` | battle | L1 |  |
 | `D03E43B` | $03:E43B | `Cmd_22_c` | battle | L1 |  |
 | `D03E4D9` | $03:E4D9 | `TwinFailed_c` | battle | L1 |  |
-| `D03FE03` | $03:FE03 | `TfrSprites_c` | field | L1 | F6 — réimplémenté OAM manuel ; exclu baseline (DMA-bypass) |
-| `D048004` | $04:8004 | `ExecSound_ext_stub` | sound: | L0 | F4 — stub no-op (débloque le titre ; SPC non implémenté) |
+| `D03FE03` | $03:FE03 | `TfrSprites_c` | field | EXCL | F6 — OAM manuel, exclu baseline |
+| `D048004` | $04:8004 | `ExecSound_ext_stub` | sound: | L0 | stub no-op explicite (F4) — débloque le titre, SPC non porté |
 | `D0485E1` | $04:85E1 | `PlayGameSfx_c` | sound | L1 |  |
 | `D04861E` | $04:861E | `ExecInterrupt_c` | sound | L1 |  |
 | `D088690` | $08:8690 | `LoadTitleGfx_c` | field | L1 |  |
 | `D08885E` | $08:885E | `TfrTitleCrystalTiles_c` | field | L1 |  |
-| `D0E8B3C` | $0E:8B3C | `CheckBattle_c` | field | L1 |  |
+| `D0E8B3C` | $0E:8B3C | `CheckBattle_c` | field | L2 | hardcore PASS (spike runtime) |
 | `D12E35B` | $12:E35B | `WaitVblankEvent_c` | field | L1 |  |
 | `D12E55A` | $12:E55A | `FindEventTerminator_c` | field | L1 |  |
 | `D12E613` | $12:E613 | `EventCmd_d8_c` | field | L1 |  |
@@ -198,12 +209,12 @@ Maturité statique de chaque routine (existence du code C, état des tests).
 | `D15B8C9` | $15:B8C9 | `_15b8c9_c` | field | L1 |  |
 | `D15BB6A` | $15:BB6A | `_15bb6a_c` | field | L1 |  |
 | `D15C144` | $15:C144 | `_15c144_c` | field | L1 |  |
-| `D15C163` | $15:C163 | `_15c163_c` | field | L1 | F7 — branche inversée + DP corrigés ; oracle 0 diff |
-| `D15C23D` | $15:C23D | `_15c23d_c` | field | L1 |  |
+| `D15C163` | $15:C163 | `_15c163_c` | field | L3 | F7 — diverge 0 octet après fix |
+| `D15C23D` | $15:C23D | `_15c23d_c` | field | L3 | wram_diff=0 vérifié (faux positif CRC levé) |
 | `D15C37F` | $15:C37F | `Pow10Hi_c` | field | L1 |  |
-| `D15CA5E` | $15:CA5E | `_15ca5e_c` | field | L1 | F11(KF) — palette DMA-bypass incomplet ; exclu baseline |
+| `D15CA5E` | $15:CA5E | `_15ca5e_c` | field | EXCL | F11(KF) — palette DMA-bypass, exclu baseline |
 | `D15CA85` | $15:CA85 | `_15ca85_c` | field | L1 |  |
-| `D15CADC` | $15:CADC | `_15cadc_c` | field | L1 | F3 — DMA-bypass OAM ; exclu baseline |
+| `D15CADC` | $15:CADC | `_15cadc_c` | field | EXCL | F3 — DMA-bypass OAM, exclu baseline |
 | `D16C59A` | $16:C59A | `AfterCutscene_c` | field | L1 |  |
 | `D16C8BC` | $16:C8BC | `Special_2d_c` | field | L1 |  |
 | `D16CB05` | $16:CB05 | `_00cb05_c` | field | L1 |  |
@@ -225,7 +236,7 @@ Maturité statique de chaque routine (existence du code C, état des tests).
 | `D16F922` | $16:F922 | `_00f922_c` | field | L1 |  |
 | `D16FB93` | $16:FB93 | `TfrBG2Tilemap_c` | field | L1 |  |
 | `D16FFAB` | $16:FFAB | `DecodeBG1Tilemap_c` | field | L1 |  |
-| `D1E9F6C` | $1E:9F6C | `UpdateLocalTiles_c` | field | L1 |  |
+| `D1E9F6C` | $1E:9F6C | `UpdateLocalTiles_c` | field | L2 | hardcore PASS (spike runtime) |
 | `D1EA03E` | $1E:A03E | `BoardChoco_c` | field | L1 |  |
 
 > **Routines volontairement en interpréteur** (retirées du dispatch, pas des
@@ -239,7 +250,7 @@ Maturité statique de chaque routine (existence du code C, état des tests).
 ## Table 2 — Validation comportementale en jeu
 
 Renseignée par **WF-VALID** (voir [workflows/WF-VALID.md](workflows/WF-VALID.md)).
-Une ligne par dispatch ayant passé une validation oracle isolée.
+Une ligne par dispatch ayant passé une validation oracle isolée (→ L3).
 
 | ID | Savestate | Frames | CRC WRAM (natif) | CRC WRAM (interp) | Dérive | PC final | Maturité | Date |
 |----|-----------|--------|------------------|-------------------|--------|----------|----------|------|
