@@ -1,0 +1,6 @@
+[submodule "ff4-gnw"]
+	path = ff4-gnw
+	url = git@github.com:hcross/ff4-gnw.git
+[submodule "ff4-port"]
+	path = ff4-port
+	url = git@github.com:hcross/ff4-port.git
