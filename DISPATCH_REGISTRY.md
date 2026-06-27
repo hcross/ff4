@@ -5,7 +5,7 @@
 > échelle de maturité définies dans [AGENTS.md](AGENTS.md) §B.1 / §B.2.
 
 **Convention d'ID** : `D<bank><addr>` (6 hex majuscules de la PC SNES).
-**Échelle** : `L0` stub · `L1` portée non testée · `L2` tests unitaires C+ASM ·
+**Échelle** : `L0` stub · `L1` portée non testée · `L2` équivalence runtime (spike) ·
 `L3` validation oracle (`wram_diff=0`) · `L4` testée device.
 
 État initial (généré depuis `ff4-gnw/dispatch_all.c`, 206 entrées) : tout est à

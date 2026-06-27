@@ -22,11 +22,13 @@ requalifie dans l'ordre via [WF-DECOMP](workflows/WF-DECOMP.md) +
 4. **Documenter** chaque décision de garder/retirer/requalifier, pour ne plus
    jamais perdre le « pourquoi ».
 
-> ⚠ État de départ honnête : **les 206 dispatches sont à L1** (sauf 1 stub L0).
-> Aucun n'a traversé la chaîne formelle complète (recompil ASM c65 + tests
-> unitaires + oracle isolé), même si certains ont des findings oracle partiels.
-> La reprise consiste précisément à transformer ce « L1 par défaut » en niveaux
-> **mérités**.
+> ⚠ État de départ honnête : **le registre est marqué L1 par défaut** (sauf 1
+> stub L0) — prudence, pas vérité. L'infra d'équivalence runtime existe déjà
+> (spikes `parity/` + oracle), et l'historique de spikes (juin) montre que
+> beaucoup de routines ont déjà une équivalence runtime par routine. L'audit
+> consiste à **créditer** ces validations (→ L2) et à mener les manquantes en
+> L2/L3, pas à tout refaire de zéro. (Pas de recompilation bit-à-bit : voie
+> abandonnée — cf. [AGENTS.md](AGENTS.md) §B.2.)
 
 ---
 
