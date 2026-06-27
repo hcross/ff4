@@ -181,12 +181,12 @@ Niveau **cumulatif** : un dispatch ne passe à `Ln+1` qu'après avoir satisfait 
 > d'équivalence est *runtime* (spike par routine, puis oracle en jeu), méthode
 > zelda3/snesrev. L'infra spike **existe déjà** (`parity/`, `translator/`).
 >
-> **Audit 2026-06-27** (niveaux fondés sur preuves) : L0=1 · L1=190 · L2=7 ·
-> L3=5 · EXCL=3. La majorité reste **L1 honnêtement** — pas un jugement de
-> qualité, mais l'absence de preuve d'équivalence par routine sur registre. La
-> promotion L1→L2 en masse (rebrancher le spike sur les corps `ff4-gnw`) est le
-> prochain gros chantier ([BACKLOG](BACKLOG.md) §2). Détail :
-> [DISPATCH_REGISTRY.md](DISPATCH_REGISTRY.md).
+> **Audit + promotion spike (2026-06-27)** : L0=1 · L1=56 · L2=141 · L3=5 ·
+> EXCL=3. La promotion L1→L2 en masse a été menée via `batch_spike_ffgnw.py`
+> (spike fuzzé 200 essais sur les corps `ff4-gnw`) : 134 PASS crédités L2. Les 56
+> L1 restants = 35 build_error (spike non self-contained), 11 no_source (btlgfx
+> bundlés), 8 no_contract, 2 fail (divergences réelles `CheckMenu`/`TfrBGAnimGfx`
+> à investiguer). Détail + méthodo : [DISPATCH_REGISTRY.md](DISPATCH_REGISTRY.md).
 
 ### B.3 Workflows (résumé)
 

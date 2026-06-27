@@ -9,22 +9,28 @@
 `L3` validation oracle (`wram_diff=0`) · `L4` testée device ·
 `EXCL` DMA-bypass intentionnel (hors échelle — divergent par conception, exclu baseline).
 
-## Méthodologie de l'audit (2026-06-27)
+## Méthodologie de l'audit
 
-Niveaux **fondés sur les preuves disponibles**, pas sur un blanc-seing :
-- **L0** : corps stub explicite (`ExecSound_ext_stub`).
-- **L2** : équivalence runtime sur registre — routines `pass`/`delegate_pass` de
-  `translator/runs/hardcore_log.jsonl` (spike), ou fix à équivalence
-  fonctionnelle démontrée en jeu (F10, F12).
-- **L3** : `wram_diff=0` vérifié et consigné dans `KNOWN_FINDINGS.md`
-  (section oracle-artifact : Mult16/InitHWRegs/InitCharRows/_15c23d ; F7 _15c163).
-- **EXCL** : DMA-bypass intentionnel exclu de la baseline (F3/F6/F11-KF).
-- **L1** : tout le reste — **honnêtement**, faute de preuve d'équivalence par
-  routine sur registre. Ce n'est pas un jugement de qualité, c'est l'absence de
-  preuve formalisée. La voie de promotion L1→L2 est le spike (cf.
-  [WF-DECOMP](workflows/WF-DECOMP.md)), à mener en masse (cf. [BACKLOG](BACKLOG.md) §3).
+**Audit initial (2026-06-27)** — niveaux fondés sur preuves : hardcore_log PASS,
+KNOWN_FINDINGS (`wram_diff=0`), fixes F10/F12, DMA-bypass exclus.
 
-**Distribution actuelle** : L0=1 · L1=190 · L2=7 · L3=5 · EXCL=3 (total 206).
+**Promotion L1→L2 par spike batch (2026-06-27)** —
+`translator/batch_spike_ffgnw.py` génère, pour chaque routine L1, un spike
+(`generate_spike.py`) qui exécute le **corps C `ff4-gnw`** vs l'asm originale
+(interpréteur) sur le même état d'entrée **fuzzé sur 200 essais**, et compare le
+slot de sortie observable du CONTRACT. `fails==0` ⇒ **L2**.
+
+> **Portée du L2-par-spike** : équivalence du slot observable sous fuzzing des
+> entrées déclarées au CONTRACT — preuve forte mais **non exhaustive** (une
+> routine dont le CONTRACT a peu/pas d'`inputs_ram` est testée plus faiblement).
+> Plus fort que L1, moins isolé que L3 (oracle en jeu). Les **FAIL** sont de
+> vraies divergences à investiguer (WF-VALID), gardées en L1 avec note.
+
+**Distribution actuelle** : L0=1 · L1=56 · L2=141 · L3=5 · EXCL=3 (total 206).
+Les 56 L1 restants : 35 `build_error` (spike non auto-générable — corps non
+self-contained), 11 `no_source` (btlgfx bundlés / pas de fichier standalone),
+8 `no_contract` (pas de bloc CONTRACT parseable), 2 `fail` (divergences réelles :
+`CheckMenu_c`, `TfrBGAnimGfx_c`).
 
 ---
 
@@ -32,247 +38,235 @@ Niveaux **fondés sur les preuves disponibles**, pas sur un blanc-seing :
 
 | ID | Adresse SNES | Routine C | Domaine | Niveau | Preuve / notes |
 |----|--------------|-----------|---------|--------|----------------|
-| `D00808E` | $00:808E | `AfterBattle_c` | field | L1 |  |
-| `D0080A0` | $00:80A0 | `FieldMain_c` | field | L1 |  |
-| `D0081F4` | $00:81F4 | `CheckMenu_c` | field | L1 |  |
-| `D008302` | $00:8302 | `UpdatePlayerSpeed_c` | field | L1 |  |
-| `D00834E` | $00:834E | `InitMapRAM_c` | field | L1 |  |
-| `D00883D` | $00:883D | `_00883d_c` | field | L1 |  |
-| `D00885E` | $00:885E | `_00885e_c` | field | L1 |  |
-| `D00AA58` | $00:AA58 | `CheckTilePass_c` | field | L1 |  |
-| `D00AAD8` | $00:AAD8 | `SetPlayerNPCMap_c` | field | L1 |  |
-| `D00AB13` | $00:AB13 | `ClearPlayerNPCMap_c` | field | L1 |  |
-| `D00AC7D` | $00:AC7D | `CheckVehicleBlock_c` | field | L1 |  |
-| `D00BE47` | $00:BE47 | `CalcVehicleSpritePos_c` | field | L1 |  |
-| `D00C0C4` | $00:C0C4 | `PlayerSpriteTiles_c` | field | L1 |  |
-| `D00C3BD` | $00:C3BD | `UpdateWhalePal_c` | field | L1 |  |
-| `D00CB5F` | $00:CB5F | `TfrBGAnimGfx_c` | field | L1 |  |
-| `D00F533` | $00:F533 | `UpdateBG2Scroll_c` | field | L1 |  |
-| `D00F535` | $00:F535 | `UpdateBG2ScrollSkip_c` | field | L1 |  |
-| `D00FFBC` | $00:FFBC | `InitCharProp_ext_c` | field | L2 | hardcore PASS (spike runtime) |
-| `D00FFE0` | $00:FFE0 | `Vectors_c` | field | L1 |  |
-| `D018010` | $01:8010 | `UpdateCtrlField_ext_c` | menu | L2 | hardcore PASS (spike) ; réimpl. intentionnelle input (F5) |
-| `D01CA85` | $01:CA85 | `TfrVRAM_c` | field | L1 |  |
-| `D01D718` | $01:D718 | `FadeIn_c` | field | L1 |  |
-| `D01DFD2` | $01:DFD2 | `LoadBattleSpeedPosText_c` | menu | L2 | hardcore PASS (spike runtime) |
-| `D028560` | $02:8560 | `Mult8_btlgfx_c` | btlgfx | L1 |  |
-| `D0285D2` | $02:85D2 | `HardMult_btlgfx_c` | btlgfx | L1 |  |
-| `D0290A0` | $02:90A0 | `TfrBG2MenuTile_c` | btlgfx | L1 |  |
-| `D02A491` | $02:A491 | `IncrTextPtr_c` | btlgfx | L1 |  |
-| `D02BB0B` | $02:BB0B | `BackAttackYOffset_s_c` | btlgfx | L1 |  |
-| `D02BB1A` | $02:BB1A | `BackAttackYOffset_l_c` | btlgfx | L1 |  |
-| `D02DA73` | $02:DA73 | `DrawMonsterSprite_c` | btlgfx | L1 |  |
-| `D02DAFE` | $02:DAFE | `InitMonsterAnim_c` | btlgfx | L1 |  |
-| `D02DCED` | $02:DCED | `BuildOAMEntries_c` | btlgfx | L1 |  |
-| `D02DDA5` | $02:DDA5 | `CheckSpriteVisible_c` | btlgfx | L1 |  |
-| `D02DDDC` | $02:DDDC | `UpdateMonsterAnim_c` | btlgfx | L1 |  |
-| `D038009` | $03:8009 | `ExecBattle_c` | battle | L1 |  |
-| `D03805F` | $03:805F | `DrawMP_c` | battle | L1 |  |
-| `D038085` | $03:8085 | `ExecBtlGfx_c` | battle | L2 | F10 — corrigé, WaitVblank/NMI corrects en jeu |
-| `D0382CB` | $03:82CB | `InitHWRegs_c` | field | L3 | wram_diff=0 vérifié (oracle-artifact) + hardcore PASS |
-| `D038379` | $03:8379 | `RandXA_c` | battle | L1 |  |
+| `D00808E` | $00:808E | `AfterBattle_c` | field | L2 | spike fuzzé 200 essais, 0 fail |
+| `D0080A0` | $00:80A0 | `FieldMain_c` | field | L2 | spike fuzzé 200 essais, 0 fail |
+| `D0081F4` | $00:81F4 | `CheckMenu_c` | field | L1 | spike: 1/200 fails — divergence à investiguer (WF-VALID) |
+| `D008302` | $00:8302 | `UpdatePlayerSpeed_c` | field | L2 | spike fuzzé 200 essais, 0 fail |
+| `D00834E` | $00:834E | `InitMapRAM_c` | field | L2 | spike fuzzé 200 essais, 0 fail |
+| `D00883D` | $00:883D | `_00883d_c` | field | L1 | pas de CONTRACT parseable |
+| `D00885E` | $00:885E | `_00885e_c` | field | L1 | pas de CONTRACT parseable |
+| `D00AA58` | $00:AA58 | `CheckTilePass_c` | field | L1 | spike non auto-générable (build) |
+| `D00AAD8` | $00:AAD8 | `SetPlayerNPCMap_c` | field | L1 | pas de CONTRACT parseable |
+| `D00AB13` | $00:AB13 | `ClearPlayerNPCMap_c` | field | L2 | spike fuzzé 200 essais, 0 fail |
+| `D00AC7D` | $00:AC7D | `CheckVehicleBlock_c` | field | L1 | spike non auto-générable (build) |
+| `D00BE47` | $00:BE47 | `CalcVehicleSpritePos_c` | field | L1 | spike non auto-générable (build) |
+| `D00C0C4` | $00:C0C4 | `PlayerSpriteTiles_c` | field | L2 | spike fuzzé 200 essais, 0 fail |
+| `D00C3BD` | $00:C3BD | `UpdateWhalePal_c` | field | L2 | spike fuzzé 200 essais, 0 fail |
+| `D00CB5F` | $00:CB5F | `TfrBGAnimGfx_c` | field | L1 | spike: 2/200 fails — divergence à investiguer (WF-VALID) |
+| `D00F533` | $00:F533 | `UpdateBG2Scroll_c` | field | L1 | spike non auto-générable (build) |
+| `D00F535` | $00:F535 | `UpdateBG2ScrollSkip_c` | field | L1 | corps bundlé/non standalone (ex. btlgfx) |
+| `D00FFBC` | $00:FFBC | `InitCharProp_ext_c` | field | L2 | hardcore PASS |
+| `D00FFE0` | $00:FFE0 | `Vectors_c` | field | L1 | spike non auto-générable (build) |
+| `D018010` | $01:8010 | `UpdateCtrlField_ext_c` | menu | L2 | hardcore PASS ; réimpl. input (F5) |
+| `D01CA85` | $01:CA85 | `TfrVRAM_c` | field | L1 | spike non auto-générable (build) |
+| `D01D718` | $01:D718 | `FadeIn_c` | field | L1 | spike non auto-générable (build) |
+| `D01DFD2` | $01:DFD2 | `LoadBattleSpeedPosText_c` | menu | L2 | hardcore PASS |
+| `D028560` | $02:8560 | `Mult8_btlgfx_c` | btlgfx | L1 | corps bundlé/non standalone (ex. btlgfx) |
+| `D0285D2` | $02:85D2 | `HardMult_btlgfx_c` | btlgfx | L1 | corps bundlé/non standalone (ex. btlgfx) |
+| `D0290A0` | $02:90A0 | `TfrBG2MenuTile_c` | btlgfx | L1 | pas de CONTRACT parseable |
+| `D02A491` | $02:A491 | `IncrTextPtr_c` | btlgfx | L1 | corps bundlé/non standalone (ex. btlgfx) |
+| `D02BB0B` | $02:BB0B | `BackAttackYOffset_s_c` | btlgfx | L1 | corps bundlé/non standalone (ex. btlgfx) |
+| `D02BB1A` | $02:BB1A | `BackAttackYOffset_l_c` | btlgfx | L1 | corps bundlé/non standalone (ex. btlgfx) |
+| `D02DA73` | $02:DA73 | `DrawMonsterSprite_c` | btlgfx | L1 | corps bundlé/non standalone (ex. btlgfx) |
+| `D02DAFE` | $02:DAFE | `InitMonsterAnim_c` | btlgfx | L1 | corps bundlé/non standalone (ex. btlgfx) |
+| `D02DCED` | $02:DCED | `BuildOAMEntries_c` | btlgfx | L1 | corps bundlé/non standalone (ex. btlgfx) |
+| `D02DDA5` | $02:DDA5 | `CheckSpriteVisible_c` | btlgfx | L1 | corps bundlé/non standalone (ex. btlgfx) |
+| `D02DDDC` | $02:DDDC | `UpdateMonsterAnim_c` | btlgfx | L1 | corps bundlé/non standalone (ex. btlgfx) |
+| `D038009` | $03:8009 | `ExecBattle_c` | battle | L2 | spike fuzzé 200 essais, 0 fail |
+| `D03805F` | $03:805F | `DrawMP_c` | battle | L2 | spike fuzzé 200 essais, 0 fail |
+| `D038085` | $03:8085 | `ExecBtlGfx_c` | battle | L2 | F10 — WaitVblank/NMI corrects en jeu |
+| `D0382CB` | $03:82CB | `InitHWRegs_c` | field | L3 | wram_diff=0 vérifié + hardcore PASS |
+| `D038379` | $03:8379 | `RandXA_c` | battle | L1 | spike non auto-générable (build) |
 | `D0383B9` | $03:83B9 | `Mult16_c` | battle | L3 | wram_diff=0 vérifié (oracle-artifact) |
-| `D0383E0` | $03:83E0 | `Mult8_c` | battle | L1 |  |
-| `D038407` | $03:8407 | `Div16_c` | battle | L1 |  |
-| `D0384E3` | $03:84E3 | `Add16_c` | battle | L1 |  |
-| `D0384FC` | $03:84FC | `Sub16_c` | battle | L1 |  |
-| `D038579` | $03:8579 | `RandMonster_c` | battle | L1 |  |
-| `D03858B` | $03:858B | `Rand99_c` | battle | L1 |  |
-| `D03859B` | $03:859B | `AddMsg1_c` | battle | L1 |  |
-| `D0385A6` | $03:85A6 | `AddMsg2_c` | battle | L1 |  |
-| `D0385B1` | $03:85B1 | `AddMsg3_c` | battle | L1 |  |
-| `D0387D8` | $03:87D8 | `CheckFanfare_c` | battle | L1 |  |
-| `D0387E4` | $03:87E4 | `CheckBattleList_c` | battle | L1 |  |
-| `D038803` | $03:8803 | `CheckWinAnim_c` | battle | L1 |  |
+| `D0383E0` | $03:83E0 | `Mult8_c` | battle | L2 | spike fuzzé 200 essais, 0 fail |
+| `D038407` | $03:8407 | `Div16_c` | battle | L2 | spike fuzzé 200 essais, 0 fail |
+| `D0384E3` | $03:84E3 | `Add16_c` | battle | L2 | spike fuzzé 200 essais, 0 fail |
+| `D0384FC` | $03:84FC | `Sub16_c` | battle | L2 | spike fuzzé 200 essais, 0 fail |
+| `D038579` | $03:8579 | `RandMonster_c` | battle | L2 | spike fuzzé 200 essais, 0 fail |
+| `D03858B` | $03:858B | `Rand99_c` | battle | L2 | spike fuzzé 200 essais, 0 fail |
+| `D03859B` | $03:859B | `AddMsg1_c` | battle | L2 | spike fuzzé 200 essais, 0 fail |
+| `D0385A6` | $03:85A6 | `AddMsg2_c` | battle | L2 | spike fuzzé 200 essais, 0 fail |
+| `D0385B1` | $03:85B1 | `AddMsg3_c` | battle | L2 | spike fuzzé 200 essais, 0 fail |
+| `D0387D8` | $03:87D8 | `CheckFanfare_c` | battle | L1 | spike non auto-générable (build) |
+| `D0387E4` | $03:87E4 | `CheckBattleList_c` | battle | L2 | spike fuzzé 200 essais, 0 fail |
+| `D038803` | $03:8803 | `CheckWinAnim_c` | battle | L2 | spike fuzzé 200 essais, 0 fail |
 | `D0395CE` | $03:95CE | `InitCharRows_c` | battle | L3 | wram_diff=0 vérifié (oracle-artifact) |
-| `D039741` | $03:9741 | `GetPendingAction_c` | battle | L1 |  |
-| `D039788` | $03:9788 | `CheckTimer_c` | battle | L1 |  |
-| `D0397B3` | $03:97B3 | `InitAction_c` | battle | L2 | F12 — équivalence fonctionnelle en jeu (combat se termine) |
-| `D039E65` | $03:9E65 | `TimerDur_00_c` | battle | L1 |  |
-| `D039E71` | $03:9E71 | `TimerDur_02_c` | battle | L1 |  |
-| `D039F1C` | $03:9F1C | `TimerDur_08_c` | battle | L1 |  |
-| `D039F75` | $03:9F75 | `TimerDur_0a_c` | battle | L1 |  |
-| `D039FD8` | $03:9FD8 | `ApplySpeedMod_c` | battle | L1 |  |
-| `D03B33F` | $03:B33F | `Cmd_21_c` | battle | L1 |  |
-| `D03BA04` | $03:BA04 | `AITarget_1e_c` | battle | L1 |  |
-| `D03BA67` | $03:BA67 | `AITarget_1f_c` | battle | L1 |  |
-| `D03BA74` | $03:BA74 | `AITarget_20_c` | battle | L1 |  |
-| `D03BA81` | $03:BA81 | `AITarget_21_c` | battle | L1 |  |
-| `D03BA8E` | $03:BA8E | `AITarget_22_c` | battle | L1 |  |
-| `D03BAEF` | $03:BAEF | `AITarget_23_c` | battle | L1 |  |
-| `D03BAFE` | $03:BAFE | `AITarget_24_c` | battle | L1 |  |
-| `D03BB0D` | $03:BB0D | `AITarget_25_c` | battle | L1 |  |
-| `D03BB6B` | $03:BB6B | `AITarget_29_c` | battle | L1 |  |
-| `D03BDA9` | $03:BDA9 | `AICond_02_c` | battle | L1 |  |
-| `D03BE1E` | $03:BE1E | `AICond_05_c` | battle | L1 |  |
-| `D03BE31` | $03:BE31 | `AICond_06_c` | battle | L1 |  |
-| `D03BEE4` | $03:BEE4 | `AICond_09_c` | battle | L1 |  |
-| `D03BF05` | $03:BF05 | `AICond_0b_c` | battle | L1 |  |
-| `D03BFF6` | $03:BFF6 | `AICondTarget_25_c` | battle | L1 |  |
-| `D03C03B` | $03:C03B | `AICondTarget_26_c` | battle | L1 |  |
-| `D03C042` | $03:C042 | `AICondTarget_27_c` | battle | L1 |  |
-| `D03C049` | $03:C049 | `AnyTarget_c` | battle | L1 |  |
-| `D03C06C` | $03:C06C | `AICondTarget_23_c` | battle | L1 |  |
-| `D03C987` | $03:C987 | `CalcHits_c` | battle | L1 |  |
-| `D03D378` | $03:D378 | `MagicDmgEffect_c` | battle | L1 |  |
-| `D03D466` | $03:D466 | `MagicEffect_04_c` | battle | L1 |  |
-| `D03D613` | $03:D613 | `MagicEffect_08_c` | battle | L1 |  |
-| `D03D83F` | $03:D83F | `MagicEffect_0d_c` | battle | L1 |  |
-| `D03D863` | $03:D863 | `MagicEffect_0e_c` | battle | L1 |  |
-| `D03D972` | $03:D972 | `MagicEffect_13_c` | battle | L1 |  |
-| `D03D9EC` | $03:D9EC | `MagicEffect_15_c` | battle | L1 |  |
-| `D03DA0C` | $03:DA0C | `MagicEffect_16_c` | battle | L1 |  |
-| `D03DC9B` | $03:DC9B | `MagicEffect_20_c` | battle | L1 |  |
-| `D03DCBB` | $03:DCBB | `MagicEffect_21_c` | battle | L1 |  |
-| `D03DCD6` | $03:DCD6 | `MagicEffect_22_c` | battle | L1 |  |
-| `D03DD06` | $03:DD06 | `MagicEffect_24_c` | battle | L1 |  |
-| `D03DD65` | $03:DD65 | `MagicEffect_2c_c` | battle | L1 |  |
-| `D03DD95` | $03:DD95 | `MagicEffect_28_c` | battle | L1 |  |
-| `D03DDB1` | $03:DDB1 | `MagicEffect_2a_c` | battle | L1 |  |
-| `D03DDC9` | $03:DDC9 | `MagicEffect_2b_c` | battle | L1 |  |
-| `D03DDDD` | $03:DDDD | `MagicEffect_2f_c` | battle | L1 |  |
-| `D03DFD2` | $03:DFD2 | `MagicEffect_32_c` | battle | L1 |  |
-| `D03E030` | $03:E030 | `RemoveTarget_c` | battle | L1 |  |
-| `D03E100` | $03:E100 | `CheckStrongElem_c` | battle | L1 |  |
-| `D03E133` | $03:E133 | `CheckWeakElem_c` | battle | L1 |  |
-| `D03E43B` | $03:E43B | `Cmd_22_c` | battle | L1 |  |
-| `D03E4D9` | $03:E4D9 | `TwinFailed_c` | battle | L1 |  |
+| `D039741` | $03:9741 | `GetPendingAction_c` | battle | L2 | spike fuzzé 200 essais, 0 fail |
+| `D039788` | $03:9788 | `CheckTimer_c` | battle | L2 | spike fuzzé 200 essais, 0 fail |
+| `D0397B3` | $03:97B3 | `InitAction_c` | battle | L2 | F12 — équivalence fonctionnelle en jeu |
+| `D039E65` | $03:9E65 | `TimerDur_00_c` | battle | L2 | spike fuzzé 200 essais, 0 fail |
+| `D039E71` | $03:9E71 | `TimerDur_02_c` | battle | L2 | spike fuzzé 200 essais, 0 fail |
+| `D039F1C` | $03:9F1C | `TimerDur_08_c` | battle | L2 | spike fuzzé 200 essais, 0 fail |
+| `D039F75` | $03:9F75 | `TimerDur_0a_c` | battle | L2 | spike fuzzé 200 essais, 0 fail |
+| `D039FD8` | $03:9FD8 | `ApplySpeedMod_c` | battle | L2 | spike fuzzé 200 essais, 0 fail |
+| `D03B33F` | $03:B33F | `Cmd_21_c` | battle | L2 | spike fuzzé 200 essais, 0 fail |
+| `D03BA04` | $03:BA04 | `AITarget_1e_c` | battle | L2 | spike fuzzé 200 essais, 0 fail |
+| `D03BA67` | $03:BA67 | `AITarget_1f_c` | battle | L2 | spike fuzzé 200 essais, 0 fail |
+| `D03BA74` | $03:BA74 | `AITarget_20_c` | battle | L2 | spike fuzzé 200 essais, 0 fail |
+| `D03BA81` | $03:BA81 | `AITarget_21_c` | battle | L2 | spike fuzzé 200 essais, 0 fail |
+| `D03BA8E` | $03:BA8E | `AITarget_22_c` | battle | L2 | spike fuzzé 200 essais, 0 fail |
+| `D03BAEF` | $03:BAEF | `AITarget_23_c` | battle | L2 | spike fuzzé 200 essais, 0 fail |
+| `D03BAFE` | $03:BAFE | `AITarget_24_c` | battle | L2 | spike fuzzé 200 essais, 0 fail |
+| `D03BB0D` | $03:BB0D | `AITarget_25_c` | battle | L2 | spike fuzzé 200 essais, 0 fail |
+| `D03BB6B` | $03:BB6B | `AITarget_29_c` | battle | L2 | spike fuzzé 200 essais, 0 fail |
+| `D03BDA9` | $03:BDA9 | `AICond_02_c` | battle | L2 | spike fuzzé 200 essais, 0 fail |
+| `D03BE1E` | $03:BE1E | `AICond_05_c` | battle | L2 | spike fuzzé 200 essais, 0 fail |
+| `D03BE31` | $03:BE31 | `AICond_06_c` | battle | L2 | spike fuzzé 200 essais, 0 fail |
+| `D03BEE4` | $03:BEE4 | `AICond_09_c` | battle | L2 | spike fuzzé 200 essais, 0 fail |
+| `D03BF05` | $03:BF05 | `AICond_0b_c` | battle | L2 | spike fuzzé 200 essais, 0 fail |
+| `D03BFF6` | $03:BFF6 | `AICondTarget_25_c` | battle | L2 | spike fuzzé 200 essais, 0 fail |
+| `D03C03B` | $03:C03B | `AICondTarget_26_c` | battle | L2 | spike fuzzé 200 essais, 0 fail |
+| `D03C042` | $03:C042 | `AICondTarget_27_c` | battle | L2 | spike fuzzé 200 essais, 0 fail |
+| `D03C049` | $03:C049 | `AnyTarget_c` | battle | L2 | spike fuzzé 200 essais, 0 fail |
+| `D03C06C` | $03:C06C | `AICondTarget_23_c` | battle | L2 | spike fuzzé 200 essais, 0 fail |
+| `D03C987` | $03:C987 | `CalcHits_c` | battle | L2 | spike fuzzé 200 essais, 0 fail |
+| `D03D378` | $03:D378 | `MagicDmgEffect_c` | battle | L2 | spike fuzzé 200 essais, 0 fail |
+| `D03D466` | $03:D466 | `MagicEffect_04_c` | battle | L2 | spike fuzzé 200 essais, 0 fail |
+| `D03D613` | $03:D613 | `MagicEffect_08_c` | battle | L2 | spike fuzzé 200 essais, 0 fail |
+| `D03D83F` | $03:D83F | `MagicEffect_0d_c` | battle | L2 | spike fuzzé 200 essais, 0 fail |
+| `D03D863` | $03:D863 | `MagicEffect_0e_c` | battle | L2 | spike fuzzé 200 essais, 0 fail |
+| `D03D972` | $03:D972 | `MagicEffect_13_c` | battle | L2 | spike fuzzé 200 essais, 0 fail |
+| `D03D9EC` | $03:D9EC | `MagicEffect_15_c` | battle | L2 | spike fuzzé 200 essais, 0 fail |
+| `D03DA0C` | $03:DA0C | `MagicEffect_16_c` | battle | L2 | spike fuzzé 200 essais, 0 fail |
+| `D03DC9B` | $03:DC9B | `MagicEffect_20_c` | battle | L2 | spike fuzzé 200 essais, 0 fail |
+| `D03DCBB` | $03:DCBB | `MagicEffect_21_c` | battle | L2 | spike fuzzé 200 essais, 0 fail |
+| `D03DCD6` | $03:DCD6 | `MagicEffect_22_c` | battle | L2 | spike fuzzé 200 essais, 0 fail |
+| `D03DD06` | $03:DD06 | `MagicEffect_24_c` | battle | L2 | spike fuzzé 200 essais, 0 fail |
+| `D03DD65` | $03:DD65 | `MagicEffect_2c_c` | battle | L2 | spike fuzzé 200 essais, 0 fail |
+| `D03DD95` | $03:DD95 | `MagicEffect_28_c` | battle | L2 | spike fuzzé 200 essais, 0 fail |
+| `D03DDB1` | $03:DDB1 | `MagicEffect_2a_c` | battle | L2 | spike fuzzé 200 essais, 0 fail |
+| `D03DDC9` | $03:DDC9 | `MagicEffect_2b_c` | battle | L2 | spike fuzzé 200 essais, 0 fail |
+| `D03DDDD` | $03:DDDD | `MagicEffect_2f_c` | battle | L2 | spike fuzzé 200 essais, 0 fail |
+| `D03DFD2` | $03:DFD2 | `MagicEffect_32_c` | battle | L2 | spike fuzzé 200 essais, 0 fail |
+| `D03E030` | $03:E030 | `RemoveTarget_c` | battle | L2 | spike fuzzé 200 essais, 0 fail |
+| `D03E100` | $03:E100 | `CheckStrongElem_c` | battle | L2 | spike fuzzé 200 essais, 0 fail |
+| `D03E133` | $03:E133 | `CheckWeakElem_c` | battle | L2 | spike fuzzé 200 essais, 0 fail |
+| `D03E43B` | $03:E43B | `Cmd_22_c` | battle | L2 | spike fuzzé 200 essais, 0 fail |
+| `D03E4D9` | $03:E4D9 | `TwinFailed_c` | battle | L2 | spike fuzzé 200 essais, 0 fail |
 | `D03FE03` | $03:FE03 | `TfrSprites_c` | field | EXCL | F6 — OAM manuel, exclu baseline |
-| `D048004` | $04:8004 | `ExecSound_ext_stub` | sound: | L0 | stub no-op explicite (F4) — débloque le titre, SPC non porté |
-| `D0485E1` | $04:85E1 | `PlayGameSfx_c` | sound | L1 |  |
-| `D04861E` | $04:861E | `ExecInterrupt_c` | sound | L1 |  |
-| `D088690` | $08:8690 | `LoadTitleGfx_c` | field | L1 |  |
-| `D08885E` | $08:885E | `TfrTitleCrystalTiles_c` | field | L1 |  |
-| `D0E8B3C` | $0E:8B3C | `CheckBattle_c` | field | L2 | hardcore PASS (spike runtime) |
-| `D12E35B` | $12:E35B | `WaitVblankEvent_c` | field | L1 |  |
-| `D12E55A` | $12:E55A | `FindEventTerminator_c` | field | L1 |  |
-| `D12E613` | $12:E613 | `EventCmd_d8_c` | field | L1 |  |
-| `D12E7D3` | $12:E7D3 | `EventCmd_d7_c` | field | L1 |  |
-| `D12EB47` | $12:EB47 | `EventCmd_e0_c` | field | L1 |  |
-| `D12EC06` | $12:EC06 | `EventCmd_e6_c` | field | L1 |  |
-| `D12EC3E` | $12:EC3E | `EventCmd_dd_c` | field | L1 |  |
-| `D12ED1D` | $12:ED1D | `SetCurrGil_c` | field | L1 |  |
-| `D12EE1C` | $12:EE1C | `EventCmd_d0_c` | field | L1 |  |
-| `D12EE25` | $12:EE25 | `EventCmd_d1_c` | field | L1 |  |
-| `D12EE35` | $12:EE35 | `TfrInvertPal_c` | field | L1 |  |
-| `D13BFE3` | $13:BFE3 | `_00bfe3_c` | field | L1 |  |
-| `D13C11F` | $13:C11F | `ReloadNPCs_c` | field | L1 |  |
-| `D13D730` | $13:D730 | `LoadTheEndGfx_c` | cutscene | L1 |  |
-| `D13DB10` | $13:DB10 | `_13db10_c` | cutscene | L1 |  |
-| `D13DB23` | $13:DB23 | `_13db23_c` | cutscene | L1 |  |
-| `D13E07D` | $13:E07D | `_13e07d_c` | cutscene | L1 |  |
-| `D13E139` | $13:E139 | `GetEarthSpritePos_c` | cutscene | L1 |  |
-| `D13E247` | $13:E247 | `InitStars_c` | cutscene | L1 |  |
-| `D13E2DC` | $13:E2DC | `GetOtherPlanetTile_c` | cutscene | L1 |  |
-| `D13E512` | $13:E512 | `Mult16_1_c` | cutscene | L1 |  |
-| `D13EB24` | $13:EB24 | `NewLine_c` | cutscene | L1 |  |
-| `D13EB60` | $13:EB60 | `_13eb60_c` | cutscene | L1 |  |
-| `D13EBB8` | $13:EBB8 | `_13ebb8_c` | cutscene | L1 |  |
-| `D13EF4C` | $13:EF4C | `_13ef4c_c` | cutscene | L1 |  |
-| `D13FE36` | $13:FE36 | `AutoBattle_0003_c` | battle | L1 |  |
-| `D14F58E` | $14:F58E | `_14f58e_c` | field | L1 |  |
-| `D14F626` | $14:F626 | `GilWindowTiles3_c` | field | L1 |  |
-| `D14F63E` | $14:F63E | `GilWindowTiles4_c` | field | L1 |  |
-| `D14F6D6` | $14:F6D6 | `DlgTilesTop_c` | field | L1 |  |
-| `D14F796` | $14:F796 | `MapTitleTilesTop_c` | field | L1 |  |
-| `D14F7B6` | $14:F7B6 | `MapTitleTilesBtm_c` | field | L1 |  |
-| `D14FA16` | $14:FA16 | `LavaAnimPal_c` | field | L1 |  |
-| `D14FB1E` | $14:FB1E | `WipeScanlineTbl_c` | field | L1 |  |
-| `D14FD00` | $14:FD00 | `InitCtrl_ext2_c` | menu | L1 |  |
-| `D14FD03` | $14:FD03 | `UpdateCtrl_ext_c` | menu | L1 |  |
-| `D14FD06` | $14:FD06 | `ClearText_ext_c` | menu | L1 |  |
-| `D14FD09` | $14:FD09 | `UpdateWindowColor_ext_c` | menu | L1 |  |
-| `D14FD0C` | $14:FD0C | `UpdateScrollRegs_ext_c` | menu | L1 |  |
-| `D1585AB` | $15:85AB | `InitWorld_c` | field | L1 |  |
-| `D1589ED` | $15:89ED | `InitInterrupts_c` | field | L1 |  |
-| `D158B2A` | $15:8B2A | `InitDMA_c` | field | L1 |  |
-| `D158D5D` | $15:8D5D | `PlayMapSong_c` | field | L1 |  |
-| `D158DFC` | $15:8DFC | `WaitKeyUp_c` | field | L1 |  |
-| `D158E05` | $15:8E05 | `WaitKeyDown_c` | field | L1 |  |
-| `D158E47` | $15:8E47 | `UpdateWaterLavaAnim_c` | field | L1 |  |
-| `D158E57` | $15:8E57 | `TfrWaterLavaGfx_c` | field | L1 |  |
-| `D158F34` | $15:8F34 | `TfrLavaGfx_c` | field | L1 |  |
-| `D159104` | $15:9104 | `UpdateMode7Regs_c` | field | L1 |  |
-| `D1591CA` | $15:91CA | `UpdateWipeIRQ_c` | field | L1 |  |
-| `D159204` | $15:9204 | `UpdateWipeNMI_c` | field | L1 |  |
-| `D159792` | $15:9792 | `LoadPlayerGfxWorld_c` | field | L1 |  |
-| `D1597A2` | $15:97A2 | `LoadPlayerGfxSub_c` | field | L1 |  |
-| `D1599FB` | $15:99FB | `GiveGil_c` | field | L1 |  |
-| `D159AE9` | $15:9AE9 | `GetTreasureTiles_c` | field | L1 |  |
-| `D159B5B` | $15:9B5B | `GetTreasurePtr_c` | field | L1 |  |
-| `D15AF24` | $15:AF24 | `CloseYesNoWindow_c` | field | L1 |  |
-| `D15B09C` | $15:B09C | `ScrollItemListDown_c` | field | L1 |  |
-| `D15B143` | $15:B143 | `TfrBGGfx_c` | field | L1 |  |
-| `D15B3DC` | $15:B3DC | `_15b3dc_c` | field | L1 |  |
-| `D15B41B` | $15:B41B | `GetDlgPtr1H_c` | field | L1 |  |
-| `D15B6F1` | $15:B6F1 | `InitDlgIRQ_c` | field | L1 |  |
-| `D15B8C9` | $15:B8C9 | `_15b8c9_c` | field | L1 |  |
-| `D15BB6A` | $15:BB6A | `_15bb6a_c` | field | L1 |  |
-| `D15C144` | $15:C144 | `_15c144_c` | field | L1 |  |
-| `D15C163` | $15:C163 | `_15c163_c` | field | L3 | F7 — diverge 0 octet après fix |
-| `D15C23D` | $15:C23D | `_15c23d_c` | field | L3 | wram_diff=0 vérifié (faux positif CRC levé) |
-| `D15C37F` | $15:C37F | `Pow10Hi_c` | field | L1 |  |
+| `D048004` | $04:8004 | `ExecSound_ext_stub` | sound: | L0 | stub no-op explicite (F4) |
+| `D0485E1` | $04:85E1 | `PlayGameSfx_c` | sound | L2 | spike fuzzé 200 essais, 0 fail |
+| `D04861E` | $04:861E | `ExecInterrupt_c` | sound | L2 | spike fuzzé 200 essais, 0 fail |
+| `D088690` | $08:8690 | `LoadTitleGfx_c` | field | L1 | pas de CONTRACT parseable |
+| `D08885E` | $08:885E | `TfrTitleCrystalTiles_c` | field | L1 | spike non auto-générable (build) |
+| `D0E8B3C` | $0E:8B3C | `CheckBattle_c` | field | L2 | hardcore PASS |
+| `D12E35B` | $12:E35B | `WaitVblankEvent_c` | field | L2 | spike fuzzé 200 essais, 0 fail |
+| `D12E55A` | $12:E55A | `FindEventTerminator_c` | field | L1 | spike non auto-générable (build) |
+| `D12E613` | $12:E613 | `EventCmd_d8_c` | field | L2 | spike fuzzé 200 essais, 0 fail |
+| `D12E7D3` | $12:E7D3 | `EventCmd_d7_c` | field | L2 | spike fuzzé 200 essais, 0 fail |
+| `D12EB47` | $12:EB47 | `EventCmd_e0_c` | field | L2 | spike fuzzé 200 essais, 0 fail |
+| `D12EC06` | $12:EC06 | `EventCmd_e6_c` | field | L2 | spike fuzzé 200 essais, 0 fail |
+| `D12EC3E` | $12:EC3E | `EventCmd_dd_c` | field | L2 | spike fuzzé 200 essais, 0 fail |
+| `D12ED1D` | $12:ED1D | `SetCurrGil_c` | field | L2 | spike fuzzé 200 essais, 0 fail |
+| `D12EE1C` | $12:EE1C | `EventCmd_d0_c` | field | L2 | spike fuzzé 200 essais, 0 fail |
+| `D12EE25` | $12:EE25 | `EventCmd_d1_c` | field | L1 | spike non auto-générable (build) |
+| `D12EE35` | $12:EE35 | `TfrInvertPal_c` | field | L1 | spike non auto-générable (build) |
+| `D13BFE3` | $13:BFE3 | `_00bfe3_c` | field | L2 | spike fuzzé 200 essais, 0 fail |
+| `D13C11F` | $13:C11F | `ReloadNPCs_c` | field | L2 | spike fuzzé 200 essais, 0 fail |
+| `D13D730` | $13:D730 | `LoadTheEndGfx_c` | cutscene | L2 | spike fuzzé 200 essais, 0 fail |
+| `D13DB10` | $13:DB10 | `_13db10_c` | cutscene | L2 | spike fuzzé 200 essais, 0 fail |
+| `D13DB23` | $13:DB23 | `_13db23_c` | cutscene | L2 | spike fuzzé 200 essais, 0 fail |
+| `D13E07D` | $13:E07D | `_13e07d_c` | cutscene | L2 | spike fuzzé 200 essais, 0 fail |
+| `D13E139` | $13:E139 | `GetEarthSpritePos_c` | cutscene | L2 | spike fuzzé 200 essais, 0 fail |
+| `D13E247` | $13:E247 | `InitStars_c` | cutscene | L2 | spike fuzzé 200 essais, 0 fail |
+| `D13E2DC` | $13:E2DC | `GetOtherPlanetTile_c` | cutscene | L2 | spike fuzzé 200 essais, 0 fail |
+| `D13E512` | $13:E512 | `Mult16_1_c` | cutscene | L2 | spike fuzzé 200 essais, 0 fail |
+| `D13EB24` | $13:EB24 | `NewLine_c` | cutscene | L2 | spike fuzzé 200 essais, 0 fail |
+| `D13EB60` | $13:EB60 | `_13eb60_c` | cutscene | L2 | spike fuzzé 200 essais, 0 fail |
+| `D13EBB8` | $13:EBB8 | `_13ebb8_c` | cutscene | L2 | spike fuzzé 200 essais, 0 fail |
+| `D13EF4C` | $13:EF4C | `_13ef4c_c` | cutscene | L2 | spike fuzzé 200 essais, 0 fail |
+| `D13FE36` | $13:FE36 | `AutoBattle_0003_c` | battle | L1 | spike non auto-générable (build) |
+| `D14F58E` | $14:F58E | `_14f58e_c` | field | L1 | spike non auto-générable (build) |
+| `D14F626` | $14:F626 | `GilWindowTiles3_c` | field | L2 | spike fuzzé 200 essais, 0 fail |
+| `D14F63E` | $14:F63E | `GilWindowTiles4_c` | field | L2 | spike fuzzé 200 essais, 0 fail |
+| `D14F6D6` | $14:F6D6 | `DlgTilesTop_c` | field | L2 | spike fuzzé 200 essais, 0 fail |
+| `D14F796` | $14:F796 | `MapTitleTilesTop_c` | field | L1 | spike non auto-générable (build) |
+| `D14F7B6` | $14:F7B6 | `MapTitleTilesBtm_c` | field | L1 | spike non auto-générable (build) |
+| `D14FA16` | $14:FA16 | `LavaAnimPal_c` | field | L2 | spike fuzzé 200 essais, 0 fail |
+| `D14FB1E` | $14:FB1E | `WipeScanlineTbl_c` | field | L2 | spike fuzzé 200 essais, 0 fail |
+| `D14FD00` | $14:FD00 | `InitCtrl_ext2_c` | menu | L2 | spike fuzzé 200 essais, 0 fail |
+| `D14FD03` | $14:FD03 | `UpdateCtrl_ext_c` | menu | L1 | spike non auto-générable (build) |
+| `D14FD06` | $14:FD06 | `ClearText_ext_c` | menu | L1 | spike non auto-générable (build) |
+| `D14FD09` | $14:FD09 | `UpdateWindowColor_ext_c` | menu | L2 | spike fuzzé 200 essais, 0 fail |
+| `D14FD0C` | $14:FD0C | `UpdateScrollRegs_ext_c` | menu | L1 | spike non auto-générable (build) |
+| `D1585AB` | $15:85AB | `InitWorld_c` | field | L2 | spike fuzzé 200 essais, 0 fail |
+| `D1589ED` | $15:89ED | `InitInterrupts_c` | field | L2 | spike fuzzé 200 essais, 0 fail |
+| `D158B2A` | $15:8B2A | `InitDMA_c` | field | L2 | spike fuzzé 200 essais, 0 fail |
+| `D158D5D` | $15:8D5D | `PlayMapSong_c` | field | L1 | spike non auto-générable (build) |
+| `D158DFC` | $15:8DFC | `WaitKeyUp_c` | field | L2 | spike fuzzé 200 essais, 0 fail |
+| `D158E05` | $15:8E05 | `WaitKeyDown_c` | field | L2 | spike fuzzé 200 essais, 0 fail |
+| `D158E47` | $15:8E47 | `UpdateWaterLavaAnim_c` | field | L2 | spike fuzzé 200 essais, 0 fail |
+| `D158E57` | $15:8E57 | `TfrWaterLavaGfx_c` | field | L1 | spike non auto-générable (build) |
+| `D158F34` | $15:8F34 | `TfrLavaGfx_c` | field | L2 | spike fuzzé 200 essais, 0 fail |
+| `D159104` | $15:9104 | `UpdateMode7Regs_c` | field | L2 | spike fuzzé 200 essais, 0 fail |
+| `D1591CA` | $15:91CA | `UpdateWipeIRQ_c` | field | L1 | pas de CONTRACT parseable |
+| `D159204` | $15:9204 | `UpdateWipeNMI_c` | field | L2 | spike fuzzé 200 essais, 0 fail |
+| `D159792` | $15:9792 | `LoadPlayerGfxWorld_c` | field | L1 | spike non auto-générable (build) |
+| `D1597A2` | $15:97A2 | `LoadPlayerGfxSub_c` | field | L1 | spike non auto-générable (build) |
+| `D1599FB` | $15:99FB | `GiveGil_c` | field | L2 | spike fuzzé 200 essais, 0 fail |
+| `D159AE9` | $15:9AE9 | `GetTreasureTiles_c` | field | L2 | spike fuzzé 200 essais, 0 fail |
+| `D159B5B` | $15:9B5B | `GetTreasurePtr_c` | field | L1 | spike non auto-générable (build) |
+| `D15AF24` | $15:AF24 | `CloseYesNoWindow_c` | field | L1 | spike non auto-générable (build) |
+| `D15B09C` | $15:B09C | `ScrollItemListDown_c` | field | L1 | spike non auto-générable (build) |
+| `D15B143` | $15:B143 | `TfrBGGfx_c` | field | L2 | spike fuzzé 200 essais, 0 fail |
+| `D15B3DC` | $15:B3DC | `_15b3dc_c` | field | L1 | pas de CONTRACT parseable |
+| `D15B41B` | $15:B41B | `GetDlgPtr1H_c` | field | L1 | spike non auto-générable (build) |
+| `D15B6F1` | $15:B6F1 | `InitDlgIRQ_c` | field | L2 | spike fuzzé 200 essais, 0 fail |
+| `D15B8C9` | $15:B8C9 | `_15b8c9_c` | field | L2 | spike fuzzé 200 essais, 0 fail |
+| `D15BB6A` | $15:BB6A | `_15bb6a_c` | field | L2 | spike fuzzé 200 essais, 0 fail |
+| `D15C144` | $15:C144 | `_15c144_c` | field | L2 | spike fuzzé 200 essais, 0 fail |
+| `D15C163` | $15:C163 | `_15c163_c` | field | L3 | F7 — diverge 0 octet |
+| `D15C23D` | $15:C23D | `_15c23d_c` | field | L3 | wram_diff=0 vérifié |
+| `D15C37F` | $15:C37F | `Pow10Hi_c` | field | L2 | spike fuzzé 200 essais, 0 fail |
 | `D15CA5E` | $15:CA5E | `_15ca5e_c` | field | EXCL | F11(KF) — palette DMA-bypass, exclu baseline |
-| `D15CA85` | $15:CA85 | `_15ca85_c` | field | L1 |  |
-| `D15CADC` | $15:CADC | `_15cadc_c` | field | EXCL | F3 — DMA-bypass OAM, exclu baseline |
-| `D16C59A` | $16:C59A | `AfterCutscene_c` | field | L1 |  |
-| `D16C8BC` | $16:C8BC | `Special_2d_c` | field | L1 |  |
-| `D16CB05` | $16:CB05 | `_00cb05_c` | field | L1 |  |
-| `D16CB72` | $16:CB72 | `_00cb72_c` | field | L1 |  |
-| `D16CFC4` | $16:CFC4 | `Special_1d_c` | field | L1 |  |
-| `D16CFD0` | $16:CFD0 | `Special_1c_c` | field | L1 |  |
-| `D16D263` | $16:D263 | `LoadOverworldLeviathan_c` | field | L1 |  |
-| `D16D342` | $16:D342 | `Special_0d_c` | field | L1 |  |
-| `D16D36D` | $16:D36D | `LoadMapStack_c` | field | L1 |  |
-| `D16D758` | $16:D758 | `DrawDestroyedDamcyan_c` | field | L1 |  |
-| `D16D831` | $16:D831 | `Special_1e_c` | field | L1 |  |
-| `D16D9D6` | $16:D9D6 | `Special_06_c` | field | L1 |  |
-| `D16DB71` | $16:DB71 | `DrawRedWings_c` | field | L1 |  |
-| `D16DBBE` | $16:DBBE | `IncBrightness_c` | field | L1 |  |
-| `D16DBD2` | $16:DBD2 | `LoadOverworldIntro_c` | field | L1 |  |
-| `D16DE1B` | $16:DE1B | `_00de1b_c` | field | L1 |  |
-| `D16DF53` | $16:DF53 | `_00df53_c` | field | L1 |  |
-| `D16F533` | $16:F533 | `UpdateBG2Scroll_c` | field | L1 |  |
-| `D16F922` | $16:F922 | `_00f922_c` | field | L1 |  |
-| `D16FB93` | $16:FB93 | `TfrBG2Tilemap_c` | field | L1 |  |
-| `D16FFAB` | $16:FFAB | `DecodeBG1Tilemap_c` | field | L1 |  |
-| `D1E9F6C` | $1E:9F6C | `UpdateLocalTiles_c` | field | L2 | hardcore PASS (spike runtime) |
-| `D1EA03E` | $1E:A03E | `BoardChoco_c` | field | L1 |  |
+| `D15CA85` | $15:CA85 | `_15ca85_c` | field | L1 | pas de CONTRACT parseable |
+| `D15CADC` | $15:CADC | `_15cadc_c` | field | EXCL | F3 — DMA-bypass, exclu baseline |
+| `D16C59A` | $16:C59A | `AfterCutscene_c` | field | L2 | spike fuzzé 200 essais, 0 fail |
+| `D16C8BC` | $16:C8BC | `Special_2d_c` | field | L2 | spike fuzzé 200 essais, 0 fail |
+| `D16CB05` | $16:CB05 | `_00cb05_c` | field | L2 | spike fuzzé 200 essais, 0 fail |
+| `D16CB72` | $16:CB72 | `_00cb72_c` | field | L1 | spike non auto-générable (build) |
+| `D16CFC4` | $16:CFC4 | `Special_1d_c` | field | L2 | spike fuzzé 200 essais, 0 fail |
+| `D16CFD0` | $16:CFD0 | `Special_1c_c` | field | L2 | spike fuzzé 200 essais, 0 fail |
+| `D16D263` | $16:D263 | `LoadOverworldLeviathan_c` | field | L2 | spike fuzzé 200 essais, 0 fail |
+| `D16D342` | $16:D342 | `Special_0d_c` | field | L2 | spike fuzzé 200 essais, 0 fail |
+| `D16D36D` | $16:D36D | `LoadMapStack_c` | field | L2 | spike fuzzé 200 essais, 0 fail |
+| `D16D758` | $16:D758 | `DrawDestroyedDamcyan_c` | field | L1 | spike non auto-générable (build) |
+| `D16D831` | $16:D831 | `Special_1e_c` | field | L2 | spike fuzzé 200 essais, 0 fail |
+| `D16D9D6` | $16:D9D6 | `Special_06_c` | field | L1 | spike non auto-générable (build) |
+| `D16DB71` | $16:DB71 | `DrawRedWings_c` | field | L1 | spike non auto-générable (build) |
+| `D16DBBE` | $16:DBBE | `IncBrightness_c` | field | L2 | spike fuzzé 200 essais, 0 fail |
+| `D16DBD2` | $16:DBD2 | `LoadOverworldIntro_c` | field | L2 | spike fuzzé 200 essais, 0 fail |
+| `D16DE1B` | $16:DE1B | `_00de1b_c` | field | L1 | spike non auto-générable (build) |
+| `D16DF53` | $16:DF53 | `_00df53_c` | field | L1 | spike non auto-générable (build) |
+| `D16F533` | $16:F533 | `UpdateBG2Scroll_c` | field | L1 | spike non auto-générable (build) |
+| `D16F922` | $16:F922 | `_00f922_c` | field | L2 | spike fuzzé 200 essais, 0 fail |
+| `D16FB93` | $16:FB93 | `TfrBG2Tilemap_c` | field | L2 | spike fuzzé 200 essais, 0 fail |
+| `D16FFAB` | $16:FFAB | `DecodeBG1Tilemap_c` | field | L2 | spike fuzzé 200 essais, 0 fail |
+| `D1E9F6C` | $1E:9F6C | `UpdateLocalTiles_c` | field | L2 | hardcore PASS |
+| `D1EA03E` | $1E:A03E | `BoardChoco_c` | field | L2 | spike fuzzé 200 essais, 0 fail |
 
 > **Routines volontairement en interpréteur** (retirées du dispatch, pas des
 > régressions) : `ExecCmd` ($03:B0FF, tail-jump `jml [$0080]`),
-> `TimerDur_0b/03/07` ($03:9E85/9E99/9F03, accès ROM bank $0F non porté ou
-> signature non standard), `Cmd_0f/0e/0c/08/01` (helpers `do_*_emu` no-op →
-> dégâts avalés). Voir [REPRISE.md](REPRISE.md) pour leur requalification.
+> `TimerDur_0b/03/07`, `Cmd_0f/0e/0c/08/01` (helpers `do_*_emu` no-op).
+> Voir [REPRISE.md](REPRISE.md).
 
 ---
 
 ## Table 2 — Validation comportementale en jeu
 
-Renseignée par **WF-VALID** (voir [workflows/WF-VALID.md](workflows/WF-VALID.md)).
+Renseignée par **WF-VALID** ([workflows/WF-VALID.md](workflows/WF-VALID.md)).
 Une ligne par dispatch ayant passé une validation oracle isolée (→ L3).
 
 | ID | Savestate | Frames | CRC WRAM (natif) | CRC WRAM (interp) | Dérive | PC final | Maturité | Date |
 |----|-----------|--------|------------------|-------------------|--------|----------|----------|------|
 | _(vide — à peupler par WF-VALID)_ | | | | | | | | |
 
-**Légende dérive** : `0` = identique byte-à-byte (hors masque stack) ; `Nb` =
-N octets divergents (détailler la zone) ; `artefact` = divergence due au
-déphasage cycles (cf. AGENTS §A.2), non significative.
-
 ---
 
 ## Table 3 — Releases G&W
 
-Renseignée par **WF-RELEASE** (voir [workflows/WF-RELEASE.md](workflows/WF-RELEASE.md)).
-Une ligne par build flashé et testé sur device.
+Renseignée par **WF-RELEASE** ([workflows/WF-RELEASE.md](workflows/WF-RELEASE.md)).
 
 | Date | Commit | Dispatches embarqués | Vitesse | Fidélité | Crash-free | Notes |
 |------|--------|----------------------|---------|----------|------------|-------|
 | _(vide — à peupler par WF-RELEASE)_ | | | | | | |
-
-**Axes de qualité** :
-- **Vitesse** : taux de dispatch (%), frames/s effectives, temps WaitVblank.
-- **Fidélité** : screenshots pixel-diff vs référence sur scènes clés.
-- **Crash-free** : oracle de liveness (frames qui avancent), SCB/CFSR à 0, pas
-  de runaway/spin sur N minutes.

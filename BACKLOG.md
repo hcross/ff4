@@ -25,8 +25,14 @@
 - [x] 🤖 Auditer chaque dispatch (2026-06-27) — niveaux fondés sur preuves :
       L0=1 · L1=190 · L2=7 · L3=5 · EXCL=3. Sources : hardcore_log PASS,
       KNOWN_FINDINGS (wram_diff=0), fixes F10/F12, DMA-bypass exclus.
-- [ ] 🤖 Promotion L1→L2 en masse : rebrancher `generate_spike.py` sur les corps
-      `ff4-gnw` et créditer les routines à spike vert (190 candidates)
+- [x] 🤖 Promotion L1→L2 en masse (2026-06-27) : `translator/batch_spike_ffgnw.py`
+      sur les corps `ff4-gnw` — **134 PASS** crédités L2 (spike fuzzé 200 essais).
+- [ ] 🤖 Traiter les 2 `fail` (vraies divergences) : `CheckMenu_c` (1/200),
+      `TfrBGAnimGfx_c` (2/200) — via WF-VALID
+- [ ] 🤖 Récupérer les 35 `build_error` : rendre le spike self-contained (helpers
+      manquants) pour ces corps, ou spike custom
+- [ ] 🤖 Spikes custom pour les 11 `no_source` (btlgfx bundlés dans
+      `battle/btlgfx_prim.c`/`btlgfx_monsters.c`) + 8 `no_contract`
 - [ ] 🤖 Renseigner la Table 2 (validation oracle) au fil de WF-VALID
 - [ ] 🤖 Renseigner la Table 3 (releases) au fil de WF-RELEASE
 
