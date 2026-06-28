@@ -181,12 +181,14 @@ Niveau **cumulatif** : un dispatch ne passe à `Ln+1` qu'après avoir satisfait 
 > d'équivalence est *runtime* (spike par routine, puis oracle en jeu), méthode
 > zelda3/snesrev. L'infra spike **existe déjà** (`parity/`, `translator/`).
 >
-> **Audit + promotion spike (2026-06-27)** : L0=1 · L1=56 · L2=141 · L3=5 ·
-> EXCL=3. La promotion L1→L2 en masse a été menée via `batch_spike_ffgnw.py`
-> (spike fuzzé 200 essais sur les corps `ff4-gnw`) : 134 PASS crédités L2. Les 56
-> L1 restants = 35 build_error (spike non self-contained), 11 no_source (btlgfx
-> bundlés), 8 no_contract, 2 fail (divergences réelles `CheckMenu`/`TfrBGAnimGfx`
-> à investiguer). Détail + méthodo : [DISPATCH_REGISTRY.md](DISPATCH_REGISTRY.md).
+> **Audit + promotion spike (2026-06-27/28)** : L0=1 · L1=44 · L2=141 · L3=5 ·
+> EXCL=3 · **DELEG=12**. 134 PASS crédités L2 via `batch_spike_ffgnw.py` (spike
+> fuzzé 200 essais sur les corps `ff4-gnw`). Le fourre-tout « build_error » a été
+> décomposé : 12 delegate wrappers → **DELEG** (équivalents par construction),
+> 19 run_hang, 3 parser_error, 1 compile_error. Les 44 L1 restants : 19 run_hang,
+> 11 no_source (btlgfx), 8 no_contract, 3 parser_error, 2 fail, 1 compile_error.
+> `DELEG` = wrapper exécutant l'asm via `run_emulated_func` (correct mais pas un
+> portage natif). Détail + méthodo : [DISPATCH_REGISTRY.md](DISPATCH_REGISTRY.md).
 
 ### B.3 Workflows (résumé)
 
