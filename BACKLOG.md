@@ -29,14 +29,16 @@
       sur les corps `ff4-gnw` — **134 PASS** crédités L2 (spike fuzzé 200 essais).
 - [ ] 🤖 Traiter les 2 `fail` (vraies divergences) : `CheckMenu_c` (1/200),
       `TfrBGAnimGfx_c` (2/200) — via WF-VALID
-- [x] 🤖 Décomposer les 35 « build_error » (2026-06-28) : 12 delegate → DELEG
-      (équivalents par construction), 19 run_hang, 3 parser_error, 1 compile_error
-- [ ] 🤖 **Garde per-trial dans le spike** (SIGALRM/setjmp) → ferme les 19
-      `run_hang` (corps C bouclant sous fuzz, faute de borne d'exécution native)
-- [ ] 🤖 **Parser CONTRACT robuste** (`generate_spike.py`) : annotations
-      `width(label)` + ranges `addr..addr=label` → ferme les 3 `parser_error`
+- [x] 🤖 Décomposer + résorber les 35 « build_error » (2026-06-28) : 12 delegate
+      → DELEG ; 19 run_hang (faux hangs = budget compound, relancés trials réduits
+      / run-timeout long → **L2**) ; 2 parser_error UpdateBG2Scroll (parser durci
+      → **L2**) ; restent 2 compile_error.
+- [ ] 🤖 Traiter les 2 `fail` (vraies divergences) : `CheckMenu_c` (1/200),
+      `TfrBGAnimGfx_c` (2/200, DMA) — via WF-VALID
+- [ ] 🤖 2 `compile_error` : `RandXA_c` (dépend de `Div16_c` non inclus + appel
+      3-args) ; `TfrVRAM_c` (`#include dispatch_all.h` absent du build spike)
 - [ ] 🤖 Ajouter un CONTRACT aux 8 `no_contract` ; spikes custom pour les 11
-      `no_source` (btlgfx bundlés) ; 1 `compile_error` (`TfrVRAM_c`)
+      `no_source` (btlgfx bundlés dans `battle/btlgfx_prim.c`/`btlgfx_monsters.c`)
 - [ ] 🤖 Renseigner la Table 2 (validation oracle) au fil de WF-VALID
 - [ ] 🤖 Renseigner la Table 3 (releases) au fil de WF-RELEASE
 
