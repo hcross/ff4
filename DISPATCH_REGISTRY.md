@@ -31,6 +31,15 @@ Les 23 L1 : 11 `no_source` (btlgfx bundlés → spike custom), 8 `no_contract`
 2 `compile_error` (`RandXA_c` dép. `Div16_c` ; `TfrVRAM_c` include). Cf.
 [BACKLOG](BACKLOG.md) §3.
 
+> ⚠ **Cluster graphique de combat — divergence intégration CONFIRMÉE (2026-06-28).**
+> Bisection oracle (006-in-combat) : `03FE03 028560 0285D2 0290A0 02A491 02BB0B
+> 02BB1A 02DA73 02DAFE 02DCED 02DDA5 02DDDC 03805F 038085` causent les glitchs
+> de **rendu combat + menu clignotant** (tous disparaissent en interpréteur).
+> Portés en bloc (`eee0a51`), **jamais validés** (no_source / bundlés). Le spike
+> mono-slot ne les attrape pas — preuve que **L2-spike ≠ rendu correct**.
+> Contournement desktop : `main_sdl.c host_exclude_combatgfx` (les interprète,
+> device intact). Vrai fix device = **réparer** le cluster (dette de portage).
+
 ---
 
 ## Table 1 — Décompilation & maturité
