@@ -105,9 +105,15 @@ Bugs corrects sur desktop ; restent à rendre **device-correct** (cf. MemPalace
       (+ InitMapRAM antérieur). Commit ff4-gnw 1741b71.
 - [x] 🤖 `TfrBGGfx` — **boucle VRAM manuelle** (c2fc6f1) : bug 4 tiles RÉSOLU
       (vrai fix device+desktop, modèle F6). Plus exclu.
-- [ ] 🤖 **Reste classe DMA** (même traitement boucle manuelle) :
-      `CloseYesNoWindow`, `TfrPal`, `InitDMA`, `TfrBGAnimGfx`, `TfrLavaGfx`,
-      `TfrInvertPal`. DMA-from-C ne flush pas → boucle manuelle façon TfrBGGfx/F6.
+- [x] 🤖 **Classe DMA traitée** (2026-06-29, ff4-gnw 08405b1) :
+      `InitDMA` (setup regs), `TfrInvertPal`+`TfrBGAnimGfx`+`TfrBGGfx` (boucle
+      manuelle), `TfrLavaGfx` (bus+ROM table+délégué), `CloseYesNoWindow`
+      (bus+ExecDMA délégué), `InitDMA_emu` câblé. `TfrPal` = delegate (pas un bug).
+      Régression-clean ; TfrBGGfx/TfrBGAnimGfx validés visuel.
+- [ ] 🧑 **Validation visuelle des 3 sans repro** : `TfrInvertPal` (palette invert),
+      `TfrLavaGfx` (anim lave), `CloseYesNoWindow` (fermeture fenêtre Oui/Non) —
+      capturer une scène les exerçant pour confirmer l'effet (port fidèle + régression
+      OK, mais effet spécifique non observé).
 - [ ] 🤖 **Vérifier les DB=$7E / DB=ROM** : `_13ddd6/_13eb60/_13ebb8/ExecInterrupt/
       InitCharRows/PlayGameSfx/PlaySystemSfx` (DB=$7E → `$7E:21xx` = WRAM, a priori
       OK) et `LoadTheEndGfx/_13e058` (DB à confirmer). Confirmer cas par cas.
