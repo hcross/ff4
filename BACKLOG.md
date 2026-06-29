@@ -82,6 +82,26 @@ Voir [REPRISE.md](REPRISE.md) — chantier dédié, suivi séparément.
 - [ ] 🤖 `gen_dispatch.py` — déplacer les éditions manuelles de la table dedans
       (TODO inline dans `dispatch_all.c`)
 
+### Dette device du bug-hunt desktop (2026-06-29)
+
+Bugs corrects sur desktop ; restent à rendre **device-correct** (cf. MemPalace
+`obstacles-and-solutions`) :
+
+- [x] 🤖 **Bug 3 mode-7** — `InitMapRAM` MMIO : VRAI FIX device (1a86d23)
+- [ ] 🤖 **Bug 4 tiles** — `TfrBGGfx` : port `snes_write` fidèle (e02a9e4) mais
+      DMA-from-C ne flush pas (classe F6) → interprété sur desktop. Port
+      device-correct = **boucle VRAM manuelle** (modèle `TfrSprites_c`/F6) ;
+      lit la source DMA pré-réglée (`$4302-4`), écrit en `$2118/$2119`.
+- [ ] 🤖 **Bugs 1+2 combat/menu** — requalifier le **batch btlgfx** (14 routines
+      no_source, eee0a51) : bug **dynamique** (flicker/animation), plusieurs
+      routines fautives en chaîne (bisection oracle frame 0→1→3). Bisection par
+      dump statique impossible ; passer par l'oracle per-frame ou A/B SDL
+      par routine. Contourné desktop par `host_exclude_divergent`.
+- [ ] 🤖 **Re-audit des L2 à effets MMIO** — 2 faux-L2 trouvés (InitMapRAM,
+      TfrBGGfx) car le spike ne capture pas les écritures MMIO (`$21xx/$42xx/
+      $43xx`). Re-vérifier les L2 dont le corps écrit du MMIO : leur CONTRACT
+      doit déclarer ces effets en `output_ram`, sinon le spike donne un faux L2.
+
 ---
 
 **Légende** : 🤖 réalisable par agent · 🧑 nécessite l'humain (hardware, push,
