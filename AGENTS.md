@@ -144,6 +144,9 @@ Cibles `make` utiles : `make oracle SEED=…`, `make oracle-baseline SEED=…`
 - **`ff4-port/desktop/KNOWN_FINDINGS.md`** : findings F1→F12 documentés avec
   reproduction, cause racine, fix et validation. **Source de vérité** sur l'état
   des bugs connus ; à lire avant de retoucher une routine déjà investiguée.
+- **`ff4-port/FIXTURES.md`** : catalogue des savestates de référence (`.lss`,
+  gitignorées — assets protégés) : scène, PC, usage, findings liés, et comment
+  les (re)générer. À consulter pour choisir une fixture de repro/validation.
 
 ---
 
