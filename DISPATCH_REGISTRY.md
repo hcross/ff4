@@ -31,6 +31,13 @@ Les 23 L1 : 11 `no_source` (btlgfx bundlés → spike custom), 8 `no_contract`
 2 `compile_error` (`RandXA_c` dép. `Div16_c` ; `TfrVRAM_c` include). Cf.
 [BACKLOG](BACKLOG.md) §3.
 
+> 🩹 **Faux-L2 réparé (2026-06-29).** `D00834E InitMapRAM_c` était L2 (spike
+> PASS) mais écrivait dans la WRAM zero-page (`$00/$01/$02`) au lieu des
+> registres MMIO `$2100/$420C/$4200` → mode-7 corrompu. Le spike ne vérifiait
+> que `output_ram 0x06FB` et ratait l'effet MMIO. **Leçon : le CONTRACT doit
+> déclarer les effets MMIO en `output_ram`, sinon le spike donne un faux L2.**
+> Fixé (snes_write), validé oracle (FB-clean) + visuellement.
+
 > ⚠ **Cluster graphique de combat — divergence intégration CONFIRMÉE (2026-06-28).**
 > Bisection oracle (006-in-combat) : `03FE03 028560 0285D2 0290A0 02A491 02BB0B
 > 02BB1A 02DA73 02DAFE 02DCED 02DDA5 02DDDC 03805F 038085` causent les glitchs
@@ -50,7 +57,7 @@ Les 23 L1 : 11 `no_source` (btlgfx bundlés → spike custom), 8 `no_contract`
 | `D0080A0` | $00:80A0 | `FieldMain_c` | field | L2 | spike fuzzé, 0 fail |
 | `D0081F4` | $00:81F4 | `CheckMenu_c` | field | L1 | spike: 1/200 fails — divergence (WF-VALID) |
 | `D008302` | $00:8302 | `UpdatePlayerSpeed_c` | field | L2 | spike fuzzé, 0 fail |
-| `D00834E` | $00:834E | `InitMapRAM_c` | field | L2 | spike fuzzé, 0 fail |
+| `D00834E` | $00:834E | `InitMapRAM_c` | field | L3 | fix MMIO mode-7 (1a86d23) — oracle FB-clean ; ex-faux-L2 (spike ratait l'effet MMIO) |
 | `D00883D` | $00:883D | `_00883d_c` | field | L1 | pas de bloc CONTRACT |
 | `D00885E` | $00:885E | `_00885e_c` | field | L1 | pas de bloc CONTRACT |
 | `D00AA58` | $00:AA58 | `CheckTilePass_c` | field | L2 | spike fuzzé, 0 fail |
