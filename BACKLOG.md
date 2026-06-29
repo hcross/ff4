@@ -103,9 +103,11 @@ Bugs corrects sur desktop ; restent à rendre **device-correct** (cf. MemPalace
 - [x] 🤖 Corrigées (DB=$00, non-DMA, snes_write, vérifiées sans régression) :
       IncBrightness, AfterCutscene, LoadOverworldIntro, ExecBattle, InitWorld
       (+ InitMapRAM antérieur). Commit ff4-gnw 1741b71.
-- [ ] 🤖 **Reste classe DMA** (boucle VRAM manuelle façon F6, device debt) :
+- [x] 🤖 `TfrBGGfx` — **boucle VRAM manuelle** (c2fc6f1) : bug 4 tiles RÉSOLU
+      (vrai fix device+desktop, modèle F6). Plus exclu.
+- [ ] 🤖 **Reste classe DMA** (même traitement boucle manuelle) :
       `CloseYesNoWindow`, `TfrPal`, `InitDMA`, `TfrBGAnimGfx`, `TfrLavaGfx`,
-      `TfrInvertPal` (+ `TfrBGGfx`). DMA-from-C ne flush pas sur desktop.
+      `TfrInvertPal`. DMA-from-C ne flush pas → boucle manuelle façon TfrBGGfx/F6.
 - [ ] 🤖 **Vérifier les DB=$7E / DB=ROM** : `_13ddd6/_13eb60/_13ebb8/ExecInterrupt/
       InitCharRows/PlayGameSfx/PlaySystemSfx` (DB=$7E → `$7E:21xx` = WRAM, a priori
       OK) et `LoadTheEndGfx/_13e058` (DB à confirmer). Confirmer cas par cas.

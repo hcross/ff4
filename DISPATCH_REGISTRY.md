@@ -229,7 +229,7 @@ Les 23 L1 : 11 `no_source` (btlgfx bundlés → spike custom), 8 `no_contract`
 | `D159B5B` | $15:9B5B | `GetTreasurePtr_c` | field | L2 | spike fuzzé, 0 fail |
 | `D15AF24` | $15:AF24 | `CloseYesNoWindow_c` | field | L2 | spike fuzzé, 0 fail |
 | `D15B09C` | $15:B09C | `ScrollItemListDown_c` | field | L2 | spike fuzzé, 0 fail |
-| `D15B143` | $15:B143 | `TfrBGGfx_c` | field | L1 | faux-L2 : culprit tiles (DMA écrite en WRAM). Fix snes_write (e02a9e4) mais DMA-from-C ne flush pas → interprété desktop ; device à vérifier (F6) |
+| `D15B143` | $15:B143 | `TfrBGGfx_c` | field | L3 | bug 4 tiles RÉSOLU : boucle VRAM manuelle (c2fc6f1, modèle F6) — vrai fix device+desktop, validé visuellement ; natif sans exclusion |
 | `D15B3DC` | $15:B3DC | `_15b3dc_c` | field | L1 | pas de bloc CONTRACT |
 | `D15B41B` | $15:B41B | `GetDlgPtr1H_c` | field | DELEG | delegate wrapper — équivalent par construction (exécute l'asm) |
 | `D15B6F1` | $15:B6F1 | `InitDlgIRQ_c` | field | L2 | spike fuzzé, 0 fail |
