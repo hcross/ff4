@@ -97,10 +97,18 @@ Bugs corrects sur desktop ; restent à rendre **device-correct** (cf. MemPalace
       routines fautives en chaîne (bisection oracle frame 0→1→3). Bisection par
       dump statique impossible ; passer par l'oracle per-frame ou A/B SDL
       par routine. Contourné desktop par `host_exclude_divergent`.
-- [ ] 🤖 **Re-audit des L2 à effets MMIO** — 2 faux-L2 trouvés (InitMapRAM,
-      TfrBGGfx) car le spike ne capture pas les écritures MMIO (`$21xx/$42xx/
-      $43xx`). Re-vérifier les L2 dont le corps écrit du MMIO : leur CONTRACT
-      doit déclarer ces effets en `output_ram`, sinon le spike donne un faux L2.
+- [x] 🤖 **Re-audit MMIO (2026-06-29)** — classe systémique : portage LLM a
+      halluciné `sta $21xx/$42xx` en `ram[0x..]` (WRAM) au lieu du bus. Scan
+      `ram[0x21xx/0x42xx/0x43xx]` + tri par DB d'entrée.
+- [x] 🤖 Corrigées (DB=$00, non-DMA, snes_write, vérifiées sans régression) :
+      IncBrightness, AfterCutscene, LoadOverworldIntro, ExecBattle, InitWorld
+      (+ InitMapRAM antérieur). Commit ff4-gnw 1741b71.
+- [ ] 🤖 **Reste classe DMA** (boucle VRAM manuelle façon F6, device debt) :
+      `CloseYesNoWindow`, `TfrPal`, `InitDMA`, `TfrBGAnimGfx`, `TfrLavaGfx`,
+      `TfrInvertPal` (+ `TfrBGGfx`). DMA-from-C ne flush pas sur desktop.
+- [ ] 🤖 **Vérifier les DB=$7E / DB=ROM** : `_13ddd6/_13eb60/_13ebb8/ExecInterrupt/
+      InitCharRows/PlayGameSfx/PlaySystemSfx` (DB=$7E → `$7E:21xx` = WRAM, a priori
+      OK) et `LoadTheEndGfx/_13e058` (DB à confirmer). Confirmer cas par cas.
 
 ---
 
