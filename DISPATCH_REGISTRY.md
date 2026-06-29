@@ -36,7 +36,13 @@ Les 23 L1 : 11 `no_source` (btlgfx bundlés → spike custom), 8 `no_contract`
 > registres MMIO `$2100/$420C/$4200` → mode-7 corrompu. Le spike ne vérifiait
 > que `output_ram 0x06FB` et ratait l'effet MMIO. **Leçon : le CONTRACT doit
 > déclarer les effets MMIO en `output_ram`, sinon le spike donne un faux L2.**
-> Fixé (snes_write), validé oracle (FB-clean) + visuellement.
+> Fixé (snes_write), validé oracle (FB-clean) + visuellement. **2e cas
+> identique : `D15B143 TfrBGGfx_c`** (bug 4, tiles corrompues) — écrivait les
+> registres DMA en WRAM `$43xx` au lieu du bus ; faux-L2 pour la même raison
+> (CONTRACT listait `$43xx` en WRAM). Différence : c'est un **DMA** → la
+> traduction `snes_write` ne flush pas depuis le C dispatché isolé (classe F6),
+> donc interprété sur desktop ; un port device-correct demande une boucle VRAM
+> manuelle.
 
 > ⚠ **Cluster graphique de combat — divergence intégration CONFIRMÉE (2026-06-28).**
 > Bisection oracle (006-in-combat) : `03FE03 028560 0285D2 0290A0 02A491 02BB0B
@@ -223,7 +229,7 @@ Les 23 L1 : 11 `no_source` (btlgfx bundlés → spike custom), 8 `no_contract`
 | `D159B5B` | $15:9B5B | `GetTreasurePtr_c` | field | L2 | spike fuzzé, 0 fail |
 | `D15AF24` | $15:AF24 | `CloseYesNoWindow_c` | field | L2 | spike fuzzé, 0 fail |
 | `D15B09C` | $15:B09C | `ScrollItemListDown_c` | field | L2 | spike fuzzé, 0 fail |
-| `D15B143` | $15:B143 | `TfrBGGfx_c` | field | L2 | spike fuzzé, 0 fail |
+| `D15B143` | $15:B143 | `TfrBGGfx_c` | field | L1 | faux-L2 : culprit tiles (DMA écrite en WRAM). Fix snes_write (e02a9e4) mais DMA-from-C ne flush pas → interprété desktop ; device à vérifier (F6) |
 | `D15B3DC` | $15:B3DC | `_15b3dc_c` | field | L1 | pas de bloc CONTRACT |
 | `D15B41B` | $15:B41B | `GetDlgPtr1H_c` | field | DELEG | delegate wrapper — équivalent par construction (exécute l'asm) |
 | `D15B6F1` | $15:B6F1 | `InitDlgIRQ_c` | field | L2 | spike fuzzé, 0 fail |
