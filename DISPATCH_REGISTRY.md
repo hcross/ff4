@@ -25,7 +25,11 @@ compile_error (dépendance inter-routine / include).
 > entrées CONTRACT — forte mais **non exhaustive**. Plus fort que L1, moins isolé
 > que L3 (oracle en jeu). Les **FAIL** = vraies divergences à investiguer (WF-VALID).
 
-**Distribution** : L0=1 · L1=23 · L2=162 · L3=5 · EXCL=3 · DELEG=12 (total 206).
+**Distribution** : L0=1 · L1=23 · L2=161 · L3=5 · EXCL=3 · DELEG=12 (total 205).
+`ExecBtlGfx` (D038085) RETIRÉE du dispatch le 2026-06-30 (206→205) : animation BLOQUANTE
+(WaitVblank/WaitFrame multi-frame) incompatible avec run_emulated_func synchrone → gel ~1s
+(garde 50M) + fin de combat prématurée ; doit rester interprétée. Cause RACINE de tous les
+bugs de combat (validé SDL). Catégorie : routine à Wait* = jamais dispatchée.
 Les 23 L1 : 11 `no_source` (btlgfx bundlés → spike custom), 8 `no_contract`
 (CONTRACT à écrire), 2 `fail` (`CheckMenu_c`, `TfrBGAnimGfx_c` → WF-VALID),
 2 `compile_error` (`RandXA_c` dép. `Div16_c` ; `TfrVRAM_c` include). Cf.
@@ -95,7 +99,7 @@ Les 23 L1 : 11 `no_source` (btlgfx bundlés → spike custom), 8 `no_contract`
 | `D02DDDC` | $02:DDDC | `UpdateMonsterAnim_c` | btlgfx | L1 | corps non standalone (btlgfx bundlé) |
 | `D038009` | $03:8009 | `ExecBattle_c` | battle | L2 | spike fuzzé, 0 fail |
 | `D03805F` | $03:805F | `DrawMP_c` | battle | L2 | spike fuzzé, 0 fail |
-| `D038085` | $03:8085 | `ExecBtlGfx_c` | battle | L2 | F10 — WaitVblank/NMI corrects en jeu |
+| `D038085` | $03:8085 | `ExecBtlGfx_c` | battle | RETIRÉ | animation BLOQUANTE (Wait*) — retirée du dispatch 2026-06-30, doit rester interprétée (cf. distribution ci-dessus) |
 | `D0382CB` | $03:82CB | `InitHWRegs_c` | field | L3 | wram_diff=0 vérifié + hardcore PASS |
 | `D038379` | $03:8379 | `RandXA_c` | battle | L1 | spike ne compile pas (dépendance inter-routine / include) |
 | `D0383B9` | $03:83B9 | `Mult16_c` | battle | L3 | wram_diff=0 vérifié (oracle-artifact) |
