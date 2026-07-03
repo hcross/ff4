@@ -25,11 +25,9 @@ leaving 2 compile_error (inter-routine dependency / include).
 > the CONTRACT inputs — strong but **not exhaustive**. Stronger than L1, less
 > isolated than L3 (in-game oracle). **FAILs** = real divergences to investigate (WF-VALID).
 
-**Distribution**: L0=1 · L1=23 · L2=159 · L3=7 · EXCL=3 · DELEG=12 (total 205).
-(Recomputed 2026-07-03 from the actual Table 1 rows — the two L2→L3 promotions
-below, `D00834E` and `D15B143`, had updated their own rows without updating
-this summary line. This is a hand-maintained count; DISPATCH_REGISTRY.md §B.2
-of AGENTS.md is a dated snapshot pointing here, not an independent source.)
+<!-- REGISTRY:DISTRIBUTION:START -->
+**Distribution** (generated from `registry/dispatch_state.jsonl` — do not hand-edit; edit the JSONL via `registry/registry_promote.py` and re-run `python registry/render_registry.py`): L0=1 · L1=24 · L2=158 · L3=7 · EXCL=3 · DELEG=12 · RETIRED=1 (total 205).
+<!-- REGISTRY:DISTRIBUTION:END -->
 `ExecBtlGfx` (D038085) REMOVED from the dispatch on 2026-06-30 (206→205): BLOCKING
 animation (multi-frame WaitVblank/WaitFrame) incompatible with the synchronous
 run_emulated_func → ~1s freeze (50M guard) + premature end of battle; must remain
@@ -65,6 +63,7 @@ The 23 L1: 11 `no_source` (bundled btlgfx → custom spike), 8 `no_contract`
 
 ## Table 1 — Decompilation & maturity
 
+<!-- REGISTRY:TABLE1:START -->
 | ID | SNES Address | C Routine | Domain | Level | Proof / notes |
 |----|--------------|-----------|--------|-------|---------------|
 | `D00808E` | $00:808E | `AfterBattle_c` | field | L2 | fuzzed spike, 0 fails |
@@ -175,7 +174,7 @@ The 23 L1: 11 `no_source` (bundled btlgfx → custom spike), 8 `no_contract`
 | `D03FE03` | $03:FE03 | `TfrSprites_c` | field | EXCL | F6 — manual OAM, excluded from baseline |
 | `D048004` | $04:8004 | `ExecSound_ext_stub` | sound: | L0 | explicit no-op stub (F4) |
 | `D0485E1` | $04:85E1 | `PlayGameSfx_c` | sound | L2 | fuzzed spike, 0 fails |
-| `D04861E` | $04:861E | `ExecInterrupt_c` | sound | L2 | fuzzed spike, 0 fails |
+| `D04861E` | $04:861E | `ExecInterrupt_c` | sound | L1 | suspected false-L2: writes ram[0x2140..0x2143] directly instead of snes->apu->inPorts[X] (Pitfall 13); spike only compares declared output_ram so it cannot see this. Found by lint_ff4.py MMIO_IN_WRAM (2026-07-03). Entry-mode comment claims DB=$7E but ground-truth asm (sta hAPUIO0/1/2/3) implies DB must be $00 at this point for the routine to fulfil its documented purpose (SPC mailbox handshake) -- pending oracle confirmation, not yet proven at runtime. |
 | `D088690` | $08:8690 | `LoadTitleGfx_c` | field | L1 | no CONTRACT block |
 | `D08885E` | $08:885E | `TfrTitleCrystalTiles_c` | field | DELEG | delegate wrapper — equivalent by construction (executes the asm) |
 | `D0E8B3C` | $0E:8B3C | `CheckBattle_c` | field | L2 | hardcore PASS |
@@ -273,6 +272,7 @@ The 23 L1: 11 `no_source` (bundled btlgfx → custom spike), 8 `no_contract`
 | `D16FFAB` | $16:FFAB | `DecodeBG1Tilemap_c` | field | L2 | fuzzed spike, 0 fails |
 | `D1E9F6C` | $1E:9F6C | `UpdateLocalTiles_c` | field | L2 | hardcore PASS |
 | `D1EA03E` | $1E:A03E | `BoardChoco_c` | field | L2 | fuzzed spike, 0 fails |
+<!-- REGISTRY:TABLE1:END -->
 
 > **Routines deliberately kept in the interpreter** (removed from the dispatch,
 > not regressions): `ExecCmd` ($03:B0FF), `TimerDur_0b/03/07`, `Cmd_0f/0e/0c/08/01`.

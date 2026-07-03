@@ -97,11 +97,16 @@ interpreter outputs. This is an **extension** of the existing spike infra
 (`generate_spike.py`), not a separate ASM chain. Tracked in [BACKLOG.md](../BACKLOG.md).
 
 ### 6. Log in the registry
-Update [DISPATCH_REGISTRY.md](../DISPATCH_REGISTRY.md) Table 1:
-`ID | address | routine | domain | level | notes`. Level reached:
-- **L1** if only the C body is written (unvalidated);
-- **L2** if the runtime-equivalence spike passes (and, eventually, the
-  boundary coverage from step 5).
+Do **not** hand-edit [DISPATCH_REGISTRY.md](../DISPATCH_REGISTRY.md) —
+Table 1 is generated from [`registry/dispatch_state.jsonl`](../registry/dispatch_state.jsonl).
+```sh
+python registry/registry_promote.py D<id> --to L1 --note "C body written, unvalidated"
+# once the spike passes:
+python registry/registry_promote.py D<id> --to L2 \
+    --evidence parity/<spike-run-output-or-log> --note "fuzzed spike, N/N pass"
+```
+This validates the level transition (won't let you skip L1) and
+re-renders DISPATCH_REGISTRY.md automatically.
 
 ### 7. Closure
 Update the `[TASK:*]` (→ `checkpoint` if continuing, `done` otherwise).

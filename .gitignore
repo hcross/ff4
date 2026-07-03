@@ -1,2 +1,5 @@
-# Le chapeau ne contient que de la documentation et les sous-modules.
+# The umbrella repo holds only documentation, the registry/ tooling, and
+# the submodules.
 .DS_Store
+__pycache__/
+*.pyc

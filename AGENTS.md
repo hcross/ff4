@@ -264,7 +264,14 @@ At session end: update the `[TASK:*]` drawer, record decisions
 
 - **[DISPATCH_REGISTRY.md](DISPATCH_REGISTRY.md)** — registry of the 205 active
   dispatches (206 rows including the retired `ExecBtlGfx`), 3 tables
-  (decompilation/tests, game validation, releases).
+  (decompilation/tests, game validation, releases). **Table 1 and the
+  distribution line are generated** from [`registry/dispatch_state.jsonl`](registry/dispatch_state.jsonl)
+  (between the `<!-- REGISTRY:*:START/END -->` markers) — never hand-edit
+  either; use `python registry/registry_promote.py D<id> --to L<n> --evidence
+  <path> --note "..."` to change a level (validates the transition and
+  re-renders automatically). `registry/render_registry.py --check` detects
+  drift; `registry/migrate_registry.py --check` cross-checks the ID/PC set
+  against `ff4-gnw/dispatch_all.c`.
 - **[BACKLOG.md](BACKLOG.md)** — existing → target work.
 - **[REPRISE.md](REPRISE.md)** — selective reset per layer, requalification order.
 
