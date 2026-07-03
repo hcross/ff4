@@ -77,7 +77,7 @@ Porting rules (identical for both paths):
 
 Generate and run the routine's spike:
 ```sh
-python translator/generate_spike.py port/<module>/<func>.c   # → parity/src/spike__<addr>_*.c
+python3 translator/generate_spike.py port/<module>/<func>.c   # → parity/src/spike__<addr>_*.c
 cd parity && make ff4-spike-<name> && ./ff4-spike-<name> ../upstream/rom/ff4-jp1.sfc [frames]
 ```
 The spike inlines the ported C and compares it, **from an identical entry
@@ -100,9 +100,9 @@ interpreter outputs. This is an **extension** of the existing spike infra
 Do **not** hand-edit [DISPATCH_REGISTRY.md](../DISPATCH_REGISTRY.md) —
 Table 1 is generated from [`registry/dispatch_state.jsonl`](../registry/dispatch_state.jsonl).
 ```sh
-python registry/registry_promote.py D<id> --to L1 --note "C body written, unvalidated"
+python3 registry/registry_promote.py D<id> --to L1 --note "C body written, unvalidated"
 # once the spike passes:
-python registry/registry_promote.py D<id> --to L2 \
+python3 registry/registry_promote.py D<id> --to L2 \
     --evidence parity/<spike-run-output-or-log> --note "fuzzed spike, N/N pass"
 ```
 This validates the level transition (won't let you skip L1) and
