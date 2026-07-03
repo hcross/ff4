@@ -215,15 +215,16 @@ this ID in **all** workflows, the registry, the commits and MemPalace.
 > proof is *runtime* (per-routine spike, then in-game oracle), zelda3/snesrev
 > method. The spike infra **already exists** (`parity/`, `translator/`).
 >
-> **Spike audit + promotion (2026-06-27/28)**: L0=1 · L1=23 · L2=162 · L3=5 ·
-> EXCL=3 · **DELEG=12**. 155 routines credited L2 by `batch_spike_ffgnw.py`
-> (fuzzed spike on the `ff4-gnw` bodies). The "build_error" catch-all was
-> cleared: 12 delegate→DELEG, 19 run_hang (false hangs = compound budget,
-> re-run with reduced budget → L2), 2 parser_error (hardened parser → L2), 2
-> compile_error remaining. The 23 L1: 11 no_source (bundled btlgfx), 8
-> no_contract, 2 fail (`CheckMenu`/`TfrBGAnimGfx`), 2 compile_error. `DELEG` =
-> wrapper running the asm via `run_emulated_func`. Detail:
-> [DISPATCH_REGISTRY.md](DISPATCH_REGISTRY.md).
+> **Spike audit + promotion (2026-06-27/28, dated snapshot — for the CURRENT
+> distribution see [DISPATCH_REGISTRY.md](DISPATCH_REGISTRY.md), which has
+> since moved with individual L2→L3 promotions)**: L0=1 · L1=23 · L2=162 ·
+> L3=5 · EXCL=3 · **DELEG=12**. 155 routines credited L2 by
+> `batch_spike_ffgnw.py` (fuzzed spike on the `ff4-gnw` bodies). The
+> "build_error" catch-all was cleared: 12 delegate→DELEG, 19 run_hang (false
+> hangs = compound budget, re-run with reduced budget → L2), 2 parser_error
+> (hardened parser → L2), 2 compile_error remaining. The 23 L1: 11 no_source
+> (bundled btlgfx), 8 no_contract, 2 fail (`CheckMenu`/`TfrBGAnimGfx`), 2
+> compile_error. `DELEG` = wrapper running the asm via `run_emulated_func`.
 
 ### B.3 Workflows (summary)
 
@@ -261,8 +262,9 @@ At session end: update the `[TASK:*]` drawer, record decisions
 
 ### B.5 Living tracking documents
 
-- **[DISPATCH_REGISTRY.md](DISPATCH_REGISTRY.md)** — registry of the 206 dispatches,
-  3 tables (decompilation/tests, game validation, releases).
+- **[DISPATCH_REGISTRY.md](DISPATCH_REGISTRY.md)** — registry of the 205 active
+  dispatches (206 rows including the retired `ExecBtlGfx`), 3 tables
+  (decompilation/tests, game validation, releases).
 - **[BACKLOG.md](BACKLOG.md)** — existing → target work.
 - **[REPRISE.md](REPRISE.md)** — selective reset per layer, requalification order.
 

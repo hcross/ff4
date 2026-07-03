@@ -33,7 +33,10 @@ requalify in order via [WF-DECOMP](workflows/WF-DECOMP.md) +
 
 ## Classification audit (DONE — 2026-06-27)
 
-See [DISPATCH_REGISTRY.md](DISPATCH_REGISTRY.md). Distribution:
+See [DISPATCH_REGISTRY.md](DISPATCH_REGISTRY.md) for the CURRENT distribution
+— the numbers below are this audit's own dated snapshot, superseded by later
+promotion batches (2026-06-27/28) and individual L2→L3 promotions since.
+Distribution at the time of this audit:
 **L0=1 · L1=56 · L2=141 · L3=5 · EXCL=3**. 134 routines promoted L1→L2 by the spike
 batch (fuzzed runtime equivalence). 2 isolated FAILs (`CheckMenu_c`, `TfrBGAnimGfx_c`).
 
@@ -52,7 +55,10 @@ batch (fuzzed runtime equivalence). 2 isolated FAILs (`CheckMenu_c`, `TfrBGAnimG
 - **Input (F5)**: `UpdateCtrlField_ext` & co. are intentional reimplementations
   incompatible with the interpreter harness.
 
-Decision by category:
+Decision by category (counts frozen at the 2026-06-27 audit date — several
+categories below have since been resolved, e.g. the 35 `build_error` were
+broken down and closed on 2026-06-28 per [DISPATCH_REGISTRY.md](DISPATCH_REGISTRY.md);
+this table records the **decision rationale**, not current counts):
 
 | Category | Count | Decision | Why |
 |-----------|----|----------|-----|

@@ -25,7 +25,11 @@ leaving 2 compile_error (inter-routine dependency / include).
 > the CONTRACT inputs — strong but **not exhaustive**. Stronger than L1, less
 > isolated than L3 (in-game oracle). **FAILs** = real divergences to investigate (WF-VALID).
 
-**Distribution**: L0=1 · L1=23 · L2=161 · L3=5 · EXCL=3 · DELEG=12 (total 205).
+**Distribution**: L0=1 · L1=23 · L2=159 · L3=7 · EXCL=3 · DELEG=12 (total 205).
+(Recomputed 2026-07-03 from the actual Table 1 rows — the two L2→L3 promotions
+below, `D00834E` and `D15B143`, had updated their own rows without updating
+this summary line. This is a hand-maintained count; DISPATCH_REGISTRY.md §B.2
+of AGENTS.md is a dated snapshot pointing here, not an independent source.)
 `ExecBtlGfx` (D038085) REMOVED from the dispatch on 2026-06-30 (206→205): BLOCKING
 animation (multi-frame WaitVblank/WaitFrame) incompatible with the synchronous
 run_emulated_func → ~1s freeze (50M guard) + premature end of battle; must remain

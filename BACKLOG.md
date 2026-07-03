@@ -27,8 +27,6 @@
       KNOWN_FINDINGS (wram_diff=0), fixes F10/F12, DMA-bypass excluded.
 - [x] 🤖 Bulk L1→L2 promotion (2026-06-27): `translator/batch_spike_ffgnw.py`
       on the `ff4-gnw` bodies — **134 PASS** credited L2 (fuzzed spike, 200 trials).
-- [ ] 🤖 Handle the 2 `fail` (real divergences): `CheckMenu_c` (1/200),
-      `TfrBGAnimGfx_c` (2/200) — via WF-VALID
 - [x] 🤖 Break down + resolve the 35 “build_error” (2026-06-28): 12 delegate
       → DELEG; 19 run_hang (false hangs = compound budget, rerun with reduced trials
       / long run-timeout → **L2**); 2 parser_error UpdateBG2Scroll (hardened parser
