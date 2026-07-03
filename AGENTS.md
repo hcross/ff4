@@ -118,7 +118,12 @@ location. Tracked in [BACKLOG.md](BACKLOG.md).
 
 > **`snes-re` golden rules** (causes of historical FF4 bugs):
 > 1. **The direct-page register (D) is pitfall no. 1.** Any `$nn` operand is
->    `[D + nn]` (bank `$00`), NOT `$00nn`. FF4 field/NMI run with `D=$0600`.
+>    `[D + nn]` (bank `$00`), NOT `$00nn`. The NMI/FieldMain-loop context runs
+>    `D=$0600`, `menu` runs `D=$0100` — but this is **not uniform per module**;
+>    see [`ff4-gnw/CONVENTIONS.md`](ff4-gnw/CONVENTIONS.md) for the
+>    per-routine evidence before assuming either value, and
+>    `registry/classify_flags.py`'s `DP_SENSITIVE` flag for a mechanically
+>    surfaced (not confirmed) "verify this" list.
 > 2. **The ROM bytes are the truth**, not the disassembly annotations.
 > 3. **Track the m/x flags** (REP/SEP) to size immediates and opcodes.
 > 4. **Validate every rendering increment by screenshot** (pixel-diff), never
