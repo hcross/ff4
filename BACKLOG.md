@@ -77,8 +77,15 @@ See [REPRISE.md](REPRISE.md) — dedicated workstream, tracked separately.
 - [ ] 🤖 `TimerDur_0b/03` — ROM bank $0F access (`snes_readByte` instead of `ram[]`)
 - [ ] 🤖 `TimerDur_07` — dispatch wrapper for the non-standard signature `(Snes*, uint16_t x)`
 - [ ] 🤖 `ExecSound_ext_stub` — real SPC responder (re-enables music/SFX)
-- [ ] 🤖 `gen_dispatch.py` — move the manual table edits into it
-      (inline TODO in `dispatch_all.c`)
+- [x] 🤖 `gen_dispatch.py` — resolved in the opposite direction (2026-07-03):
+      the rich per-entry comments and hand-tuned oracle machinery in
+      `dispatch_all.c` make full regeneration infeasible without an engine
+      to preserve them, and a real regeneration attempt was confirmed
+      destructive (186 lines of oracle machinery lost, 206→201 entries).
+      `gen_dispatch.py` is now read-only: it reports candidate routines not
+      yet in the table (`python gen_dispatch.py`) without ever writing
+      `dispatch_all.{h,c}`. Table edits stay manual, per
+      [workflows/WF-DECOMP.md](workflows/WF-DECOMP.md).
 
 ### Device debt from the desktop bug-hunt (2026-06-29)
 
