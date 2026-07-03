@@ -5,7 +5,7 @@
 {"id": "D00834E", "pc": "00834E", "addr_display": "$00:834E", "name": "InitMapRAM_c", "module": "field", "level": "L3", "notes": "mode-7 MMIO fix (1a86d23) \u2014 oracle FB-clean; ex-false-L2 (spike missed the MMIO effect)", "flags": ["DMA_TRIGGER", "DP_SENSITIVE"], "updated": null}
 {"id": "D00883D", "pc": "00883D", "addr_display": "$00:883D", "name": "_00883d_c", "module": "field", "level": "L1", "notes": "no CONTRACT block", "flags": [], "updated": null}
 {"id": "D00885E", "pc": "00885E", "addr_display": "$00:885E", "name": "_00885e_c", "module": "field", "level": "L1", "notes": "no CONTRACT block", "flags": [], "updated": null}
-{"id": "D00AA58", "pc": "00AA58", "addr_display": "$00:AA58", "name": "CheckTilePass_c", "module": "field", "level": "L2", "notes": "fuzzed spike, 0 fails", "flags": [], "updated": null}
+{"id": "D00AA58", "pc": "00AA58", "addr_display": "$00:AA58", "name": "CheckTilePass_c", "module": "field", "level": "L2", "notes": "fuzzed spike, 0 fails", "flags": ["DP_SENSITIVE"], "updated": null}
 {"id": "D00AAD8", "pc": "00AAD8", "addr_display": "$00:AAD8", "name": "SetPlayerNPCMap_c", "module": "field", "level": "L1", "notes": "no CONTRACT block", "flags": [], "updated": null}
 {"id": "D00AB13", "pc": "00AB13", "addr_display": "$00:AB13", "name": "ClearPlayerNPCMap_c", "module": "field", "level": "L2", "notes": "fuzzed spike, 0 fails", "flags": ["DP_SENSITIVE"], "updated": null}
 {"id": "D00AC7D", "pc": "00AC7D", "addr_display": "$00:AC7D", "name": "CheckVehicleBlock_c", "module": "field", "level": "DELEG", "notes": "delegate wrapper \u2014 equivalent by construction (executes the asm)", "flags": [], "updated": null}
@@ -103,12 +103,12 @@
 {"id": "D03E133", "pc": "03E133", "addr_display": "$03:E133", "name": "CheckWeakElem_c", "module": "battle", "level": "L2", "notes": "fuzzed spike, 0 fails", "flags": [], "updated": null}
 {"id": "D03E43B", "pc": "03E43B", "addr_display": "$03:E43B", "name": "Cmd_22_c", "module": "battle", "level": "L2", "notes": "fuzzed spike, 0 fails", "flags": [], "updated": null}
 {"id": "D03E4D9", "pc": "03E4D9", "addr_display": "$03:E4D9", "name": "TwinFailed_c", "module": "battle", "level": "L2", "notes": "fuzzed spike, 0 fails", "flags": ["TAIL_JML"], "updated": null}
-{"id": "D03FE03", "pc": "03FE03", "addr_display": "$03:FE03", "name": "TfrSprites_c", "module": "field", "level": "EXCL", "notes": "F6 \u2014 manual OAM, excluded from baseline", "flags": ["DMA_TRIGGER"], "updated": null}
+{"id": "D03FE03", "pc": "03FE03", "addr_display": "$03:FE03", "name": "TfrSprites_c", "module": "field", "level": "EXCL", "notes": "F6 \u2014 manual OAM, excluded from baseline", "flags": ["DMA_TRIGGER", "DP_SENSITIVE"], "updated": null}
 {"id": "D048004", "pc": "048004", "addr_display": "$04:8004", "name": "ExecSound_ext_stub", "module": "sound:", "level": "L0", "notes": "explicit no-op stub (F4)", "flags": [], "updated": null}
 {"id": "D0485E1", "pc": "0485E1", "addr_display": "$04:85E1", "name": "PlayGameSfx_c", "module": "sound", "level": "L2", "notes": "fuzzed spike, 0 fails", "flags": ["SPC_MAILBOX"], "updated": null}
 {"id": "D04861E", "pc": "04861E", "addr_display": "$04:861E", "name": "ExecInterrupt_c", "module": "sound", "level": "L1", "notes": "suspected false-L2: writes ram[0x2140..0x2143] directly instead of snes->apu->inPorts[X] (Pitfall 13); spike only compares declared output_ram so it cannot see this. Found by lint_ff4.py MMIO_IN_WRAM (2026-07-03). Entry-mode comment claims DB=$7E but ground-truth asm (sta hAPUIO0/1/2/3) implies DB must be $00 at this point for the routine to fulfil its documented purpose (SPC mailbox handshake) -- pending oracle confirmation, not yet proven at runtime.", "flags": ["SPC_MAILBOX"], "updated": "2026-07-03"}
 {"id": "D088690", "pc": "088690", "addr_display": "$08:8690", "name": "LoadTitleGfx_c", "module": "field", "level": "L1", "notes": "no CONTRACT block", "flags": ["DP_SENSITIVE"], "updated": null}
-{"id": "D08885E", "pc": "08885E", "addr_display": "$08:885E", "name": "TfrTitleCrystalTiles_c", "module": "field", "level": "DELEG", "notes": "delegate wrapper \u2014 equivalent by construction (executes the asm)", "flags": [], "updated": null}
+{"id": "D08885E", "pc": "08885E", "addr_display": "$08:885E", "name": "TfrTitleCrystalTiles_c", "module": "field", "level": "DELEG", "notes": "delegate wrapper \u2014 equivalent by construction (executes the asm)", "flags": ["DP_SENSITIVE"], "updated": null}
 {"id": "D0E8B3C", "pc": "0E8B3C", "addr_display": "$0E:8B3C", "name": "CheckBattle_c", "module": "field", "level": "L2", "notes": "hardcore PASS", "flags": [], "updated": null}
 {"id": "D12E35B", "pc": "12E35B", "addr_display": "$12:E35B", "name": "WaitVblankEvent_c", "module": "field", "level": "L2", "notes": "fuzzed spike, 0 fails", "flags": ["WAIT_BLOCKING"], "updated": null}
 {"id": "D12E55A", "pc": "12E55A", "addr_display": "$12:E55A", "name": "FindEventTerminator_c", "module": "field", "level": "DELEG", "notes": "delegate wrapper \u2014 equivalent by construction (executes the asm)", "flags": [], "updated": null}
@@ -118,7 +118,7 @@
 {"id": "D12EC06", "pc": "12EC06", "addr_display": "$12:EC06", "name": "EventCmd_e6_c", "module": "field", "level": "L2", "notes": "fuzzed spike, 0 fails", "flags": ["DP_SENSITIVE"], "updated": null}
 {"id": "D12EC3E", "pc": "12EC3E", "addr_display": "$12:EC3E", "name": "EventCmd_dd_c", "module": "field", "level": "L2", "notes": "fuzzed spike, 0 fails", "flags": ["TAIL_JML", "DP_SENSITIVE"], "updated": null}
 {"id": "D12ED1D", "pc": "12ED1D", "addr_display": "$12:ED1D", "name": "SetCurrGil_c", "module": "field", "level": "L2", "notes": "fuzzed spike, 0 fails", "flags": ["DP_SENSITIVE"], "updated": null}
-{"id": "D12EE1C", "pc": "12EE1C", "addr_display": "$12:EE1C", "name": "EventCmd_d0_c", "module": "field", "level": "L2", "notes": "fuzzed spike, 0 fails", "flags": ["TAIL_JML"], "updated": null}
+{"id": "D12EE1C", "pc": "12EE1C", "addr_display": "$12:EE1C", "name": "EventCmd_d0_c", "module": "field", "level": "L2", "notes": "fuzzed spike, 0 fails", "flags": ["TAIL_JML", "DP_SENSITIVE"], "updated": null}
 {"id": "D12EE25", "pc": "12EE25", "addr_display": "$12:EE25", "name": "EventCmd_d1_c", "module": "field", "level": "L2", "notes": "fuzzed spike, 0 fails", "flags": ["WAIT_BLOCKING", "TAIL_JML", "DP_SENSITIVE"], "updated": null}
 {"id": "D12EE35", "pc": "12EE35", "addr_display": "$12:EE35", "name": "TfrInvertPal_c", "module": "field", "level": "L2", "notes": "fuzzed spike, 0 fails", "flags": ["DMA_TRIGGER"], "updated": null}
 {"id": "D13BFE3", "pc": "13BFE3", "addr_display": "$13:BFE3", "name": "_00bfe3_c", "module": "field", "level": "L2", "notes": "fuzzed spike, 0 fails", "flags": ["DP_SENSITIVE"], "updated": null}
@@ -153,20 +153,20 @@
 {"id": "D1589ED", "pc": "1589ED", "addr_display": "$15:89ED", "name": "InitInterrupts_c", "module": "field", "level": "L2", "notes": "fuzzed spike, 0 fails", "flags": ["DP_SENSITIVE"], "updated": null}
 {"id": "D158B2A", "pc": "158B2A", "addr_display": "$15:8B2A", "name": "InitDMA_c", "module": "field", "level": "L2", "notes": "fuzzed spike, 0 fails", "flags": ["DMA_TRIGGER"], "updated": null}
 {"id": "D158D5D", "pc": "158D5D", "addr_display": "$15:8D5D", "name": "PlayMapSong_c", "module": "field", "level": "DELEG", "notes": "delegate wrapper \u2014 equivalent by construction (executes the asm)", "flags": [], "updated": null}
-{"id": "D158DFC", "pc": "158DFC", "addr_display": "$15:8DFC", "name": "WaitKeyUp_c", "module": "field", "level": "L2", "notes": "fuzzed spike, 0 fails", "flags": ["WAIT_BLOCKING"], "updated": null}
-{"id": "D158E05", "pc": "158E05", "addr_display": "$15:8E05", "name": "WaitKeyDown_c", "module": "field", "level": "L2", "notes": "fuzzed spike, 0 fails", "flags": ["WAIT_BLOCKING"], "updated": null}
+{"id": "D158DFC", "pc": "158DFC", "addr_display": "$15:8DFC", "name": "WaitKeyUp_c", "module": "field", "level": "L2", "notes": "fuzzed spike, 0 fails", "flags": ["WAIT_BLOCKING", "DP_SENSITIVE"], "updated": null}
+{"id": "D158E05", "pc": "158E05", "addr_display": "$15:8E05", "name": "WaitKeyDown_c", "module": "field", "level": "L2", "notes": "fuzzed spike, 0 fails", "flags": ["WAIT_BLOCKING", "DP_SENSITIVE"], "updated": null}
 {"id": "D158E47", "pc": "158E47", "addr_display": "$15:8E47", "name": "UpdateWaterLavaAnim_c", "module": "field", "level": "L2", "notes": "fuzzed spike, 0 fails", "flags": [], "updated": null}
 {"id": "D158E57", "pc": "158E57", "addr_display": "$15:8E57", "name": "TfrWaterLavaGfx_c", "module": "field", "level": "L2", "notes": "fuzzed spike, 0 fails", "flags": [], "updated": null}
-{"id": "D158F34", "pc": "158F34", "addr_display": "$15:8F34", "name": "TfrLavaGfx_c", "module": "field", "level": "L2", "notes": "fuzzed spike, 0 fails", "flags": [], "updated": null}
-{"id": "D159104", "pc": "159104", "addr_display": "$15:9104", "name": "UpdateMode7Regs_c", "module": "field", "level": "L2", "notes": "fuzzed spike, 0 fails", "flags": [], "updated": null}
+{"id": "D158F34", "pc": "158F34", "addr_display": "$15:8F34", "name": "TfrLavaGfx_c", "module": "field", "level": "L2", "notes": "fuzzed spike, 0 fails", "flags": ["DP_SENSITIVE"], "updated": null}
+{"id": "D159104", "pc": "159104", "addr_display": "$15:9104", "name": "UpdateMode7Regs_c", "module": "field", "level": "L2", "notes": "fuzzed spike, 0 fails", "flags": ["DP_SENSITIVE"], "updated": null}
 {"id": "D1591CA", "pc": "1591CA", "addr_display": "$15:91CA", "name": "UpdateWipeIRQ_c", "module": "field", "level": "L1", "notes": "no CONTRACT block", "flags": [], "updated": null}
 {"id": "D159204", "pc": "159204", "addr_display": "$15:9204", "name": "UpdateWipeNMI_c", "module": "field", "level": "L2", "notes": "fuzzed spike, 0 fails", "flags": ["DP_SENSITIVE"], "updated": null}
 {"id": "D159792", "pc": "159792", "addr_display": "$15:9792", "name": "LoadPlayerGfxWorld_c", "module": "field", "level": "DELEG", "notes": "delegate wrapper \u2014 equivalent by construction (executes the asm)", "flags": [], "updated": null}
 {"id": "D1597A2", "pc": "1597A2", "addr_display": "$15:97A2", "name": "LoadPlayerGfxSub_c", "module": "field", "level": "DELEG", "notes": "delegate wrapper \u2014 equivalent by construction (executes the asm)", "flags": [], "updated": null}
-{"id": "D1599FB", "pc": "1599FB", "addr_display": "$15:99FB", "name": "GiveGil_c", "module": "field", "level": "L2", "notes": "fuzzed spike, 0 fails", "flags": [], "updated": null}
+{"id": "D1599FB", "pc": "1599FB", "addr_display": "$15:99FB", "name": "GiveGil_c", "module": "field", "level": "L2", "notes": "fuzzed spike, 0 fails", "flags": ["DP_SENSITIVE"], "updated": null}
 {"id": "D159AE9", "pc": "159AE9", "addr_display": "$15:9AE9", "name": "GetTreasureTiles_c", "module": "field", "level": "L2", "notes": "fuzzed spike, 0 fails", "flags": ["DP_SENSITIVE"], "updated": null}
 {"id": "D159B5B", "pc": "159B5B", "addr_display": "$15:9B5B", "name": "GetTreasurePtr_c", "module": "field", "level": "L2", "notes": "fuzzed spike, 0 fails", "flags": ["DP_SENSITIVE"], "updated": null}
-{"id": "D15AF24", "pc": "15AF24", "addr_display": "$15:AF24", "name": "CloseYesNoWindow_c", "module": "field", "level": "L2", "notes": "fuzzed spike, 0 fails", "flags": ["DMA_TRIGGER"], "updated": null}
+{"id": "D15AF24", "pc": "15AF24", "addr_display": "$15:AF24", "name": "CloseYesNoWindow_c", "module": "field", "level": "L2", "notes": "fuzzed spike, 0 fails", "flags": ["DMA_TRIGGER", "DP_SENSITIVE"], "updated": null}
 {"id": "D15B09C", "pc": "15B09C", "addr_display": "$15:B09C", "name": "ScrollItemListDown_c", "module": "field", "level": "L2", "notes": "fuzzed spike, 0 fails", "flags": ["WAIT_BLOCKING", "DP_SENSITIVE"], "updated": null}
 {"id": "D15B143", "pc": "15B143", "addr_display": "$15:B143", "name": "TfrBGGfx_c", "module": "field", "level": "L3", "notes": "bug 4 tiles RESOLVED: manual VRAM loop (c2fc6f1, F6 model) \u2014 true device+desktop fix, visually validated; native without exclusion", "flags": ["DMA_TRIGGER"], "updated": null}
 {"id": "D15B3DC", "pc": "15B3DC", "addr_display": "$15:B3DC", "name": "_15b3dc_c", "module": "field", "level": "L1", "notes": "no CONTRACT block", "flags": [], "updated": null}
@@ -178,9 +178,9 @@
 {"id": "D15C163", "pc": "15C163", "addr_display": "$15:C163", "name": "_15c163_c", "module": "field", "level": "L3", "notes": "F7 \u2014 diverges by 0 bytes", "flags": [], "updated": null}
 {"id": "D15C23D", "pc": "15C23D", "addr_display": "$15:C23D", "name": "_15c23d_c", "module": "field", "level": "L3", "notes": "wram_diff=0 verified", "flags": [], "updated": null}
 {"id": "D15C37F", "pc": "15C37F", "addr_display": "$15:C37F", "name": "Pow10Hi_c", "module": "field", "level": "L2", "notes": "fuzzed spike, 0 fails", "flags": [], "updated": null}
-{"id": "D15CA5E", "pc": "15CA5E", "addr_display": "$15:CA5E", "name": "_15ca5e_c", "module": "field", "level": "EXCL", "notes": "F11(KF) \u2014 palette DMA-bypass, excluded from baseline", "flags": [], "updated": null}
+{"id": "D15CA5E", "pc": "15CA5E", "addr_display": "$15:CA5E", "name": "_15ca5e_c", "module": "field", "level": "EXCL", "notes": "F11(KF) \u2014 palette DMA-bypass, excluded from baseline", "flags": ["DP_SENSITIVE"], "updated": null}
 {"id": "D15CA85", "pc": "15CA85", "addr_display": "$15:CA85", "name": "_15ca85_c", "module": "field", "level": "L1", "notes": "no CONTRACT block", "flags": [], "updated": null}
-{"id": "D15CADC", "pc": "15CADC", "addr_display": "$15:CADC", "name": "_15cadc_c", "module": "field", "level": "EXCL", "notes": "F3 \u2014 DMA-bypass, excluded from baseline", "flags": [], "updated": null}
+{"id": "D15CADC", "pc": "15CADC", "addr_display": "$15:CADC", "name": "_15cadc_c", "module": "field", "level": "EXCL", "notes": "F3 \u2014 DMA-bypass, excluded from baseline", "flags": ["DP_SENSITIVE"], "updated": null}
 {"id": "D16C59A", "pc": "16C59A", "addr_display": "$16:C59A", "name": "AfterCutscene_c", "module": "field", "level": "L2", "notes": "fuzzed spike, 0 fails", "flags": [], "updated": null}
 {"id": "D16C8BC", "pc": "16C8BC", "addr_display": "$16:C8BC", "name": "Special_2d_c", "module": "field", "level": "L2", "notes": "fuzzed spike, 0 fails", "flags": ["TAIL_JML", "DP_SENSITIVE"], "updated": null}
 {"id": "D16CB05", "pc": "16CB05", "addr_display": "$16:CB05", "name": "_00cb05_c", "module": "field", "level": "L2", "notes": "fuzzed spike, 0 fails", "flags": ["DP_SENSITIVE"], "updated": null}
@@ -194,13 +194,13 @@
 {"id": "D16D831", "pc": "16D831", "addr_display": "$16:D831", "name": "Special_1e_c", "module": "field", "level": "L2", "notes": "fuzzed spike, 0 fails", "flags": ["TAIL_JML", "DP_SENSITIVE"], "updated": null}
 {"id": "D16D9D6", "pc": "16D9D6", "addr_display": "$16:D9D6", "name": "Special_06_c", "module": "field", "level": "DELEG", "notes": "delegate wrapper \u2014 equivalent by construction (executes the asm)", "flags": ["TAIL_JML"], "updated": null}
 {"id": "D16DB71", "pc": "16DB71", "addr_display": "$16:DB71", "name": "DrawRedWings_c", "module": "field", "level": "DELEG", "notes": "delegate wrapper \u2014 equivalent by construction (executes the asm)", "flags": [], "updated": null}
-{"id": "D16DBBE", "pc": "16DBBE", "addr_display": "$16:DBBE", "name": "IncBrightness_c", "module": "field", "level": "L2", "notes": "fuzzed spike, 0 fails", "flags": [], "updated": null}
+{"id": "D16DBBE", "pc": "16DBBE", "addr_display": "$16:DBBE", "name": "IncBrightness_c", "module": "field", "level": "L2", "notes": "fuzzed spike, 0 fails", "flags": ["DP_SENSITIVE"], "updated": null}
 {"id": "D16DBD2", "pc": "16DBD2", "addr_display": "$16:DBD2", "name": "LoadOverworldIntro_c", "module": "field", "level": "L2", "notes": "fuzzed spike, 0 fails", "flags": ["DP_SENSITIVE"], "updated": null}
 {"id": "D16DE1B", "pc": "16DE1B", "addr_display": "$16:DE1B", "name": "_00de1b_c", "module": "field", "level": "L2", "notes": "fuzzed spike, 0 fails", "flags": ["DP_SENSITIVE"], "updated": null}
 {"id": "D16DF53", "pc": "16DF53", "addr_display": "$16:DF53", "name": "_00df53_c", "module": "field", "level": "L2", "notes": "fuzzed spike, 0 fails", "flags": ["DP_SENSITIVE"], "updated": null}
 {"id": "D16F533", "pc": "16F533", "addr_display": "$16:F533", "name": "UpdateBG2Scroll_c", "module": "field", "level": "L2", "notes": "fuzzed spike, 0 fails", "flags": [], "updated": null}
 {"id": "D16F922", "pc": "16F922", "addr_display": "$16:F922", "name": "_00f922_c", "module": "field", "level": "L2", "notes": "fuzzed spike, 0 fails", "flags": ["DP_SENSITIVE"], "updated": null}
-{"id": "D16FB93", "pc": "16FB93", "addr_display": "$16:FB93", "name": "TfrBG2Tilemap_c", "module": "field", "level": "L2", "notes": "fuzzed spike, 0 fails", "flags": ["DMA_TRIGGER"], "updated": null}
-{"id": "D16FFAB", "pc": "16FFAB", "addr_display": "$16:FFAB", "name": "DecodeBG1Tilemap_c", "module": "field", "level": "L2", "notes": "fuzzed spike, 0 fails", "flags": [], "updated": null}
+{"id": "D16FB93", "pc": "16FB93", "addr_display": "$16:FB93", "name": "TfrBG2Tilemap_c", "module": "field", "level": "L2", "notes": "fuzzed spike, 0 fails", "flags": ["DMA_TRIGGER", "DP_SENSITIVE"], "updated": null}
+{"id": "D16FFAB", "pc": "16FFAB", "addr_display": "$16:FFAB", "name": "DecodeBG1Tilemap_c", "module": "field", "level": "L2", "notes": "fuzzed spike, 0 fails", "flags": ["DP_SENSITIVE"], "updated": null}
 {"id": "D1E9F6C", "pc": "1E9F6C", "addr_display": "$1E:9F6C", "name": "UpdateLocalTiles_c", "module": "field", "level": "L2", "notes": "hardcore PASS", "flags": ["DP_SENSITIVE"], "updated": null}
 {"id": "D1EA03E", "pc": "1EA03E", "addr_display": "$1E:A03E", "name": "BoardChoco_c", "module": "field", "level": "L2", "notes": "fuzzed spike, 0 fails", "flags": ["DP_SENSITIVE"], "updated": null}

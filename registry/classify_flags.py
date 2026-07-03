@@ -22,10 +22,13 @@ Flags:
   SPC_MAILBOX    — asm reads or writes hAPUIO0-3 ($2140-$2143) — driving the
                    SPC700 handshake; a no-op stub here can hang the audio
                    boot sequence (see gen_dispatch.py SKIPPED_ROUTINES).
-  DP_SENSITIVE   — the ff4-gnw C body accesses WRAM via bare `ram[N]` /
-                   `write16(ram, N, ...)` for small N (< 0x1000, the
-                   direct-page-scale range) WITHOUT ever computing the
-                   address relative to `snes->cpu->dp`. This is a
+  DP_SENSITIVE   — the ff4-gnw C body reads OR writes WRAM via bare
+                   `ram[N]` / `read16(ram, N)` / `write16(ram, N, ...)`
+                   for small N (< 0x1000, the direct-page-scale range)
+                   WITHOUT ever computing the address relative to
+                   `snes->cpu->dp`. A read-only routine is just as
+                   DP-sensitive as a write (a wrong D reads the wrong
+                   byte either way). This is a
                    MECHANICAL PROXY, not a verdict: it only means "if this
                    routine's real entry D is non-zero, this port reads/
                    writes the wrong address" (the exact bug fixed in
@@ -70,9 +73,12 @@ _STORE_OR_LOAD_OPCODE_RE = re.compile(
     r"([\w$]+)",
     re.IGNORECASE | re.MULTILINE,
 )
-_MMIO_ASSIGN_RE = re.compile(
-    r"\bram\s*\[\s*0x([0-9A-Fa-f]{1,4})\s*\]\s*=(?!=)"
-    r"|\bwrite16\s*\(\s*ram\s*,\s*0x([0-9A-Fa-f]{1,4})\s*,"
+# Any direct WRAM access (read OR write) at a small literal offset — not
+# just assignments. A read-only routine (e.g. `if (ram[0x50] == 1)`) is
+# just as DP-sensitive as a write: a wrong D still reads the wrong byte.
+_LOW_RAM_ACCESS_RE = re.compile(
+    r"\bram\s*\[\s*0x([0-9A-Fa-f]{1,4})\s*\]"
+    r"|\b(?:read|write)16\s*\(\s*ram\s*,\s*0x([0-9A-Fa-f]{1,4})\s*[,)]"
 )
 
 
@@ -141,7 +147,7 @@ def classify_one(name: str, module: str, ffgnw: Path, upstream: Path, syms: dict
             no_line = re.sub(r"//[^\n]*", "", no_block)
             uses_dynamic_dp = "cpu->dp" in no_line
             has_small_offset = False
-            for m in _MMIO_ASSIGN_RE.finditer(no_line):
+            for m in _LOW_RAM_ACCESS_RE.finditer(no_line):
                 addr = int(m.group(1) or m.group(2), 16)
                 if addr < 0x1000:
                     has_small_offset = True
