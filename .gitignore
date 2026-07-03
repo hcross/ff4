@@ -3,3 +3,7 @@
 .DS_Store
 __pycache__/
 *.pyc
+
+# scripts/regress.sh's recorded oracle verdicts: this-machine, this-ROM-copy
+# state, not portable — licensed-asset-adjacent like the ROM/fixtures.
+.regress-baselines/
