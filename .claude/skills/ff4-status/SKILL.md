@@ -36,6 +36,11 @@ data = open('ff4-port/upstream/rom/ff4-jp1.sfc','rb').read()
 crc = format(zlib.crc32(data) & 0xFFFFFFFF, '08X')
 print('CRC32:', crc, '(expect CAA15E97 for JP 1.1)')
 "
+
+# Translator pitfalls prompts in sync with their single source of truth?
+# (reverser_system.md and reverser_hardcore.md forked silently once already —
+# P13-P17 landed in one and not the other, cf. W1-5)
+python3 ff4-port/prompts/generate_pitfalls.py --check
 ```
 
 If any of these fail: **stop and diagnose before doing anything else** —
