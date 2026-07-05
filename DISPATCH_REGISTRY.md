@@ -26,7 +26,7 @@ leaving 2 compile_error (inter-routine dependency / include).
 > isolated than L3 (in-game oracle). **FAILs** = real divergences to investigate (WF-VALID).
 
 <!-- REGISTRY:DISTRIBUTION:START -->
-**Distribution** (generated from `registry/dispatch_state.jsonl` — do not hand-edit; edit the JSONL via `registry/registry_promote.py` and re-run `python registry/render_registry.py`): L0=1 · L1=17 · L2=165 · L3=7 · EXCL=3 · DELEG=12 · RETIRED=1 (total 205).
+**Distribution** (generated from `registry/dispatch_state.jsonl` — do not hand-edit; edit the JSONL via `registry/registry_promote.py` and re-run `python registry/render_registry.py`): L0=1 · L1=16 · L2=165 · L3=7 · EXCL=3 · DELEG=12 · RETIRED=2 (total 204).
 <!-- REGISTRY:DISTRIBUTION:END -->
 `ExecBtlGfx` (D038085) REMOVED from the dispatch on 2026-06-30 (206→205): BLOCKING
 animation (multi-frame WaitVblank/WaitFrame) incompatible with the synchronous
@@ -81,8 +81,8 @@ The 23 L1: 11 `no_source` (bundled btlgfx → custom spike), 8 `no_contract`
 | `D00C0C4` | $00:C0C4 | `PlayerSpriteTiles_c` | field | L2 | fuzzed spike, 0 fails |
 | `D00C3BD` | $00:C3BD | `UpdateWhalePal_c` | field | L2 | fuzzed spike, 0 fails |
 | `D00CB5F` | $00:CB5F | `TfrBGAnimGfx_c` | field | L1 | spike: 2/200 fails — divergence (WF-VALID) |
-| `D00F533` | $00:F533 | `UpdateBG2Scroll_c` | field | L2 | fuzzed spike, 0 fails |
-| `D00F535` | $00:F535 | `UpdateBG2ScrollSkip_c` | field | L1 | non-standalone body (bundled btlgfx) |
+| `D00F533` | $00:F533 | `UpdateBG2Scroll_c` | field | RETIRED | dead entry -- $00:F533 is not an instruction boundary (mid-operand byte of the preceding routine's LDX $43 at $00:F532; $00:F534=RTS), confirmed by direct ROM inspection. Never a valid call target. The disassembly's two-entry model (F533=full/F535=skip) was off by 2 bytes; see D00F535 for the real, sole entry point. Retired 2026-07-05. |
+| `D00F535` | $00:F535 | `UpdateBG2ScrollSkip_c` | field | L2 | FIXED: guard source was cpu->a (wrong), changed to ram[dp+0xC9] matching the real $00:F535 asm (LDA $C9), confirmed by direct ROM-byte inspection. Dead sibling entry D00F533 retired same day. Region-compare spike 5000/5000 pass. (evidence: ff4-port/translator/runs/D00F535_updatebg2scrollskip_FIXED_revalidation.txt) |
 | `D00FFBC` | $00:FFBC | `InitCharProp_ext_c` | field | L2 | hardcore PASS |
 | `D00FFE0` | $00:FFE0 | `Vectors_c` | field | L2 | fuzzed spike, 0 fails |
 | `D018010` | $01:8010 | `UpdateCtrlField_ext_c` | menu | L2 | hardcore PASS; input reimpl. (F5) |
