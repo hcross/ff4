@@ -26,7 +26,7 @@ leaving 2 compile_error (inter-routine dependency / include).
 > isolated than L3 (in-game oracle). **FAILs** = real divergences to investigate (WF-VALID).
 
 <!-- REGISTRY:DISTRIBUTION:START -->
-**Distribution** (generated from `registry/dispatch_state.jsonl` — do not hand-edit; edit the JSONL via `registry/registry_promote.py` and re-run `python registry/render_registry.py`): L0=1 · L1=16 · L2=165 · L3=7 · EXCL=3 · DELEG=12 · RETIRED=2 (total 204).
+**Distribution** (generated from `registry/dispatch_state.jsonl` — do not hand-edit; edit the JSONL via `registry/registry_promote.py` and re-run `python registry/render_registry.py`): L0=1 · L1=14 · L2=167 · L3=7 · EXCL=3 · DELEG=12 · RETIRED=2 (total 204).
 <!-- REGISTRY:DISTRIBUTION:END -->
 `ExecBtlGfx` (D038085) REMOVED from the dispatch on 2026-06-30 (206→205): BLOCKING
 animation (multi-frame WaitVblank/WaitFrame) incompatible with the synchronous
@@ -93,8 +93,8 @@ The 23 L1: 11 `no_source` (bundled btlgfx → custom spike), 8 `no_contract`
 | `D0285D2` | $02:85D2 | `HardMult_btlgfx_c` | btlgfx | L2 | Extracted MultHW ($02:85D2) from bundled btlgfx_prim.c into port/battle/HardMult_btlgfx.c; standalone spike 300/300 pass, 0 fails. Body verbatim (hardware 8x8->16 multiply ram[$1C]*ram[$1E]->ram[$20:$21]); no bug found, no width-truncation risk (8x8->16 fits uint16_t). (evidence: ff4-port/translator/runs/D0285D2_hardmult_btlgfx_revalidation.txt) |
 | `D0290A0` | $02:90A0 | `TfrBG2MenuTile_c` | btlgfx | L1 | no CONTRACT block |
 | `D02A491` | $02:A491 | `IncrTextPtr_c` | btlgfx | L2 | Extracted bundled body (btlgfx_prim.c) to standalone port/btlgfx/IncrTextPtr.c; 16-bit X increment, no truncation bug (verbatim body already correct); auto-spike 300 trials, fails: 0 (evidence: ff4-port/translator/runs/D02A491_incrtextptr_revalidation.txt) |
-| `D02BB0B` | $02:BB0B | `BackAttackYOffset_s_c` | btlgfx | L1 | non-standalone body (bundled btlgfx) |
-| `D02BB1A` | $02:BB1A | `BackAttackYOffset_l_c` | btlgfx | L1 | non-standalone body (bundled btlgfx) |
+| `D02BB0B` | $02:BB0B | `BackAttackYOffset_s_c` | btlgfx | L2 | register/flag-output spike via new SPIKE_OUTPUT_REG mode (generate_spike.py extended 2026-07-05 -- previous 'pass' was vacuous 0==0), 2000/2000 pass (evidence: ff4-port/translator/runs/D02BB0B_backattackyoffset_s_FIXED_revalidation.txt) |
+| `D02BB1A` | $02:BB1A | `BackAttackYOffset_l_c` | btlgfx | L2 | register/flag-output spike via new SPIKE_OUTPUT_REG mode, sibling of D02BB0B, 2000/2000 pass (evidence: ff4-port/translator/runs/D02BB1A_backattackyoffset_l_FIXED_revalidation.txt) |
 | `D02DA73` | $02:DA73 | `DrawMonsterSprite_c` | btlgfx | L2 | region-compare spike (SPIKE_MASK 0x1C-0x1D), 300/300 pass, re-verified 2026-07-05 — extraction PoC dated 2026-06-30 (ff4-port ba9b3d8/3e388bc) never promoted (evidence: ff4-port/translator/runs/D02DA73_drawmonstersprite_revalidation.txt) |
 | `D02DAFE` | $02:DAFE | `InitMonsterAnim_c` | btlgfx | L2 | Extracted InitMonsterAnim_c standalone (btlgfx_monsters.c), region spike 300/300 fails:0; mutation-verified teeth (write-path mutation -> 296/300 fails). Applied 8-bit index-truncation fix on mon47<<2 in ff4-gnw too (benign for 0..5 slots, faithful to asm). headless-all builds clean. (evidence: ff4-port/translator/runs/D02DAFE_initmonsteranim_revalidation.txt) |
 | `D02DCED` | $02:DCED | `BuildOAMEntries_c` | btlgfx | L2 | fixed y_row 8-bit truncation bug (diverged for slot>=64, latent since 2026-06-30), region-compare spike 300/300 pass after fix, re-verified 2026-07-05 (evidence: ff4-port/translator/runs/D02DCED_buildoamentries_revalidation.txt) |
