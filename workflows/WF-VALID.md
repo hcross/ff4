@@ -31,16 +31,16 @@ Post-compaction protocol (AGENTS §B.4). `[TASK:ongoing] wf-valid-D<id>`.
 ### 1. Identify the usage point
 Determine a scene where the routine is called. Cross-reference with
 `KNOWN_FINDINGS.md` and `miss_profiler` (hot PCs). List the reference
-savestates (`ff4-port/*.lss`); otherwise capture one via
+savestates (`ff4-port/fixtures/*.lss`, private submodule); otherwise capture one via
 `ff4-desktop-sdl` (`5` = incremental save slot).
 
 ### 2. Load a savestate leading to the usage moment
 The savestate must reach a moment where **only this dispatch** matters. Verify
 the routine is actually reached:
 ```sh
-./ff4-desktop-headless $ROM --load <scene>.lss --frames N --trace-frame F
+./ff4-desktop-headless $ROM --load ../fixtures/<scene>.lss --frames N --trace-frame F
 # or watch an address written by the routine:
-./ff4-desktop-headless $ROM --load <scene>.lss --frames N --watch-wram <ADDR>
+./ff4-desktop-headless $ROM --load ../fixtures/<scene>.lss --frames N --watch-wram <ADDR>
 ```
 
 ### 3. Isolate the dispatch in the oracle
@@ -49,12 +49,12 @@ exclusion filter (`--exclude HEX`, repeatable), or conversely start from
 `oracle-baseline` and reintroduce only the routine under test.
 ```sh
 cd ff4-port/desktop
-make oracle SEED=../<scene>.lss FRAMES=600        # A/B dispatch vs interpreter
+make oracle SEED=../fixtures/<scene>.lss FRAMES=600        # A/B dispatch vs interpreter
 ```
 
 ### 4. Compare WRAM (CRC + byte-exact diff)
 ```sh
-./wram_diff $ROM ../<scene>.lss        # byte-exact diff, masks the stack region
+./wram_diff $ROM ../fixtures/<scene>.lss        # byte-exact diff, masks the stack region
 ```
 - **0 diverging bytes** (outside the mask) → faithful.
 - Divergence with a **cycle delta ~0** but PC 1 instruction off →
@@ -70,7 +70,7 @@ make oracle SEED=../<scene>.lss FRAMES=600        # A/B dispatch vs interpreter
 For any routine touching display: dump the frame + **pixel-diff** against a
 known reference.
 ```sh
-./ff4-desktop-headless $ROM --load <scene>.lss --frames N --out /tmp/cap.ppm
+./ff4-desktop-headless $ROM --load ../fixtures/<scene>.lss --frames N --out /tmp/cap.ppm
 # convert + compare (sips → png, visual diff)
 ```
 Corrupted rendering **is not** detected by fps/frame-count/fault alone

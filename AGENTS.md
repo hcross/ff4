@@ -48,7 +48,7 @@ this umbrella directory (`ff4/`).
 | Project | Role | Key contents |
 |--------|------|-------------|
 | **`ff4-gnw/`** | C sources of the port — the artifact that runs on the device | Dispatch table (`dispatch_all.c`/`.h`), ported routines (`battle/`, `field/`, `menu/`, `cutscene/`, `sound/`), LakeSnes helpers (`ff4_helpers.c`), LakeSnes fork (`snes/`), G&W glue (`main.c`) |
-| **`ff4-port/`** | Validation infrastructure — the oracle and ground truth | Reference disassembly (`upstream/notes/ff4j-sfc.asm`), ROM (`upstream/rom/ff4-jp1.sfc`), desktop harness (`desktop/`), reference savestates (`*.lss`), `desktop/KNOWN_FINDINGS.md` |
+| **`ff4-port/`** | Validation infrastructure — the oracle and ground truth | Reference disassembly (`upstream/notes/ff4j-sfc.asm`), ROM (`upstream/rom/ff4-jp1.sfc`), desktop harness (`desktop/`), reference savestates (`fixtures/*.lss`, private submodule — see [FIXTURES.md](https://github.com/hcross/ff4-port/blob/main/FIXTURES.md)), `desktop/KNOWN_FINDINGS.md` |
 
 `ff4-gnw` compiles **twice** from the same C sources:
 - for the **device** (STM32H7B0, via the retro-go-sd build);
@@ -181,8 +181,9 @@ Useful `make` targets: `make oracle SEED=…`, `make oracle-baseline SEED=…`
   reproduction, root cause, fix and validation. **Source of truth** on the state
   of known bugs; read it before touching a routine already investigated.
 - **`ff4-port/FIXTURES.md`**: catalog of reference savestates (`.lss`,
-  gitignored — protected assets): scene, PC, usage, related findings, and how
-  to (re)generate them. Consult it to pick a repro/validation fixture.
+  in the private `fixtures/` submodule — protected assets, never public):
+  scene, PC, usage, related findings, and how to (re)generate them if the
+  submodule isn't reachable. Consult it to pick a repro/validation fixture.
 
 ---
 
@@ -292,8 +293,8 @@ cd ff4-port/desktop && make all
 make sdl ROM=../upstream/rom/ff4-jp1.sfc        # then load a .lss with 9
 
 # A/B comparison (dispatch vs interpreter) on a savestate
-make oracle SEED=../006-in-combat.lss FRAMES=600
+make oracle SEED=../fixtures/006-in-combat.lss FRAMES=600
 
 # Byte-exact WRAM diff at the divergence frame
-./wram_diff ../upstream/rom/ff4-jp1.sfc ../006-in-combat.lss
+./wram_diff ../upstream/rom/ff4-jp1.sfc ../fixtures/006-in-combat.lss
 ```

@@ -69,7 +69,7 @@ if [ -n "$FIXTURES_FILTER" ]; then
   fixtures=()
   IFS=',' read -ra names <<< "$FIXTURES_FILTER"
   for n in "${names[@]}"; do
-    f="$UMBRELLA/ff4-port/$n.lss"
+    f="$UMBRELLA/ff4-port/fixtures/$n.lss"
     if [ ! -f "$f" ]; then
       echo "error: fixture not found: $f" >&2
       exit 2
@@ -77,10 +77,10 @@ if [ -n "$FIXTURES_FILTER" ]; then
     fixtures+=("$f")
   done
 else
-  fixtures=("$UMBRELLA"/ff4-port/*.lss)
+  fixtures=("$UMBRELLA"/ff4-port/fixtures/*.lss)
 fi
 if [ ${#fixtures[@]} -eq 0 ]; then
-  echo "error: no .lss fixtures found under $UMBRELLA/ff4-port/ — see FIXTURES.md" >&2
+  echo "error: no .lss fixtures found under $UMBRELLA/ff4-port/fixtures/ — see FIXTURES.md (run 'git submodule update --init fixtures' if empty)" >&2
   exit 2
 fi
 
