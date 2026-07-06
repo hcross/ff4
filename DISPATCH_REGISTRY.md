@@ -26,7 +26,7 @@ leaving 2 compile_error (inter-routine dependency / include).
 > isolated than L3 (in-game oracle). **FAILs** = real divergences to investigate (WF-VALID).
 
 <!-- REGISTRY:DISTRIBUTION:START -->
-**Distribution** (generated from `registry/dispatch_state.jsonl` — do not hand-edit; edit the JSONL via `registry/registry_promote.py` and re-run `python registry/render_registry.py`): L0=1 · L1=14 · L2=167 · L3=7 · EXCL=3 · DELEG=12 · RETIRED=2 (total 204).
+**Distribution** (generated from `registry/dispatch_state.jsonl` — do not hand-edit; edit the JSONL via `registry/registry_promote.py` and re-run `python registry/render_registry.py`): L0=1 · L1=13 · L2=167 · L3=7 · EXCL=3 · DELEG=12 · RETIRED=3 (total 203).
 <!-- REGISTRY:DISTRIBUTION:END -->
 `ExecBtlGfx` (D038085) REMOVED from the dispatch on 2026-06-30 (206→205): BLOCKING
 animation (multi-frame WaitVblank/WaitFrame) incompatible with the synchronous
@@ -68,7 +68,7 @@ The 23 L1: 11 `no_source` (bundled btlgfx → custom spike), 8 `no_contract`
 |----|--------------|-----------|--------|-------|---------------|
 | `D00808E` | $00:808E | `AfterBattle_c` | field | L2 | fuzzed spike, 0 fails |
 | `D0080A0` | $00:80A0 | `FieldMain_c` | field | L2 | fuzzed spike, 0 fails |
-| `D0081F4` | $00:81F4 | `CheckMenu_c` | field | L1 | spike: 1/200 fails — divergence (WF-VALID) |
+| `D0081F4` | $00:81F4 | `CheckMenu_c` | field | RETIRED | Removed from dispatch 2026-07-06: CheckMenu_c's body is fine but its 4 helper delegations (fade_out/in_menu, main_menu=MainMenu_ext, exec_event) are no-op stubs and MainMenu_ext is an interactive multi-frame routine that cannot run synchronously inside one dispatch call (same class as ExecBtlGfx). Left dispatched, the whole menu subsystem silently never worked natively. Verified via headless --exclude 0081f4: menu opens and navigates correctly with everything else (including this session's ReadCtrl/UpdateCtrl/InitCtrl/ResetSprites fixes) staying native. Was already carrying a pre-existing known 1/200 spike divergence. |
 | `D008302` | $00:8302 | `UpdatePlayerSpeed_c` | field | L2 | fuzzed spike, 0 fails |
 | `D00834E` | $00:834E | `InitMapRAM_c` | field | L3 | mode-7 MMIO fix (1a86d23) — oracle FB-clean; ex-false-L2 (spike missed the MMIO effect) |
 | `D00883D` | $00:883D | `_00883d_c` | field | L1 | no CONTRACT block |
