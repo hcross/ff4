@@ -26,7 +26,7 @@ leaving 2 compile_error (inter-routine dependency / include).
 > isolated than L3 (in-game oracle). **FAILs** = real divergences to investigate (WF-VALID).
 
 <!-- REGISTRY:DISTRIBUTION:START -->
-**Distribution** (generated from `registry/dispatch_state.jsonl` — do not hand-edit; edit the JSONL via `registry/registry_promote.py` and re-run `python registry/render_registry.py`): L0=1 · L1=13 · L2=167 · L3=7 · EXCL=3 · DELEG=12 · RETIRED=3 (total 203).
+**Distribution** (generated from `registry/dispatch_state.jsonl` — do not hand-edit; edit the JSONL via `registry/registry_promote.py` and re-run `python registry/render_registry.py`): L0=1 · L1=14 · L2=167 · L3=7 · EXCL=3 · DELEG=12 · RETIRED=3 (total 204).
 <!-- REGISTRY:DISTRIBUTION:END -->
 `ExecBtlGfx` (D038085) REMOVED from the dispatch on 2026-06-30 (206→205): BLOCKING
 animation (multi-frame WaitVblank/WaitFrame) incompatible with the synchronous
@@ -148,6 +148,7 @@ The 23 L1: 11 `no_source` (bundled btlgfx → custom spike), 8 `no_contract`
 | `D03C049` | $03:C049 | `AnyTarget_c` | battle | L2 | fuzzed spike, 0 fails |
 | `D03C06C` | $03:C06C | `AICondTarget_23_c` | battle | L2 | fuzzed spike, 0 fails |
 | `D03C987` | $03:C987 | `CalcHits_c` | battle | L2 | fuzzed spike, 0 fails |
+| `D03C99F` | $03:C99F | `CalcDmg_c` | battle | L1 | New dispatch entry 2026-07-06: calc_dmg_emu was a genuine no-op stub, root cause of oversized monster damage (player bug report). Full formula translated (variance/elemental+creature multipliers/crit/defense/multiply-divide/9999 cap), careful about Pitfall 9 (hidden B). Verified via headless combat repro (ff4-port/fixtures/012-first-worldmap-combat.lss) -- damage now in a plausible 10-30 range instead of 100+. NOT yet spike-verified -- ported under real-time bug-fix pressure, not the usual WF-DECOMP spike-first flow. Dedicated spike proof is a flagged follow-up. |
 | `D03D378` | $03:D378 | `MagicDmgEffect_c` | battle | L2 | fuzzed spike, 0 fails |
 | `D03D466` | $03:D466 | `MagicEffect_04_c` | battle | L2 | fuzzed spike, 0 fails |
 | `D03D613` | $03:D613 | `MagicEffect_08_c` | battle | L2 | fuzzed spike, 0 fails |
