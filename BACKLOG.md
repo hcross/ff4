@@ -123,6 +123,62 @@ Bugs correct on desktop; still to be made **device-correct** (cf. MemPalace
       InitCharRows/PlayGameSfx/PlaySystemSfx` (DB=$7E → `$7E:21xx` = WRAM, presumably
       OK) and `LoadTheEndGfx/_13e058` (DB to be confirmed). Confirm case by case.
 
+## 7. PPU render-loop performance (title screen lag, 2026-07-06 investigation)
+
+Triggered by a real on-device report: the title screen lags on G&W hardware.
+Initial assumption was "needs more dispatch coverage" (CPU/65816 interpretation
+is ~6x slower per §A.2) — **investigation disproved this** and redirected the
+fix target. Full narrative in MemPalace `wing=ff4-gnw room=obstacles-and-solutions`
+(drawer title: "PPU render-loop dominates title-screen cost, not CPU dispatch").
+
+- [x] 🤖 Measured dispatch-hit rate boot→title (`miss_profiler`, 1800 frames):
+      already ~86% by call count. 10/11 remaining miss PCs are one-shot boot
+      inits (sound/controller/OAM, negligible cost); the 1 repeating miss
+      (`$00:913E`, `WaitVblankShort` body, ~99.4% of miss volume) is a genuine
+      NMI spin-wait — same unsafe-to-synchronously-dispatch category as
+      `ExecBtlGfx`/`CheckMenu` (a C body can't wait for an NMI that hasn't
+      happened). The project's own DELEG pattern for this class doesn't save
+      any interpreted-opcode cost either — porting it wouldn't move the needle.
+- [x] 🤖 Real wall-clock A/B (`ff4-desktop-headless --frames 600` vs
+      `--no-dispatch`, equal `frames_run=599`, 3 runs each): dispatch ON is
+      **~6% SLOWER** wall-clock than pure interpretation for this specific
+      window (2.18s vs 2.05s) — dispatch call-count % is not a reliable proxy
+      for real lag here.
+- [x] 🤖 macOS `sample` (5s, `/usr/bin/sample`) on the running headless title
+      loop: **`ppu_getPixel` 62%, `ppu_runLine` 15%, `snes_runCycles` 12%,
+      `cpu_doOpcode` <0.1%**. The 65816 interpreter is statistical noise — all
+      real cost is in LakeSnes's software PPU pixel renderer
+      (`ff4-gnw/snes/ppu.c`), an architecture completely orthogonal to
+      dispatch/CPU porting.
+- [x] 🤖 Root-caused why THIS scene is expensive: `$2130`/`$2131` (CGWSEL/
+      CGADSUB) enable SNES color math (BG1 main + BG2 sub, half-color blend —
+      likely the logo/crystal glow effect), which makes `ppu_handlePixel` call
+      `ppu_getPixel` **twice** per output pixel (main + subscreen) plus run the
+      blend arithmetic. This is required for correct visual output, not waste.
+- [x] 🤖 Checked for a free win in `ppu_getPixel`/`ppu_getPixelForBgLayer`: a
+      per-scanline tilemap+bitplane cache **already exists** (`s_bgTilemapAdr`/
+      `s_bgPlaneAdr`, comment: "cuts ~7/8 of BG-layer VRAM fetches") — the
+      obvious memoization is already done. Remaining per-pixel cost (bit
+      extraction from already-cached plane words) is inherently pixel-varying;
+      no further win without changing what's rendered.
+- [ ] 🤖 **Next lever identified (not implemented)**: batch the per-pixel bit
+      extraction in `ppu_getPixelForBgLayer` 8 pixels at a time, reusing the
+      already-cached plane words for a whole tile span in one pass instead of
+      one function-call-per-pixel. Byte-identical output (same cache, same
+      arithmetic, just restructured), so semantically safe in principle — but
+      touches the renderer shared by every scene, so requires a full oracle
+      (`wram_diff`) regression pass across multiple fixtures before trusting
+      it, not just the title screen. Scoped as a dedicated future session, not
+      attempted here.
+- [ ] 🧑/🤖 **Not investigated**: whether the on-device (Cortex-M7) bottleneck
+      profile actually matches the desktop x86 `sample` result — worth a
+      cross-check before investing in the PPU refactor (different cache/memory
+      characteristics could shift the hot path).
+- [ ] 🧑 **Pragmatic alternative not tried**: throttle the title screen
+      specifically to 30 fps (non-gameplay screen, likely imperceptible) —
+      cheap to test, no shared-code risk, doesn't fix the underlying PPU cost
+      but may be sufficient to eliminate perceived lag.
+
 ---
 
 **Legend**: 🤖 doable by agent · 🧑 requires the human (hardware, push,
