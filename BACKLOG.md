@@ -161,15 +161,33 @@ fix target. Full narrative in MemPalace `wing=ff4-gnw room=obstacles-and-solutio
       obvious memoization is already done. Remaining per-pixel cost (bit
       extraction from already-cached plane words) is inherently pixel-varying;
       no further win without changing what's rendered.
-- [ ] 🤖 **Next lever identified (not implemented)**: batch the per-pixel bit
-      extraction in `ppu_getPixelForBgLayer` 8 pixels at a time, reusing the
-      already-cached plane words for a whole tile span in one pass instead of
-      one function-call-per-pixel. Byte-identical output (same cache, same
-      arithmetic, just restructured), so semantically safe in principle — but
-      touches the renderer shared by every scene, so requires a full oracle
-      (`wram_diff`) regression pass across multiple fixtures before trusting
-      it, not just the title screen. Scoped as a dedicated future session, not
-      attempted here.
+- [x] 🤖 **Batching lever implemented, measured, and PARKED (2026-07-06,
+      branch `perf/ppu-bg-line-batching` in ff4-gnw — two commits, both
+      byte-identical-proven against 19 golden runs: PPM + WRAM CRC over
+      coldboot + 8 fixtures × 2 frame counts)**. Tip = variant A
+      (whole-line lazy decode per BG layer); tip~1 = variant B (8px block
+      decode, addSubscreen-gated). Fair alternated A/B on x86, medians:
+      - Variant A: title −6%, combat −8%, **menu +23% / mode7 +13%
+        regressions**, and pathological delegated-spin fixtures (003
+        measured; 002/005/006 same class) **>15× faster** — would make
+        them usable in desktop validation for the first time.
+      - Variant B: title −5%, everything else +4..7% — trades away both
+        the wins and the losses.
+      Verdict: no variant is a clean win on x86; NOT merged to main.
+      Regressions persist even where the fast path cannot engage
+      (mode 7) — codegen/inlining sensitivity of the hot loop, not logic.
+- [ ] 🧑 **Device verdict**: flash branch `perf/ppu-bg-line-batching` (tip
+      = variant A) on the G&W and observe the title screen — the
+      Cortex-M7 (in-order, small D-cache) may weight the per-pixel
+      arithmetic reduction very differently from desktop x86 (this was
+      already flagged as the open cross-check below).
+- [ ] 🤖 **The structural fix**: full per-line layer renderer
+      (zelda3/Snes9x approach — render each active layer's line once into
+      a buffer, compose priorities/math once per line) instead of the
+      per-pixel layer loop. This is where the 62%-of-CPU cost actually
+      lives; the parked batching only nibbles at it. Dedicated session,
+      same byte-identical golden methodology (scripts now exist, see
+      MemPalace drawer `ppu-bg-line-batching`).
 - [ ] 🧑/🤖 **Not investigated**: whether the on-device (Cortex-M7) bottleneck
       profile actually matches the desktop x86 `sample` result — worth a
       cross-check before investing in the PPU refactor (different cache/memory
