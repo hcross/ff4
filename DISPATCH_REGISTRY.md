@@ -297,4 +297,4 @@ Populated by **WF-RELEASE** ([workflows/WF-RELEASE.md](workflows/WF-RELEASE.md))
 
 | Date | Commit | Embedded dispatches | Speed | Fidelity | Crash-free | Notes |
 |------|--------|---------------------|-------|----------|------------|-------|
-| _(empty — to be populated by WF-RELEASE)_ | | | | | | |
+| 2026-07-08 | ff4-gnw `88e2a9c` (branch `perf/ppu-bg-line-batching` = main `004e78d` + BG batching variant A) | Full table at `b40099f` (204 entries) | Title ~6-8 fps (human estimate, up from ~3-5 on the 225a397-era flash) | Visually OK through boot → title → intro cutscene → bridge dialogue (human LCD reading; no pixel-diff pass) | Yes, through the bridge scene — no crash, no visual bug | Smoke test, not a full qualification: no L4 promotions (fidelity axis not pixel-diffed, GDB oracle not run — probe disabled post-flash). Speed-delta attribution ambiguous between BG batching and the 229 KB pixelBuffer fix (both embedded). Device loop renders every SNES frame (no frameskip), so displayed fps ≈ game-logic speed. |

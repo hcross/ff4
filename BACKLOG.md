@@ -176,11 +176,34 @@ fix target. Full narrative in MemPalace `wing=ff4-gnw room=obstacles-and-solutio
       Verdict: no variant is a clean win on x86; NOT merged to main.
       Regressions persist even where the fast path cannot engage
       (mode 7) — codegen/inlining sensitivity of the hot loop, not logic.
-- [ ] 🧑 **Device verdict**: flash branch `perf/ppu-bg-line-batching` (tip
-      = variant A) on the G&W and observe the title screen — the
-      Cortex-M7 (in-order, small D-cache) may weight the per-pixel
-      arithmetic reduction very differently from desktop x86 (this was
-      already flagged as the open cross-check below).
+- [x] 🧑 **Device verdict (2026-07-08)**: branch flashed (merged tip
+      `88e2a9c` = variant A + the pixelBuffer fix below) and observed:
+      title ~3-5 fps → ~6-8 fps (~2×, human estimate), zero
+      crash/visual bug through boot → title → intro → bridge dialogue.
+      Attribution between batching and the pixelBuffer fix is ambiguous
+      (flash `main` alone to separate them). Registry Table 3 has the
+      release row. The M7 gain is real but the per-pixel renderer
+      remains the structural floor.
+- [x] 🤖 **Device link was silently BROKEN on main (found 2026-07-08,
+      fixed same day)**: the 2026-07-06 battle/field fixes pushed the
+      FF4 RAM_EMU overlay ~3 KB over budget (`Error: FF4 BSS overflow`)
+      — never noticed because no device build had run since `225a397`
+      (June 25). Fixed structurally on main (`004e78d`): the LakeSnes
+      pixelBuffer stored an 8-byte hires PAIR per SNES column while FF4
+      never uses hires and every reader only consumed the left half —
+      halved to 256×4×224 under `FF4_PORT_STATIC_SNES` (−229 KB, 3
+      fewer RAM writes/pixel, byte-identical over the 19-run golden
+      sweep). Link margin: −3,024 B (fail) → +226,544 B. Lesson: any
+      ff4-gnw commit adding code/BSS should at least device-LINK before
+      merging (WF-RELEASE §3 build, no flash needed).
+- [ ] 🤖 **Frameskip (not implemented — likely the biggest perceived-speed
+      lever)**: the device loop (`main_ff4.c`) renders every SNES frame,
+      so 6-8 fps displayed = game logic at ~1/8 speed. Rendering
+      dominates (~85%+); emulating N frames while rendering only the
+      Nth (keep `ppu_evaluateSprites` for game-visible $213E flags,
+      skip only the pixel loop) would speed the game up almost
+      proportionally. Needs a render-skip flag through
+      `snes_runFrame`/`ppu_runLine` + a WRAM-identical validation pass.
 - [ ] 🤖 **The structural fix**: full per-line layer renderer
       (zelda3/Snes9x approach — render each active layer's line once into
       a buffer, compose priorities/math once per line) instead of the
