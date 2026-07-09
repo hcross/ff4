@@ -204,13 +204,22 @@ fix target. Full narrative in MemPalace `wing=ff4-gnw room=obstacles-and-solutio
       skip only the pixel loop) would speed the game up almost
       proportionally. Needs a render-skip flag through
       `snes_runFrame`/`ppu_runLine` + a WRAM-identical validation pass.
-- [ ] 🤖 **The structural fix**: full per-line layer renderer
-      (zelda3/Snes9x approach — render each active layer's line once into
-      a buffer, compose priorities/math once per line) instead of the
-      per-pixel layer loop. This is where the 62%-of-CPU cost actually
-      lives; the parked batching only nibbles at it. Dedicated session,
-      same byte-identical golden methodology (scripts now exist, see
-      MemPalace drawer `ppu-bg-line-batching`).
+- [ ] 🤖 **The structural fix — now sized by REAL M7 numbers (D6,
+      2026-07-09, title screen, frameskip-3 decomposition)**: pure
+      emulation 68 ms/frame + PPU render 186 ms/frame + blit 2 ms
+      (3.3-3.9 fps). 60 fps (16.7 ms) therefore requires BOTH axes;
+      a free renderer alone caps at 14.7 fps. Milestone plan:
+      **M1** per-line layer renderer (render 186 -> target <20 ms;
+      byte-identical golden bar, infra ready; also D-cache-friendly on
+      the 16 KB M7 cache). **M2** vblank-spin fast-forward (emulation
+      68 -> target ~15-20 ms on idle scenes: the title spins WaitVblank
+      interpreted and snes_runCycles ticks ~357k events/frame -- the
+      stepping machinery, not the opcodes, is the cost; detect the spin
+      PC and advance cycles in bulk; WRAM-identical desktop validation).
+      **M3** re-measure D6; if total >33 ms, next lever is
+      snes_runCycles event batching (core surgery) and/or continued
+      dispatch. Honest target: title 30-40 fps after M1+M2; strict 60
+      likely needs M3. Order matters: M1 first (render dominates).
 - [ ] 🧑/🤖 **Not investigated**: whether the on-device (Cortex-M7) bottleneck
       profile actually matches the desktop x86 `sample` result — worth a
       cross-check before investing in the PPU refactor (different cache/memory
