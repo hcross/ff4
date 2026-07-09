@@ -239,10 +239,34 @@ fix target. Full narrative in MemPalace `wing=ff4-gnw room=obstacles-and-solutio
       Correction to the historical record: the M1-era "render 63 ms" is not
       reproducible (the M1 tip itself reads 77.3 ms in today's conditions);
       render at ~77 ms is now unambiguously the dominant axis. Registry
-      Table 3 has the release row. Remaining emu-side levers: the bit-exact
-      fp-replay of the APU tick accumulation (removing it is NOT
-      byte-identical → needs an ADR relaxing the bar for that accumulator),
-      cpu-level batching of the WaitVblank spin (M2), continued dispatch.
+      Table 3 has the release row. ADR-006 (ff4-port) authorizes an exact
+      integer reformulation of the APU accumulator with a replacement
+      evidence pack (not byte-identical by construction).
+- [x] 🤖 **Probe sampling profile on the M3a firmware (240 samples, title,
+      frameskip 3, 2026-07-09)** — the "measure before optimizing" pass
+      for iteration 3. Full histogram + sampler pitfalls in MemPalace
+      (obstacles drawer 60ef55ba). Headlines: `snes_runCycles` still #1 at
+      26.7% but its fp-replay loop is only ~12% of that (~2-3 ms/frame —
+      NOT the 7-9 ms estimated); the dominant cost is per-call overhead
+      (~90k invocations/frame at 3-6 ticks per memory access).
+      `ppu_getWindowState` is 8.3% of total wall — ~26 of the 77 ms
+      render (34%): per-PIXEL window evaluation in the M1 compositor's
+      output stage. Memory-access chain ~22.5%; real APU/DSP ~9%.
+- [ ] 🤖 **R1 — window state by spans in the M1 compositor**: window
+      state is piecewise-constant (≤5 spans/line from the two windows'
+      edges) → precompute per line instead of calling ppu_getWindowState
+      per pixel. Estimated ~24 ms off the render (77 → ~53). Standard
+      byte-identical bar (parallel 5 s golden sweep ready).
+- [ ] 🤖 **E1 — ADR-006 implementation (exact integer APU accumulator)
+      COUPLED with a next-event downcounter fast path in snes_runCycles**
+      (cache ticks-to-next-event, O(1) per call, full segment machinery
+      only when the budget is exhausted). Only worthwhile together — the
+      ADR alone recovers ~2-3 ms. ADR-006 evidence pack applies.
+- [ ] 🤖 **E2 — memory-access chain (~22.5%)**: region LUT / fast paths
+      for the WRAM+ROM read hot path (snes_rread + cart_read +
+      getAccessTime). After R1+E1, honest projection is ~18-19 fps title;
+      60 fps also needs this, M2 spin fast-forward, and an APU-decimation
+      decision (🧑 audio-quality trade-off).
 - [ ] 🧑/🤖 **Not investigated**: whether the on-device (Cortex-M7) bottleneck
       profile actually matches the desktop x86 `sample` result — worth a
       cross-check before investing in the PPU refactor (different cache/memory
