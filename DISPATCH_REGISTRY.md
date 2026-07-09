@@ -26,7 +26,7 @@ leaving 2 compile_error (inter-routine dependency / include).
 > isolated than L3 (in-game oracle). **FAILs** = real divergences to investigate (WF-VALID).
 
 <!-- REGISTRY:DISTRIBUTION:START -->
-**Distribution** (generated from `registry/dispatch_state.jsonl` — do not hand-edit; edit the JSONL via `registry/registry_promote.py` and re-run `python registry/render_registry.py`): L0=1 · L1=13 · L2=168 · L3=7 · EXCL=3 · DELEG=12 · RETIRED=3 (total 204).
+**Distribution** (generated from `registry/dispatch_state.jsonl` — do not hand-edit; edit the JSONL via `registry/registry_promote.py` and re-run `python registry/render_registry.py`): L0=1 · L1=13 · L2=167 · L3=7 · EXCL=3 · DELEG=12 · RETIRED=4 (total 203).
 <!-- REGISTRY:DISTRIBUTION:END -->
 `ExecBtlGfx` (D038085) REMOVED from the dispatch on 2026-06-30 (206→205): BLOCKING
 animation (multi-frame WaitVblank/WaitFrame) incompatible with the synchronous
@@ -89,7 +89,7 @@ The 23 L1: 11 `no_source` (bundled btlgfx → custom spike), 8 `no_contract`
 | `D01CA85` | $01:CA85 | `TfrVRAM_c` | field | L1 | spike does not compile (inter-routine dependency / include) |
 | `D01D718` | $01:D718 | `FadeIn_c` | field | DELEG | delegate wrapper — equivalent by construction (executes the asm) |
 | `D01DFD2` | $01:DFD2 | `LoadBattleSpeedPosText_c` | menu | L2 | hardcore PASS |
-| `D028560` | $02:8560 | `Mult8_btlgfx_c` | btlgfx | L2 | Bundled-body routine (btlgfx_prim.c). Extracted verbatim to port/btlgfx/Mult8_btlgfx.c; body already correct (no fix needed — bit-serial ROR/ADC loop, no 8-bit ASL-index truncation class applies). Fixed output_ram 0x2A=2 (16-bit product 2A:2B). Spike 300 trials, 0 fails. (evidence: ff4-port/translator/runs/D028560_mult8_btlgfx_revalidation.txt) |
+| `D028560` | $02:8560 | `Mult8_btlgfx_c` | btlgfx | RETIRED | Retired 2026-07-09: sole cause of the transient battle-menu tilemap corruption (16/600 frames on 006-in-combat -> 0/600 with the entry excluded/removed; automated detector + bisect + runtime isolation). Spike-passing arithmetic; divergence is an interaction beyond the routine contract (006 frame-0 oracle divergence = standing lead). Interpreted until requalified. (evidence: ff4-gnw/dispatch_all.c) |
 | `D0285D2` | $02:85D2 | `HardMult_btlgfx_c` | btlgfx | L2 | Extracted MultHW ($02:85D2) from bundled btlgfx_prim.c into port/battle/HardMult_btlgfx.c; standalone spike 300/300 pass, 0 fails. Body verbatim (hardware 8x8->16 multiply ram[$1C]*ram[$1E]->ram[$20:$21]); no bug found, no width-truncation risk (8x8->16 fits uint16_t). (evidence: ff4-port/translator/runs/D0285D2_hardmult_btlgfx_revalidation.txt) |
 | `D0290A0` | $02:90A0 | `TfrBG2MenuTile_c` | btlgfx | L1 | no CONTRACT block |
 | `D02A491` | $02:A491 | `IncrTextPtr_c` | btlgfx | L2 | Extracted bundled body (btlgfx_prim.c) to standalone port/btlgfx/IncrTextPtr.c; 16-bit X increment, no truncation bug (verbatim body already correct); auto-spike 300 trials, fails: 0 (evidence: ff4-port/translator/runs/D02A491_incrtextptr_revalidation.txt) |
