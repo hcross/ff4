@@ -220,6 +220,29 @@ fix target. Full narrative in MemPalace `wing=ff4-gnw room=obstacles-and-solutio
       snes_runCycles event batching (core surgery) and/or continued
       dispatch. Honest target: title 30-40 fps after M1+M2; strict 60
       likely needs M3. Order matters: M1 first (render dominates).
+- [x] 🤖 **M3 (promoted after the M1 probe sampling showed snes_runCycle at
+      ~67% of the M7 frame): snes_runCycles event batching — implemented and
+      byte-identical-validated (2026-07-09, ff4-gnw branch
+      `perf/runcycle-event-batching`, commit `fc3acb7`, on top of the M1
+      line-renderer branch)**. The per-tick loop (~357k ticks/frame paying
+      the full irq/event/wrap check chain) is replaced by segment runs
+      between the only hPos values that owe event work (0/16/512/1104,
+      h-irq point, line end); irq edge detection, event order and the apu
+      catchup accumulation are preserved tick- and bit-exact (fp additions
+      replayed, not fused). Validation: 41/41 byte-identical goldens
+      (coldboot + 11 fixtures × 2 depths, PPM+WRAM) + 1800/1800 per-frame
+      fb CRCs (006/012/013 × 600). Desktop wall-clock neutral (expected —
+      same as M1, x86 OoO masks the stepping cost). **D6 measured on device
+      (same day, title, FF4_FRAMESKIP=3): emu 67.8 → 59.0 ms (−13%), fps
+      11.4 → 12.7 (+11%), render/blit unchanged** — same-day A/B reflash of
+      the M1 tip in identical conditions, D6 windows stable to <0.1%.
+      Correction to the historical record: the M1-era "render 63 ms" is not
+      reproducible (the M1 tip itself reads 77.3 ms in today's conditions);
+      render at ~77 ms is now unambiguously the dominant axis. Registry
+      Table 3 has the release row. Remaining emu-side levers: the bit-exact
+      fp-replay of the APU tick accumulation (removing it is NOT
+      byte-identical → needs an ADR relaxing the bar for that accumulator),
+      cpu-level batching of the WaitVblank spin (M2), continued dispatch.
 - [ ] 🧑/🤖 **Not investigated**: whether the on-device (Cortex-M7) bottleneck
       profile actually matches the desktop x86 `sample` result — worth a
       cross-check before investing in the PPU refactor (different cache/memory
