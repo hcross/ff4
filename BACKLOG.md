@@ -266,11 +266,35 @@ fix target. Full narrative in MemPalace `wing=ff4-gnw room=obstacles-and-solutio
       (58 ms) is now the dominant axis again, render (47 ms) second** —
       E1 (ADR-006 accumulator + downcounter fast path) is the next
       lever, then E2/render-iteration-4 by whichever D6 says dominates.
-- [ ] 🤖 **E1 — ADR-006 implementation (exact integer APU accumulator)
-      COUPLED with a next-event downcounter fast path in snes_runCycles**
-      (cache ticks-to-next-event, O(1) per call, full segment machinery
-      only when the budget is exhausted). Only worthwhile together — the
-      ADR alone recovers ~2-3 ms. ADR-006 evidence pack applies.
+- [x] 🤖 **E1 — exact integer APU debt + next-event downcounter fast path
+      — DONE, measured (2026-07-10, ff4-gnw branch
+      `perf/e1-apu-int-downcounter`, commit `a3f3337`, merged to main after
+      input confirmation)**: int64 numerator against the rational
+      clock ratio replaces the fp replay (ADR-006; .lss double view kept,
+      states load unchanged); calls fitting inside the cached
+      ticks-to-next-event budget are O(1). Hard-won invariant: positional
+      events are owed by the tick STARTING at the boundary, the line wrap
+      by the tick ENDING at lineEnd — the wrap tick never counts as
+      fast-path budget (first cut hung combat fixtures via a 65536-cycle
+      runaway line). Validation EXCEEDS the ADR-006 pack: 41/41
+      byte-identical vs R1 (integer truncation coincides with the fp
+      history over the whole coverage) + self-consistency + oracle
+      verdicts unchanged 7/7. Device D6 (title, frameskip 3): emu
+      58.2 → 43.6 ms (−25%), render untouched at 47.0, title
+      14.1 → 17.9 fps. Cumulative since 2026-07-09 M1: 11.4 → 17.9
+      (+57%). Walls now nearly balanced: render 47.0 / emu 43.6 →
+      re-profile before choosing E2 vs render iteration 4.
+      POSTSCRIPT — device-input incident, root-caused same day: E1 is the
+      only change altering the Snes struct layout, and retro-go-sd's
+      dependency include only globbed build/*.d (never build/<port>/*.d),
+      so the incremental device build rebuilt snes.o alone and shipped a
+      mixed-layout firmware — input dead on device, desktop (single-shot
+      compile) unaffected, D6 numbers unaffected (main_ff4 statics).
+      Fixed in the scaffold branch (retro-go-sd 0c9923a2: include
+      build/*/*.d) + full build/ff4 rebuild; input and 17.9 fps both
+      confirmed on the coherent binary. Lesson recorded in MemPalace
+      obstacles: any external/ff4 HEADER change before that commit
+      requires rm -rf build/ff4.
 - [ ] 🤖 **E2 — memory-access chain (~22.5%)**: region LUT / fast paths
       for the WRAM+ROM read hot path (snes_rread + cart_read +
       getAccessTime). After R1+E1, honest projection is ~18-19 fps title;
