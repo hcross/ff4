@@ -388,7 +388,27 @@ fix target. Full narrative in MemPalace `wing=ff4-gnw room=obstacles-and-solutio
       Next targets mapped: $00:9FC2 (10/frame, FOURTH disassembly
       off-by-2 verified by ROM bytes, JMP $9FF3 continuation to trace),
       dead-entry requalification 0x1E9F6C (UpdateLocalTiles_c: rewritten
-      bank + off-by-2 -> likely never hits).
+      bank + off-by-2 -> likely never hits). Both done in batch 3, below.
+- [x] 🤖 **Field map-engine porting campaign, batch 3 (2026-07-11)**:
+      both mapped targets landed. D009FC2 GetTileProps L2 (tile-properties
+      leaf, ~10/frame; the JMP $9FF3 "continuation" turned out to be an
+      internal jump to the routine's own tail -- fourth off-by-2). The
+      0x1E9F6C dead entry was CONFIRMED dead (rewritten bank + off-by-2:
+      $1E:9F6C is data, zero call sites in the whole ROM; its "hardcore
+      PASS" was vacuous -- the old spike ran the asm side at data bytes
+      and the production get_tile_prop_emu helper was a weak no-op) ->
+      retired, and UpdateLocalTiles rewritten dp-relative at the real
+      $00:9F6E (fifth off-by-2), its five inner calls now hitting the
+      native GetTileProps_c. Spikes 5000/0 both; in-game 009 FB/OAM
+      byte-identical, misses 9000 -> 8400/300f, verdicts unchanged 7/7.
+      Correctness/coverage track as decided -- no perf claim. TOOLING
+      SHARP EDGE surfaced: generate_spike.py resolves the spike target
+      from the port FILE stem via ca65-bridge and trusts it over the
+      REVERSED_FUNCTION line -- on off-by-2 routines the bridge returns
+      the annotated WRONG address (4975/5000 fails, asm side executing
+      mid-instruction garbage). Workaround: name the port file so the
+      bridge can't resolve it (UpdateLocalTilesEntry.c). A proper
+      trust-the-contract override directive is a candidate small fix.
 - [x] 🤖 **Palette-only partial skip (R5) — DONE, measured, merged
       (2026-07-10, ff4-gnw `613146c`)**: geometry stable + cgram animated
       → reuse decode+compose from a per-line store (~143 KB overlay),
