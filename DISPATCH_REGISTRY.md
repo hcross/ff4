@@ -26,7 +26,7 @@ leaving 2 compile_error (inter-routine dependency / include).
 > isolated than L3 (in-game oracle). **FAILs** = real divergences to investigate (WF-VALID).
 
 <!-- REGISTRY:DISTRIBUTION:START -->
-**Distribution** (generated from `registry/dispatch_state.jsonl` — do not hand-edit; edit the JSONL via `registry/registry_promote.py` and re-run `python registry/render_registry.py`): L0=1 · L1=13 · L2=168 · L3=7 · EXCL=3 · DELEG=12 · RETIRED=4 (total 204).
+**Distribution** (generated from `registry/dispatch_state.jsonl` — do not hand-edit; edit the JSONL via `registry/registry_promote.py` and re-run `python registry/render_registry.py`): L0=1 · L1=13 · L2=171 · L3=7 · EXCL=3 · DELEG=12 · RETIRED=4 (total 207).
 <!-- REGISTRY:DISTRIBUTION:END -->
 `ExecBtlGfx` (D038085) REMOVED from the dispatch on 2026-06-30 (206→205): BLOCKING
 animation (multi-frame WaitVblank/WaitFrame) incompatible with the synchronous
@@ -80,6 +80,9 @@ The 23 L1: 11 `no_source` (bundled btlgfx → custom spike), 8 `no_contract`
 | `D00BDB2` | $00:BDB2 | `CalcObjScreenPos_c` | field | L2 | field on-screen object-position leaf (~28 calls/frame on the map); fuzzed region-compare spike 5000/0 over 7 inputs; in-game (009) framebuffer byte-identical + WRAM diff is stack-residue only (4 bytes $02xx = PHX/PHY below SP). Entry is $00:BDB2, not $00:BDB0 (disassembly off-by-2, same class as D00F533/F535). |
 | `D00BE47` | $00:BE47 | `CalcVehicleSpritePos_c` | field | DELEG | delegate wrapper — equivalent by construction (executes the asm) |
 | `D00C0C4` | $00:C0C4 | `PlayerSpriteTiles_c` | field | L2 | fuzzed spike, 0 fails |
+| `D00C2FF` | $00:C2FF | `ClearNpcMapCell_c` | field | L2 | npc-map cell clear ($7F:4C00+idx=0), ~8 calls/frame on the map; fuzzed region-compare spike 5000/0; in-game pixels byte-identical, WRAM stack-residue-only. Part of the npc-map cluster port (with D00C347/D00C357). |
+| `D00C347` | $00:C347 | `SetNpcMapCell_c` | field | L2 | npc-map cell set ($AE|$80), ~8 calls/frame; fuzzed region-compare spike 5000/0; in-game pixels byte-identical, WRAM stack-residue-only. |
+| `D00C357` | $00:C357 | `SetNpcMapPtr_c` | field | L2 | npc-map index into $3D/$3E (y*32+x, 8-bit low add truncates), ~16 calls/frame; real entry $00:C357, NOT the annotated $00:C355 (disassembly off-by-2, third of the class after D00F535/D00BDB2); fuzzed region-compare spike 5000/0; in-game pixels byte-identical. |
 | `D00C3BD` | $00:C3BD | `UpdateWhalePal_c` | field | L2 | fuzzed spike, 0 fails |
 | `D00CB5F` | $00:CB5F | `TfrBGAnimGfx_c` | field | L1 | spike: 2/200 fails — divergence (WF-VALID) |
 | `D00F533` | $00:F533 | `UpdateBG2Scroll_c` | field | RETIRED | dead entry -- $00:F533 is not an instruction boundary (mid-operand byte of the preceding routine's LDX $43 at $00:F532; $00:F534=RTS), confirmed by direct ROM inspection. Never a valid call target. The disassembly's two-entry model (F533=full/F535=skip) was off by 2 bytes; see D00F535 for the real, sole entry point. Retired 2026-07-05. |
