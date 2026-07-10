@@ -332,13 +332,27 @@ fix target. Full narrative in MemPalace `wing=ff4-gnw room=obstacles-and-solutio
       same codegen-sensitivity class as the parked 2026-07-06 batching
       variants) and was dropped after the device A/B caught it — the
       measure-every-increment discipline is what saved it.
-- [ ] 🤖 **R2b — decoded-tile-row cache (the remaining big render
-      lever, ~17 ms BG decode)**: cache planar->chunky tile-row decodes
-      keyed on VRAM address + bit depth, invalidated by a VRAM-write
-      generation counter (single write site, $2118/19). Static scenes
-      (title, dialogue) hit ~100%; palette offset and flip applied at
-      copy time. Sizing: ~4096 entries x 12 B ~= 48 KB in the overlay
-      (margin ~200 KB). Standard byte-identical bar.
+- [x] 🤖 **R2b — decoded-tile-row cache — DONE, measured (2026-07-10,
+      ff4-gnw `383052d`, merged to main)**. Hypothesis verified first:
+      instrumented VRAM writes/frame = 0 on title, 0 on ~5/6 field
+      frames, so a vramGen-invalidated cache hits ~100% on the target
+      scenes. 4096 direct-mapped slots keyed on (planeAdr, bitDepth),
+      raw 8-pixel column-order rows before hFlip/palette. Device D6
+      (deterministic savestate-boot A/B, fixture 009, frameskip 0):
+      field 71.2 -> 62.9 ms/frame (-12%), field fps 14.0 -> 15.8.
+      Device framebuffer captured via probe = clean render. 41/41
+      byte-identical goldens + oracle verdicts unchanged 7/7.
+      Cumulative field render since E2: 76.5 -> 62.9 ms.
+- [ ] 🤖 **Next render levers toward 60 fps** (field now ~63 ms; 60 fps
+      = 17 ms, still ~3.7x): compose stage (~10 ms, s_lrPix/s_lrLayer
+      memsets + per-layer loop -- cache or skip when the composed line is
+      unchanged); dirty-line rendering (skip recompose of lines whose
+      inputs -- scroll, VRAM, cgram, OAM -- did not move; the big
+      structural win for static/scrolling scenes, but a real refactor);
+      continued dispatch (CPU interpreter core); APU/DSP decimation
+      (~13%, human audio-quality call). 60 strict likely needs the
+      dirty-line refactor; 30-40 fps field reachable with the cheaper
+      levers first.
 - [ ] 🧑/🤖 **Not investigated**: whether the on-device (Cortex-M7) bottleneck
       profile actually matches the desktop x86 `sample` result — worth a
       cross-check before investing in the PPU refactor (different cache/memory
