@@ -373,6 +373,22 @@ fix target. Full narrative in MemPalace `wing=ff4-gnw room=obstacles-and-solutio
       19 and 84). The load-bearing assumption (frame-identical periods in
       rendered scenes) does not hold for FF4. Parked; the signature/raster/
       HDMA gate machinery is sound and reusable if a future need arises.
+- [x] 🤖 **Field map-engine porting campaign, batches 1-2 + the honest
+      measurement (2026-07-10)**: 4 routines ported L2 (D00BDB2
+      CalcObjScreenPos 28/frame; D00C2FF/D00C347/D00C357 npc-map cluster
+      ~32/frame) -- miss rate on 009 halved (94.3% -> 44.4%). Device D6
+      A/B (field 009, frameskip 3, savestate-boot): emu 31.61 -> 31.33
+      ms/frame (-0.9%). SECOND confirmation of the 2026-07-06 lesson:
+      dispatch call-rate is not time -- the eliminated leaves were tiny
+      (~2.4k opcodes/frame). Porting leaf JSRs improves coverage and
+      correctness posture but is NOT a framerate lever; moving field emu
+      meaningfully means porting whole subtrees (movement/NPC main-loop
+      bodies) or the remaining machinery/APU levers. Campaign continues
+      as a correctness/coverage track, decoupled from perf expectations.
+      Next targets mapped: $00:9FC2 (10/frame, FOURTH disassembly
+      off-by-2 verified by ROM bytes, JMP $9FF3 continuation to trace),
+      dead-entry requalification 0x1E9F6C (UpdateLocalTiles_c: rewritten
+      bank + off-by-2 -> likely never hits).
 - [ ] 🤖 **Palette-only partial skip (the ACTUAL lever the R4 diagnosis
       exposed, sizable)**: when ONLY cgram changed (title/field palette
       animation -- the dominant real-scene case), decode (~17 ms) and
