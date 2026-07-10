@@ -88,6 +88,18 @@ exit state. Green ⇒ the routine's runtime equivalence is proven. `ca65`
 **reassemble the disassembly into the reference vanilla ROM** (the "golden"
 ROM for `parity_compare`), not to recompile the C.
 
+> ⚠ **The spike target address comes from the port file's NAME, not from the
+> `REVERSED_FUNCTION` line.** `generate_spike.py` resolves the target from
+> the file stem via `ca65-bridge` and, on disagreement, trusts the bridge
+> ("Trusting the bridge" warning). On a routine whose disassembly annotation
+> is offset from its true entry (the recurring off-by-2 class, e.g.
+> `D009F6E`), the bridge therefore returns the annotated **wrong** address
+> and the spike fails en masse (~4975/5000, asm side executing
+> mid-instruction garbage). Workaround: name the port file so the bridge
+> cannot resolve it (e.g. `UpdateLocalTilesEntry.c` — falls back to the
+> `REVERSED_FUNCTION` address) and add a one-line spike-only `void <stem>_c`
+> shim. Evidence: `ff4-port/translator/runs/D009F6E_updatelocaltiles_spike.txt`.
+
 ### 5. Boundary coverage *(to be formalised on top of the spikes)*
 The spike covers the state reached by the test savestate(s). For **edge
 cases** (0, max values, incoming carry, overflows, extreme indices)
