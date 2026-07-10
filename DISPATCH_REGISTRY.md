@@ -26,7 +26,7 @@ leaving 2 compile_error (inter-routine dependency / include).
 > isolated than L3 (in-game oracle). **FAILs** = real divergences to investigate (WF-VALID).
 
 <!-- REGISTRY:DISTRIBUTION:START -->
-**Distribution** (generated from `registry/dispatch_state.jsonl` — do not hand-edit; edit the JSONL via `registry/registry_promote.py` and re-run `python registry/render_registry.py`): L0=1 · L1=13 · L2=167 · L3=7 · EXCL=3 · DELEG=12 · RETIRED=4 (total 203).
+**Distribution** (generated from `registry/dispatch_state.jsonl` — do not hand-edit; edit the JSONL via `registry/registry_promote.py` and re-run `python registry/render_registry.py`): L0=1 · L1=13 · L2=168 · L3=7 · EXCL=3 · DELEG=12 · RETIRED=4 (total 204).
 <!-- REGISTRY:DISTRIBUTION:END -->
 `ExecBtlGfx` (D038085) REMOVED from the dispatch on 2026-06-30 (206→205): BLOCKING
 animation (multi-frame WaitVblank/WaitFrame) incompatible with the synchronous
@@ -77,6 +77,7 @@ The 23 L1: 11 `no_source` (bundled btlgfx → custom spike), 8 `no_contract`
 | `D00AAD8` | $00:AAD8 | `SetPlayerNPCMap_c` | field | L1 | no CONTRACT block |
 | `D00AB13` | $00:AB13 | `ClearPlayerNPCMap_c` | field | L2 | fuzzed spike, 0 fails |
 | `D00AC7D` | $00:AC7D | `CheckVehicleBlock_c` | field | DELEG | delegate wrapper — equivalent by construction (executes the asm) |
+| `D00BDB2` | $00:BDB2 | `CalcObjScreenPos_c` | field | L2 | field on-screen object-position leaf (~28 calls/frame on the map); fuzzed region-compare spike 5000/0 over 7 inputs; in-game (009) framebuffer byte-identical + WRAM diff is stack-residue only (4 bytes $02xx = PHX/PHY below SP). Entry is $00:BDB2, not $00:BDB0 (disassembly off-by-2, same class as D00F533/F535). |
 | `D00BE47` | $00:BE47 | `CalcVehicleSpritePos_c` | field | DELEG | delegate wrapper — equivalent by construction (executes the asm) |
 | `D00C0C4` | $00:C0C4 | `PlayerSpriteTiles_c` | field | L2 | fuzzed spike, 0 fails |
 | `D00C3BD` | $00:C3BD | `UpdateWhalePal_c` | field | L2 | fuzzed spike, 0 fails |
