@@ -396,13 +396,13 @@ fix target. Full narrative in MemPalace `wing=ff4-gnw room=obstacles-and-solutio
       −36% (render-portion −64%), emu unchanged, title 23.9 → 28.1 fps.
       Byte-identical (82/82 deep). Fires where R4 could not (title
       299/300, field 261/300). R4 whole-frame skip kept as mode 1.
-- [ ] 🤖 **R5 store vs FF4_LOAD_SAVESTATE (follow-up)**: the 142 KB
-      line store (s_psPix/s_psSub/s_psFlg) links canonical/release but
-      overflows RAM_EMU with the FF4_LOAD_SAVESTATE debug-boot path.
-      Fix options: shrink (sparse s_psSub -- only PS_F_SUBV pixels need
-      it; or pack), or share memory with the savestate cache buffer
-      (disjoint in time: loaded at boot vs populated during play).
-      Until then, savestate-boot play must use a pre-R5 build.
+- [x] 🤖 **R5 store vs FF4_LOAD_SAVESTATE — RESOLVED (2026-07-10,
+      ff4-gnw `e4c93d2`)**: the combination missed the RAM_EMU budget by
+      only 2,676 bytes; halving the R2b tile-row cache (4096 -> 2048
+      slots, power of two kept) freed 32 KB. Byte-identical revalidated
+      (41/41 vs the R5 goldens — collisions only re-decode). Both
+      configs now clean-link; R5+savestate flashed and live on device
+      (airship state loads, frames advance).
 - [ ] 🤖 **(superseded spec kept for reference) Palette-only partial skip (the ACTUAL lever the R4 diagnosis
       exposed, sizable)**: when ONLY cgram changed (title/field palette
       animation -- the dominant real-scene case), decode (~17 ms) and
