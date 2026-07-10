@@ -353,6 +353,21 @@ fix target. Full narrative in MemPalace `wing=ff4-gnw room=obstacles-and-solutio
       (~13%, human audio-quality call). 60 strict likely needs the
       dirty-line refactor; 30-40 fps field reachable with the cheaper
       levers first.
+- [x] 🤖 **R3 — loop-invariant branch hoists (compose + R2b apply),
+      2026-07-10, ff4-gnw `cd0a678`, merged**: field render 62.9 -> 61.8
+      ms (-1.7%). Confirms the cheap micro-opts are near their ceiling;
+      compose is structurally branch/memory bound. Byte-identical.
+- [ ] 🤖/🧑 **Dirty-frame render skip (the next real render lever, NOT
+      cheap)**: skip decode+compose+output for a frame whose PPU inputs
+      are byte-unchanged, keeping the blit (pixelBuffer is persistent;
+      LCD double-buffer stays correct since the blit re-copies the
+      unchanged buffer). BLOCKER found: FF4 re-uploads OAM by DMA every
+      vblank, so a write-happened counter always trips -- the skip needs
+      value-change detection (bump a renderGen only when a PPU write
+      actually changes state: vram/cgram/oam/registers). Medium effort,
+      high value on static scenes (title/menus/dialogue/standing still ->
+      near blit-only). Strong test net: per-frame fb CRCs over animated
+      fixtures catch any missed input. Byte-identical bar.
 - [ ] 🧑/🤖 **Not investigated**: whether the on-device (Cortex-M7) bottleneck
       profile actually matches the desktop x86 `sample` result — worth a
       cross-check before investing in the PPU refactor (different cache/memory
