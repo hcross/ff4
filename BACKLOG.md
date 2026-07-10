@@ -357,17 +357,35 @@ fix target. Full narrative in MemPalace `wing=ff4-gnw room=obstacles-and-solutio
       2026-07-10, ff4-gnw `cd0a678`, merged**: field render 62.9 -> 61.8
       ms (-1.7%). Confirms the cheap micro-opts are near their ceiling;
       compose is structurally branch/memory bound. Byte-identical.
-- [ ] 🤖/🧑 **Dirty-frame render skip (the next real render lever, NOT
-      cheap)**: skip decode+compose+output for a frame whose PPU inputs
-      are byte-unchanged, keeping the blit (pixelBuffer is persistent;
-      LCD double-buffer stays correct since the blit re-copies the
-      unchanged buffer). BLOCKER found: FF4 re-uploads OAM by DMA every
-      vblank, so a write-happened counter always trips -- the skip needs
-      value-change detection (bump a renderGen only when a PPU write
-      actually changes state: vram/cgram/oam/registers). Medium effort,
-      high value on static scenes (title/menus/dialogue/standing still ->
-      near blit-only). Strong test net: per-frame fb CRCs over animated
-      fixtures catch any missed input. Byte-identical bar.
+- [x] 🤖 **Dirty-frame render skip (R4) -- IMPLEMENTED, VALIDATED,
+      PARKED as a negative result (2026-07-10, branch `perf/r4-dirty-frame`
+      `3327797`, NOT merged)**. Whole-frame skip when the render signature
+      (FNV over OAM + all render control regs, plus vramGen/cgramGen) is
+      unchanged and no raster hazard (no visible-line ppu_write last frame,
+      no HDMA armed). Correct: per-frame fb CRCs byte-identical to no-skip
+      across all 11 fixtures x 300 frames; field device build shows exact
+      no-regression. BUT it fires ~0% on every real-content scene: the
+      skip only triggered on the degenerate black fixtures (004/001 render
+      all-zero). Every scene that draws real pixels animates each frame --
+      palette cycling (title crystal, field torches/reflections: cgram
+      changes every frame) or raster splits (dialogue/combat/worldmap:
+      BG scroll written mid-frame, e.g. 013 writes $2111/$2112 at vPos
+      19 and 84). The load-bearing assumption (frame-identical periods in
+      rendered scenes) does not hold for FF4. Parked; the signature/raster/
+      HDMA gate machinery is sound and reusable if a future need arises.
+- [ ] 🤖 **Palette-only partial skip (the ACTUAL lever the R4 diagnosis
+      exposed, sizable)**: when ONLY cgram changed (title/field palette
+      animation -- the dominant real-scene case), decode (~17 ms) and
+      compose (~10 ms) are identical frame-to-frame; only the output-stage
+      palette differs (already cached by R2a). Reusing the previous
+      frame's composed line result and re-running only the output stage
+      would cut ~27 of the ~62 ms -- plausibly 60 fps on the title.
+      COST/BLOCKER: needs the composed result of all 224 lines stored
+      (s_lrPix+s_lrLayer, ~114-170 KB depending on packing) against a
+      ~143 KB overlay margin -- tight, needs a packing scheme (uint8
+      indices for <=8bpp, directColor fallback) and careful validation.
+      Dedicated session. Byte-identical bar (R2a already proves the
+      palette re-application is exact).
 - [ ] 🧑/🤖 **Not investigated**: whether the on-device (Cortex-M7) bottleneck
       profile actually matches the desktop x86 `sample` result — worth a
       cross-check before investing in the PPU refactor (different cache/memory
