@@ -396,6 +396,16 @@ fix target. Full narrative in MemPalace `wing=ff4-gnw room=obstacles-and-solutio
       −36% (render-portion −64%), emu unchanged, title 23.9 → 28.1 fps.
       Byte-identical (82/82 deep). Fires where R4 could not (title
       299/300, field 261/300). R4 whole-frame skip kept as mode 1.
+- [x] 🤖 **R6 — mosaic on the line-renderer fast path (2026-07-10,
+      ff4-gnw `a5dbc86`, merged)**: pixelation transitions (battle entry,
+      teleports) used to be rejected by ppu_lrFastPathOk and fall back to
+      the legacy per-pixel renderer — the direct cause of the
+      player-reported "pixelation is super slow". Mosaic is
+      line-renderer-friendly (base-row decode + per-block horizontal
+      replication, same signed-% expression as legacy). Byte-identical on
+      the mosaic fixtures (005: 12k lines, 012: 7k) + full sweep 41/41;
+      mosaicStartLine added to the R4/R5 signature. Desktop transition
+      window −28% on x86; M7 larger.
 - [x] 🤖 **R5 store vs FF4_LOAD_SAVESTATE — RESOLVED (2026-07-10,
       ff4-gnw `e4c93d2`)**: the combination missed the RAM_EMU budget by
       only 2,676 bytes; halving the R2b tile-row cache (4096 -> 2048
