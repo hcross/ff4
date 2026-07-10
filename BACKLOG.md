@@ -426,6 +426,26 @@ fix target. Full narrative in MemPalace `wing=ff4-gnw room=obstacles-and-solutio
       the mosaic fixtures (005: 12k lines, 012: 7k) + full sweep 41/41;
       mosaicStartLine added to the R4/R5 signature. Desktop transition
       window −28% on x86; M7 larger.
+- [x] 🤖 **D6 read on the live R5+R6 firmware (2026-07-11, airship/worldmap
+      mode-7 state, frameskip 0, probe attach without reflash)**: at skip 0
+      D6 cannot split emu from render (emu_ms=0 by construction; rend_ms
+      carries both) -- 250 frames over a 20 s window: emu+render
+      78.9 ms/frame, blit 2.0 ms, ~12.4 fps (liveness cross-check 13.3).
+      PC-sampling profile instead (150 probe samples; `flushregs` after
+      every halt is MANDATORY -- without it gdb's register cache returns
+      the same stale PC 150/150): ppu_runLine 47.3% + memset (compose /
+      objPixelBuffer clears) 5.3% -> render ~53%; CPU interpreter
+      (runCycles/cpuRead/cart_write/runOpcode/runFrame) ~25%; APU/DSP ~9%;
+      input_read (LakeSnes auto-joy shift register; bucket may absorb
+      following statics -- map-level symbols only) 9.3%; app_main 3.3%.
+      ROOT CAUSE of the render share: ppu_lrFastPathOk accepts only modes
+      0/1/3, so MODE 7 scenes run the legacy per-pixel renderer -- same
+      structural story as pre-R6 mosaic. VERDICT for the pending decision:
+      on mode-7 scenes the renderer still dominates (~53% vs ~34%
+      emu+APU); lever #1 there is a mode-7 line-renderer fast path ("R7",
+      analogous to R6) or the M1 structural work -- NOT continued
+      dispatch. Scene-specific caveat: field/title (modes 0/1) already run
+      the fast path; re-profile those before generalizing.
 - [x] 🤖 **R5 store vs FF4_LOAD_SAVESTATE — RESOLVED (2026-07-10,
       ff4-gnw `e4c93d2`)**: the combination missed the RAM_EMU budget by
       only 2,676 bytes; halving the R2b tile-row cache (4096 -> 2048
