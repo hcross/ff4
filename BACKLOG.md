@@ -318,6 +318,27 @@ fix target. Full narrative in MemPalace `wing=ff4-gnw room=obstacles-and-solutio
       (fresh probe profile of ppu_runLine internals first), then
       continued dispatch (CPU interpreter core ~16% pre-E2) and the APU
       decimation decision (~13%, human audio-quality call).
+- [x] 🤖 **Iteration-4 probe profile + R2a (2026-07-10, ff4-gnw
+      `ec00330`+`28e19b9`, merged to main)**. Frameskip-0 title profile
+      (240 samples) decomposes the 47 ms render: ~17 ms BG decode
+      (inlined ppu_lrDecodeBgLine), ~16 ms output stage, ~10 ms compose,
+      ~3 ms sprite eval. R2a caches the final palette (cgram x
+      brightness, keyed on a new ppu->cgramGen) and collapses the whole
+      output stage to palette copies on lines with no math/clip/direct
+      color. Measured (deterministic savestate-boot A/B on fixture 009,
+      frameskip 0): field scene 76.5 -> 71.2 ms/frame (-7%), title
+      neutral by design. LESSON: a per-pixel variant of the same
+      shortcut cost +4.2 ms on the math-heavy title (duplicated tests;
+      same codegen-sensitivity class as the parked 2026-07-06 batching
+      variants) and was dropped after the device A/B caught it — the
+      measure-every-increment discipline is what saved it.
+- [ ] 🤖 **R2b — decoded-tile-row cache (the remaining big render
+      lever, ~17 ms BG decode)**: cache planar->chunky tile-row decodes
+      keyed on VRAM address + bit depth, invalidated by a VRAM-write
+      generation counter (single write site, $2118/19). Static scenes
+      (title, dialogue) hit ~100%; palette offset and flip applied at
+      copy time. Sizing: ~4096 entries x 12 B ~= 48 KB in the overlay
+      (margin ~200 KB). Standard byte-identical bar.
 - [ ] 🧑/🤖 **Not investigated**: whether the on-device (Cortex-M7) bottleneck
       profile actually matches the desktop x86 `sample` result — worth a
       cross-check before investing in the PPU refactor (different cache/memory
