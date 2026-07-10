@@ -26,7 +26,7 @@ leaving 2 compile_error (inter-routine dependency / include).
 > isolated than L3 (in-game oracle). **FAILs** = real divergences to investigate (WF-VALID).
 
 <!-- REGISTRY:DISTRIBUTION:START -->
-**Distribution** (generated from `registry/dispatch_state.jsonl` — do not hand-edit; edit the JSONL via `registry/registry_promote.py` and re-run `python registry/render_registry.py`): L0=1 · L1=13 · L2=172 · L3=7 · EXCL=3 · DELEG=12 · RETIRED=4 (total 208).
+**Distribution** (generated from `registry/dispatch_state.jsonl` — do not hand-edit; edit the JSONL via `registry/registry_promote.py` and re-run `python registry/render_registry.py`): L0=1 · L1=13 · L2=172 · L3=7 · EXCL=3 · DELEG=12 · RETIRED=5 (total 208).
 <!-- REGISTRY:DISTRIBUTION:END -->
 `ExecBtlGfx` (D038085) REMOVED from the dispatch on 2026-06-30 (206→205): BLOCKING
 animation (multi-frame WaitVblank/WaitFrame) incompatible with the synchronous
@@ -73,6 +73,7 @@ The 23 L1: 11 `no_source` (bundled btlgfx → custom spike), 8 `no_contract`
 | `D00834E` | $00:834E | `InitMapRAM_c` | field | L3 | mode-7 MMIO fix (1a86d23) — oracle FB-clean; ex-false-L2 (spike missed the MMIO effect) |
 | `D00883D` | $00:883D | `_00883d_c` | field | L1 | no CONTRACT block |
 | `D00885E` | $00:885E | `_00885e_c` | field | L1 | no CONTRACT block |
+| `D009F6E` | $00:9F6E | `UpdateLocalTiles_c` | field | L2 | five local tile-property slots around the player (~2 calls/frame on first-free-roam, 5 JSR sites: $9BEA/$9D4F/$A94C/$AB8B/$E2E2); replaces retired D1E9F6C (rewritten bank + off-by-2 dead entry). Body rewritten dp-relative and calls the native GetTileProps_c (D009FC2) instead of the old weak no-op get_tile_prop_emu delegate. Fuzzed region-compare spike 5000/0 at the true entry $00:9F6E (port file named UpdateLocalTilesEntry.c to stop ca65-bridge resolving the off-by-2 annotated $00:9F6C); in-game (009) FB/OAM byte-identical over 300 frames, ~2 hits/frame, regress.sh verdicts unchanged 7/7. Fifth off-by-2 of the D00F533/F535 class. |
 | `D009FC2` | $00:9FC2 | `GetTileProps_c` | field | L2 | field map tile-properties leaf (~10 calls/frame on first-free-roam, 5 JSR sites); fuzzed region-compare spike 5000/0 (tilemap slice + props table fuzzed); in-game (009) FB/OAM byte-identical over 300 frames, WRAM divergence set unchanged vs a run with this dispatch excluded (pre-existing stack-residue class), regress.sh verdicts unchanged 7/7. Entry is $00:9FC2, not the annotated $00:9FC0 (disassembly off-by-2, fourth instance: D00F533/F535, D00BDB2, D00C357); the annotated JMP $9FF1 is really JMP $9FF3, internal. |
 | `D00AA58` | $00:AA58 | `CheckTilePass_c` | field | L2 | fuzzed spike, 0 fails |
 | `D00AAD8` | $00:AAD8 | `SetPlayerNPCMap_c` | field | L1 | no CONTRACT block |
@@ -276,7 +277,7 @@ The 23 L1: 11 `no_source` (bundled btlgfx → custom spike), 8 `no_contract`
 | `D16F922` | $16:F922 | `_00f922_c` | field | L2 | fuzzed spike, 0 fails |
 | `D16FB93` | $16:FB93 | `TfrBG2Tilemap_c` | field | L2 | fuzzed spike, 0 fails |
 | `D16FFAB` | $16:FFAB | `DecodeBG1Tilemap_c` | field | L2 | fuzzed spike, 0 fails |
-| `D1E9F6C` | $1E:9F6C | `UpdateLocalTiles_c` | field | L2 | hardcore PASS |
+| `D1E9F6C` | $1E:9F6C | `UpdateLocalTiles_c` | field | RETIRED | dead entry -- 0x1E9F6C was a rewritten bank + off-by-2: $1E:9F6C is graphics/mask DATA (bytes C0 F8 FF F8...), zero JSL/JSR call sites in the whole ROM, so this dispatch could never fire. The real routine is $00:9F6E (5 JSR sites in bank $00: 9BEA/9D4F/A94C/AB8B/E2E2; the disassembly annotates $00:9F6C, fifth off-by-2 of this class). The old 'hardcore PASS' was vacuous: its spike ran the asm side at data bytes and delegated the inner tile-prop calls to the equally-wrong $00:9FC0, and the production body's get_tile_prop_emu helper was a weak no-op. Replaced by D009F6E. Retired 2026-07-11. (evidence: ff4-port/translator/runs/D009F6E_updatelocaltiles_spike.txt) |
 | `D1EA03E` | $1E:A03E | `BoardChoco_c` | field | L2 | fuzzed spike, 0 fails |
 <!-- REGISTRY:TABLE1:END -->
 
