@@ -295,7 +295,7 @@ fix target. Full narrative in MemPalace `wing=ff4-gnw room=obstacles-and-solutio
       confirmed on the coherent binary. Lesson recorded in MemPalace
       obstacles: any external/ff4 HEADER change before that commit
       requires rm -rf build/ff4.
-- [ ] 🤖 **E2 — per-access memory chain, re-ranked #1 by the post-E1
+- [x] 🤖 **E2 — per-access memory chain, re-ranked #1 by the post-E1
       profile (240 samples, coherent E1 firmware, 2026-07-10)**: the
       whole per-access chain now costs **35.1%** of wall — snes_cpuRead
       12.5% + dma_handleDma 9.2% + cart_read 4.6% + snes_rread 3.8% +
@@ -308,7 +308,16 @@ fix target. Full narrative in MemPalace `wing=ff4-gnw room=obstacles-and-solutio
       snes_runCycles 13.3% (halved by E1 ✓), CPU interpreter core
       ~15.8% (dispatch's territory), APU/DSP ~12.9% (🧑 decimation =
       audio-quality decision), ppu_getWindowState gone from the top
-      (R1 ✓). Projection if E2 recovers half its axis: title ~24-25 fps.
+      (R1 ✓). Projection if E2 recovers half its axis: title ~24-25 fps. MEASURED
+      (2026-07-10, ff4-gnw `11f9fcb`, merged to main after player-level
+      confirmation): emu 43.6 -> 31.3 ms (-28%), render untouched at
+      47.0, title 17.9 -> 22.9 fps. Cumulative since the 2026-07-09 M1
+      reference: 11.4 -> 22.9 fps (+101%, speed doubled across four
+      byte-identical surgeries). Render (47 ms) is now the dominant wall
+      again (1.5x the emu axis) -> next lever is render iteration 4
+      (fresh probe profile of ppu_runLine internals first), then
+      continued dispatch (CPU interpreter core ~16% pre-E2) and the APU
+      decimation decision (~13%, human audio-quality call).
 - [ ] 🧑/🤖 **Not investigated**: whether the on-device (Cortex-M7) bottleneck
       profile actually matches the desktop x86 `sample` result — worth a
       cross-check before investing in the PPU refactor (different cache/memory
