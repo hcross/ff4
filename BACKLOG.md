@@ -252,11 +252,20 @@ fix target. Full narrative in MemPalace `wing=ff4-gnw room=obstacles-and-solutio
       `ppu_getWindowState` is 8.3% of total wall — ~26 of the 77 ms
       render (34%): per-PIXEL window evaluation in the M1 compositor's
       output stage. Memory-access chain ~22.5%; real APU/DSP ~9%.
-- [ ] 🤖 **R1 — window state by spans in the M1 compositor**: window
-      state is piecewise-constant (≤5 spans/line from the two windows'
-      edges) → precompute per line instead of calling ppu_getWindowState
-      per pixel. Estimated ~24 ms off the render (77 → ~53). Standard
-      byte-identical bar (parallel 5 s golden sweep ready).
+- [x] 🤖 **R1 — window state by spans in the M1 compositor — DONE,
+      measured (2026-07-10, ff4-gnw branch `perf/r1-window-spans`,
+      commit `7a974c7`, merged to main after Hoani's LCD confirmation)**: the s_lrWin
+      per-line fill now sorts the 4 window-edge breakpoints and calls
+      ppu_getWindowState once per span (≤5) + memset, keeping the
+      original function as the single semantic authority. 41/41
+      byte-identical goldens + 1800/1800 fb CRCs vs the M3a build.
+      Device D6 (title, frameskip 3): render 77.2 → 47.0 ms (−39%,
+      better than the ~24 ms estimate), emu unchanged 58.2 ms, title
+      12.7 → 14.1 fps. Cumulative since the 2026-07-09 M1 reference:
+      11.4 → 14.1 fps (+24%). **The walls have swapped: emulation
+      (58 ms) is now the dominant axis again, render (47 ms) second** —
+      E1 (ADR-006 accumulator + downcounter fast path) is the next
+      lever, then E2/render-iteration-4 by whichever D6 says dominates.
 - [ ] 🤖 **E1 — ADR-006 implementation (exact integer APU accumulator)
       COUPLED with a next-event downcounter fast path in snes_runCycles**
       (cache ticks-to-next-event, O(1) per call, full segment machinery
