@@ -389,7 +389,14 @@ fix target. Full narrative in MemPalace `wing=ff4-gnw room=obstacles-and-solutio
       off-by-2 verified by ROM bytes, JMP $9FF3 continuation to trace),
       dead-entry requalification 0x1E9F6C (UpdateLocalTiles_c: rewritten
       bank + off-by-2 -> likely never hits).
-- [ ] 🤖 **Palette-only partial skip (the ACTUAL lever the R4 diagnosis
+- [x] 🤖 **Palette-only partial skip (R5) — DONE, measured, merged
+      (2026-07-10, ff4-gnw `613146c`)**: geometry stable + cgram animated
+      → reuse decode+compose from a per-line store (~143 KB overlay),
+      re-run only the output stage. Title coldboot skip-3 A/B: render
+      −36% (render-portion −64%), emu unchanged, title 23.9 → 28.1 fps.
+      Byte-identical (82/82 deep). Fires where R4 could not (title
+      299/300, field 261/300). R4 whole-frame skip kept as mode 1.
+- [ ] 🤖 **(superseded spec kept for reference) Palette-only partial skip (the ACTUAL lever the R4 diagnosis
       exposed, sizable)**: when ONLY cgram changed (title/field palette
       animation -- the dominant real-scene case), decode (~17 ms) and
       compose (~10 ms) are identical frame-to-frame; only the output-stage
