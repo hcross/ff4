@@ -295,11 +295,20 @@ fix target. Full narrative in MemPalace `wing=ff4-gnw room=obstacles-and-solutio
       confirmed on the coherent binary. Lesson recorded in MemPalace
       obstacles: any external/ff4 HEADER change before that commit
       requires rm -rf build/ff4.
-- [ ] 🤖 **E2 — memory-access chain (~22.5%)**: region LUT / fast paths
-      for the WRAM+ROM read hot path (snes_rread + cart_read +
-      getAccessTime). After R1+E1, honest projection is ~18-19 fps title;
-      60 fps also needs this, M2 spin fast-forward, and an APU-decimation
-      decision (🧑 audio-quality trade-off).
+- [ ] 🤖 **E2 — per-access memory chain, re-ranked #1 by the post-E1
+      profile (240 samples, coherent E1 firmware, 2026-07-10)**: the
+      whole per-access chain now costs **35.1%** of wall — snes_cpuRead
+      12.5% + dma_handleDma 9.2% + cart_read 4.6% + snes_rread 3.8% +
+      getAccessTime 3.3% + cpuIdle 1.7% (~19.6 ms/frame-avg). Design:
+      flat region LUT (bank<<3|adr>>13 → {direct pointer, access
+      cycles, kind}) for the WRAM/ROM fast cases + a single dmaPending
+      byte guard so dma_handleDma's early-out becomes one load+branch.
+      Timing-neutral → standard byte-identical bar. Remaining post-E1
+      profile for the record: ppu_runLine 13.8% (sprite eval + render),
+      snes_runCycles 13.3% (halved by E1 ✓), CPU interpreter core
+      ~15.8% (dispatch's territory), APU/DSP ~12.9% (🧑 decimation =
+      audio-quality decision), ppu_getWindowState gone from the top
+      (R1 ✓). Projection if E2 recovers half its axis: title ~24-25 fps.
 - [ ] 🧑/🤖 **Not investigated**: whether the on-device (Cortex-M7) bottleneck
       profile actually matches the desktop x86 `sample` result — worth a
       cross-check before investing in the PPU refactor (different cache/memory
