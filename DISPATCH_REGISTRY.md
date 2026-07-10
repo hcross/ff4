@@ -26,7 +26,7 @@ leaving 2 compile_error (inter-routine dependency / include).
 > isolated than L3 (in-game oracle). **FAILs** = real divergences to investigate (WF-VALID).
 
 <!-- REGISTRY:DISTRIBUTION:START -->
-**Distribution** (generated from `registry/dispatch_state.jsonl` — do not hand-edit; edit the JSONL via `registry/registry_promote.py` and re-run `python registry/render_registry.py`): L0=1 · L1=13 · L2=171 · L3=7 · EXCL=3 · DELEG=12 · RETIRED=4 (total 207).
+**Distribution** (generated from `registry/dispatch_state.jsonl` — do not hand-edit; edit the JSONL via `registry/registry_promote.py` and re-run `python registry/render_registry.py`): L0=1 · L1=13 · L2=172 · L3=7 · EXCL=3 · DELEG=12 · RETIRED=4 (total 208).
 <!-- REGISTRY:DISTRIBUTION:END -->
 `ExecBtlGfx` (D038085) REMOVED from the dispatch on 2026-06-30 (206→205): BLOCKING
 animation (multi-frame WaitVblank/WaitFrame) incompatible with the synchronous
@@ -73,6 +73,7 @@ The 23 L1: 11 `no_source` (bundled btlgfx → custom spike), 8 `no_contract`
 | `D00834E` | $00:834E | `InitMapRAM_c` | field | L3 | mode-7 MMIO fix (1a86d23) — oracle FB-clean; ex-false-L2 (spike missed the MMIO effect) |
 | `D00883D` | $00:883D | `_00883d_c` | field | L1 | no CONTRACT block |
 | `D00885E` | $00:885E | `_00885e_c` | field | L1 | no CONTRACT block |
+| `D009FC2` | $00:9FC2 | `GetTileProps_c` | field | L2 | field map tile-properties leaf (~10 calls/frame on first-free-roam, 5 JSR sites); fuzzed region-compare spike 5000/0 (tilemap slice + props table fuzzed); in-game (009) FB/OAM byte-identical over 300 frames, WRAM divergence set unchanged vs a run with this dispatch excluded (pre-existing stack-residue class), regress.sh verdicts unchanged 7/7. Entry is $00:9FC2, not the annotated $00:9FC0 (disassembly off-by-2, fourth instance: D00F533/F535, D00BDB2, D00C357); the annotated JMP $9FF1 is really JMP $9FF3, internal. |
 | `D00AA58` | $00:AA58 | `CheckTilePass_c` | field | L2 | fuzzed spike, 0 fails |
 | `D00AAD8` | $00:AAD8 | `SetPlayerNPCMap_c` | field | L1 | no CONTRACT block |
 | `D00AB13` | $00:AB13 | `ClearPlayerNPCMap_c` | field | L2 | fuzzed spike, 0 fails |
