@@ -426,6 +426,29 @@ fix target. Full narrative in MemPalace `wing=ff4-gnw room=obstacles-and-solutio
       the mosaic fixtures (005: 12k lines, 012: 7k) + full sweep 41/41;
       mosaicStartLine added to the R4/R5 signature. Desktop transition
       window −28% on x86; M7 larger.
+- [x] 🤖 **Field metrology campaign, phase 1 (2026-07-11, ff4-gnw `6092260`,
+      ff4-port `7ed5449`, retro-go-sd local `9b044f61`+`b1fdb3bc`)**: built
+      the measurement rig Hoani asked for on 009-first-free-roam, then used
+      it. (1) D6R: deterministic per-300-frame block ring in main_ff4.c,
+      readable in ONE gdb halt -- block N is the same emulated workload on
+      every firmware. Block-to-block spread measured <0.5%. (2)
+      FF4_AUTO_WALK: deterministic DPAD square from frame 60 -- walking
+      defeats the R4/R5 skips, so it measures real play, not the idle skip
+      path (idle: 30.2 ms/f; walking: 33.1). Desktop equivalent: the
+      existing --press scripting. (3) Walking per-section profile: render
+      ~33%, APU ~22% (!! -- much bigger on field than worldmap, now the
+      single biggest optimizable block, human call pending), memset/libc
+      ~13% (compose per-line memsets), interpreter ~18%, blit 6%. (4)
+      First product: D009179 ResetAllSprites L2 (~25% of interpreted
+      opcodes, once per frame from 37 JSR sites; entry $9179 not the
+      annotated $9177, SIXTH off-by-2; spike 5000/0; CRCs 9/9 + a
+      scripted-walk 300f run). D6R A/B verdict: -390+/-2 ms per block on
+      EVERY block = exactly -1.30 ms/frame, 30.2 -> 31.5 fps walking
+      (+4.3%) -- a 1.3 ms effect resolved with zero ambiguity, which the
+      +/-1.5 fps wall-clock windows could not do. NEXT on field by
+      measured size: APU (~7.3 ms, decision), compose memsets/outLayer
+      elision (~2-4 ms est.), draw-npcs subtree port ($00:BB68 bodies,
+      ~18% of remaining interpreted).
 - [x] 🤖 **R10 — packed-word final palette (2026-07-11, ff4-gnw `a281f8b`,
       merged) + the honest measurement correction**: s_lrPal4 (one LE word
       per color, pixelOutputFormat baked in, pad byte written as the 0 it
