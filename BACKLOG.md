@@ -426,6 +426,23 @@ fix target. Full narrative in MemPalace `wing=ff4-gnw room=obstacles-and-solutio
       the mosaic fixtures (005: 12k lines, 012: 7k) + full sweep 41/41;
       mosaicStartLine added to the R4/R5 signature. Desktop transition
       window −28% on x86; M7 larger.
+- [x] 🤖 **R8b — mode-7 sprite lines fused too (2026-07-11, ff4-gnw
+      `15544dd` + DTCM fix `1dfe19a`, merged, device-measured)**: the ~20%
+      of mode-7 lines carrying sprites still ran the generic pipeline.
+      actMode 7's five compose passes collapse to one per-pixel select
+      (opaque un-masked sprite wins unless prio 0 over opaque BG).
+      Engagement lesson RE-CONFIRMED: FF4 windows the SPRITE layer exactly
+      like the BG (inverted [1,254] edge mask), so a !windowed gate on
+      layer 4 sent every sprite line straight back to the generic path --
+      counters caught it, the window is applied as a span mask inside the
+      select instead. With it: ZERO generic mode-7 lines on 008. Also hit
+      a hard wall: .ff4_dtcm is within 16 BYTES of a fixed LD boundary --
+      s_m7Win went to plain overlay BSS (any future DTCM scratch needs
+      that budget check first). Validation: FB CRCs 9/9 vs M2 binary,
+      1000f long-horizon identical, oracle verdicts 7/7. Device
+      (aligned-window A/B, host 536-856): 26.9 -> 27.6 fps (+2.6%,
+      scene-noise adjacent but structurally strictly less work/line).
+      DAY TOTAL worldmap 008: 7.3 -> 27.6 fps (x3.8).
 - [x] 🤖 **M2 — wait-spin fast-forward (2026-07-11, ff4-gnw `43b77b3`,
       merged, device-measured)**: a PC histogram (new FF4_PC_PROFILE tool
       in cpu.c) showed 67% of ALL interpreted opcodes on 008 inside two
