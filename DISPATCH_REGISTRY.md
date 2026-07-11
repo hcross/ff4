@@ -26,7 +26,7 @@ leaving 2 compile_error (inter-routine dependency / include).
 > isolated than L3 (in-game oracle). **FAILs** = real divergences to investigate (WF-VALID).
 
 <!-- REGISTRY:DISTRIBUTION:START -->
-**Distribution** (generated from `registry/dispatch_state.jsonl` — do not hand-edit; edit the JSONL via `registry/registry_promote.py` and re-run `python registry/render_registry.py`): L0=1 · L1=13 · L2=173 · L3=7 · EXCL=3 · DELEG=12 · RETIRED=5 (total 209).
+**Distribution** (generated from `registry/dispatch_state.jsonl` — do not hand-edit; edit the JSONL via `registry/registry_promote.py` and re-run `python registry/render_registry.py`): L0=1 · L1=13 · L2=174 · L3=7 · EXCL=3 · DELEG=12 · RETIRED=5 (total 210).
 <!-- REGISTRY:DISTRIBUTION:END -->
 `ExecBtlGfx` (D038085) REMOVED from the dispatch on 2026-06-30 (206→205): BLOCKING
 animation (multi-frame WaitVblank/WaitFrame) incompatible with the synchronous
@@ -80,6 +80,7 @@ The 23 L1: 11 `no_source` (bundled btlgfx → custom spike), 8 `no_contract`
 | `D00AAD8` | $00:AAD8 | `SetPlayerNPCMap_c` | field | L1 | no CONTRACT block |
 | `D00AB13` | $00:AB13 | `ClearPlayerNPCMap_c` | field | L2 | fuzzed spike, 0 fails |
 | `D00AC7D` | $00:AC7D | `CheckVehicleBlock_c` | field | DELEG | delegate wrapper — equivalent by construction (executes the asm) |
+| `D00BB6A` | $00:BB6A | `DrawNpcs_c` | field | L2 | draw all field NPC + party/formation sprites into the OAM shadow ($0400/$0480 blocks + the $0300 party block, gated by $128A bit6); per-object body measured at ~55% of ALL remaining interpreted opcodes on 009-first-free-roam under a walking workload (the #1 interpreted target, 2026-07-11). Entry is $00:BB6A, not the annotated $00:BB68 (SEVENTH off-by-2 of this class; all 6 call sites are JSR $BB6A by ROM bytes, $BB68 has zero callers; the whole region is +2 so callee $BDB0->$BDB2 and tables $BDF6/BDFA/BDFE/BE06 -> $BDF8/BDFC/BE00/BE08). Calls native CalcObjScreenPos_c ($BDB2, L2) and inlines next-sprite $88E2 (X+=4/Y+=4). Fuzzed region-compare spike 5000/0; baseline-vs-native FB CRCs byte-identical on 009 idle + 300-frame scripted-walk, 008-overworld-mode7, 004-menu, 001-scene; regress verdicts 7/7 unchanged. |
 | `D00BDB2` | $00:BDB2 | `CalcObjScreenPos_c` | field | L2 | field on-screen object-position leaf (~28 calls/frame on the map); fuzzed region-compare spike 5000/0 over 7 inputs; in-game (009) framebuffer byte-identical + WRAM diff is stack-residue only (4 bytes $02xx = PHX/PHY below SP). Entry is $00:BDB2, not $00:BDB0 (disassembly off-by-2, same class as D00F533/F535). |
 | `D00BE47` | $00:BE47 | `CalcVehicleSpritePos_c` | field | DELEG | delegate wrapper — equivalent by construction (executes the asm) |
 | `D00C0C4` | $00:C0C4 | `PlayerSpriteTiles_c` | field | L2 | fuzzed spike, 0 fails |
