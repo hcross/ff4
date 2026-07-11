@@ -426,6 +426,31 @@ fix target. Full narrative in MemPalace `wing=ff4-gnw room=obstacles-and-solutio
       the mosaic fixtures (005: 12k lines, 012: 7k) + full sweep 41/41;
       mosaicStartLine added to the R4/R5 signature. Desktop transition
       window −28% on x86; M7 larger.
+- [x] 🤖 **R10 — packed-word final palette (2026-07-11, ff4-gnw `a281f8b`,
+      merged) + the honest measurement correction**: s_lrPal4 (one LE word
+      per color, pixelOutputFormat baked in, pad byte written as the 0 it
+      always contains and that no reader observes) turns every whole-line
+      output path (m7 fused x2, generic fast path, R5 palette replay)
+      into one word load + one word store per pixel. DTCM balanced by
+      evicting s_m7Line (pal4 = pal3 + 256 B; the boundary wall). ALSO:
+      per-SECTION map attribution (using -ffunction-sections .text.*
+      entries instead of global symbols) dissolved the phantom
+      \"input_read 17%\" bucket -- it was ppu_runLine's inlined body all
+      along; real post-M2 shares: render ~52%, interpreter ~20%, APU
+      ~12%, blit+libc ~11%. Validation: 9/9 CRCs, 1000f long-horizon,
+      verdicts 7/7, device link pre-verified. MEASUREMENT CORRECTION
+      (applies to R8b/R9 claims too): repeated aligned-window device
+      readings vary +/-1.5 fps -- R8b/R9/R10 are individually SUB-NOISE
+      on device (desktop shows the real structural chain: M2 0.27 ->
+      R9 0.24 -> R10 0.23 s per 600 frames on 008). The M7's store
+      buffer already merged the byte stores; its render bottleneck is
+      VRAM/AXI fetch latency, not stores. CONCLUSION: the render
+      micro-opt series is exhausted; remaining levers are the
+      interpreter (worldmap subtree dispatch -- a decompilation
+      campaign, not a renderer patch), the APU (~12%, human call), and
+      better device metrology first (a deterministic per-300-frame D6
+      block ring readable via gdb would replace the noisy wall-clock
+      windows).
 - [x] 🤖 **R9 — per-frame sprite line-coverage map (2026-07-11, ff4-gnw
       `a22c86a`, merged, device-measured)**: evaluateSprites scanned all
       128 OAM entries per line (224x/frame) just to find y-range members;
