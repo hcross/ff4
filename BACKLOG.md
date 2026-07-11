@@ -426,6 +426,20 @@ fix target. Full narrative in MemPalace `wing=ff4-gnw room=obstacles-and-solutio
       the mosaic fixtures (005: 12k lines, 012: 7k) + full sweep 41/41;
       mosaicStartLine added to the R4/R5 signature. Desktop transition
       window −28% on x86; M7 larger.
+- [x] 🤖 **R7 — mode 7 on the line-renderer fast path (2026-07-11, ff4-gnw
+      `45dc9da`, merged; device flash pending)**: the direct product of the
+      D6/PC-profile read below. ppu_lrDecodeM7Line reproduces the legacy
+      affine walk per pixel and feeds the hoisted compose/output stages;
+      m7startX/Y computed ahead of the row clamp so the savestate/signature
+      state matches legacy exactly; EXTBG implemented but gated off the
+      fast path (zero actMode-9 lines in any fixture -- ships unreachable
+      rather than unvalidated). Byte-identical FB CRCs vs the parent
+      binary: 008 (~50k mode-7 lines/300f), 011 (~70k), 012, + five
+      non-mode-7 fixtures; coverage instrumented before being claimed (R6
+      lesson); oracle verdicts unchanged 7/7. Desktop wall-clock whole-run:
+      008 -43%, 011 -58%. NEXT: flash + same-conditions D6 A/B on device
+      (needs a power-cycle at the console); expect the ~47% ppu_runLine
+      share on airship to collapse toward the field/title fast-path cost.
 - [x] 🤖 **D6 read on the live R5+R6 firmware (2026-07-11, airship/worldmap
       mode-7 state, frameskip 0, probe attach without reflash)**: at skip 0
       D6 cannot split emu from render (emu_ms=0 by construction; rend_ms
