@@ -426,6 +426,19 @@ fix target. Full narrative in MemPalace `wing=ff4-gnw room=obstacles-and-solutio
       the mosaic fixtures (005: 12k lines, 012: 7k) + full sweep 41/41;
       mosaicStartLine added to the R4/R5 signature. Desktop transition
       window −28% on x86; M7 larger.
+- [x] 🤖 **R10c -- aligned word stores (2026-07-11, ff4-gnw `9b4c2fd`,
+      device-measured)**: post-R10b disassembly showed the packed
+      may_alias store STILL lowered to four strb + byte extractions
+      (-mno-unaligned-access class toolchain). pixelBuffer is now
+      aligned(4) (contents-serialized savestates unaffected) and the
+      store is an ALIGNED may_alias word write -- ONE str.w verified in
+      the device disassembly. D6R A/B (walking 009): -361+/-2 ms per
+      block = -1.20 ms/frame exact. Field walking 40.3 -> 42.4 fps.
+      CAMPAIGN TOTAL: 30.2 -> 42.4 fps (+40%). Post-R10b re-profile
+      (LR-resolved): render ~47%, interpreter ~20%, APU ~16%, blit 6%;
+      the scroll-engine lever = the draw-npcs per-object body
+      ($00:BC4D-BD13, ~55% of remaining interpreted opcodes) -- port in
+      progress.
 - [x] 🤖 **R10b -- the R10 word stores were LIBC CALLS on device (2026-07-11,
       ff4-gnw `05eca58`, device-measured)**: LR-sampling the flash bucket
       showed every memcpy hit returning into ppu_runLine: device gcc
