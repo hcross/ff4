@@ -437,9 +437,19 @@ fix target. Full narrative in MemPalace `wing=ff4-gnw room=obstacles-and-solutio
       binary: 008 (~50k mode-7 lines/300f), 011 (~70k), 012, + five
       non-mode-7 fixtures; coverage instrumented before being claimed (R6
       lesson); oracle verdicts unchanged 7/7. Desktop wall-clock whole-run:
-      008 -43%, 011 -58%. NEXT: flash + same-conditions D6 A/B on device
-      (needs a power-cycle at the console); expect the ~47% ppu_runLine
-      share on airship to collapse toward the field/title fast-path cost.
+      008 -43%, 011 -58%. **DEVICE-MEASURED same day (D6 same-day-reflash
+      A/B, M3 method, 008-overworld-mode7 savestate-boot -- baked
+      savestate switched from 013 to 008 at Hoani's call, 013 exercises
+      zero mode-7 lines at its start -- frameskip 0)**: emu+render 139.9
+      -> 53.7 ms/frame (-62%), fps 7.3 -> 18.4 (x2.5), blit 2.0 unchanged.
+      Post-R7 profile on the flight scene: ppu_runLine 40% (the affine
+      walk is inherently per-pixel -- no tile spans -- so mode-7 lines
+      keep a higher floor than modes 0/1/3), CPU interp ~25%, APU ~10%.
+      Observation-channel caveat logged: SWD reads of once-written cached
+      state (ff4_snes pointer, LCD framebuffers) can return stale zeros
+      through the M7 D-cache -- use per-frame-written counters (D6,
+      g_diag_host_frame) as the liveness/measurement channel, not
+      pointer-chased struct reads.
 - [x] 🤖 **D6 read on the live R5+R6 firmware (2026-07-11, airship/worldmap
       mode-7 state, frameskip 0, probe attach without reflash)**: at skip 0
       D6 cannot split emu from render (emu_ms=0 by construction; rend_ms
