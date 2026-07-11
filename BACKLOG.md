@@ -426,6 +426,37 @@ fix target. Full narrative in MemPalace `wing=ff4-gnw room=obstacles-and-solutio
       the mosaic fixtures (005: 12k lines, 012: 7k) + full sweep 41/41;
       mosaicStartLine added to the R4/R5 signature. Desktop transition
       window −28% on x86; M7 larger.
+- [x] 🤖 **M2 — wait-spin fast-forward (2026-07-11, ff4-gnw `43b77b3`,
+      merged, device-measured)**: a PC histogram (new FF4_PC_PROFILE tool
+      in cpu.c) showed 67% of ALL interpreted opcodes on 008 inside two
+      2-instruction WaitVblank loops ($00:9133/$00:9142 -- annotated two
+      bytes off in the disassembly, as usual). Such \`lda dp / bne -4\`
+      loops write nothing, so they only exit via an interrupt: while none
+      fires, every iteration is state-identical at the loop head. The
+      fast-forward (hooked on taken -4 branches, self-verifying pattern +
+      state/cost calibration over two iterations) advances the CLOCK ONLY
+      in whole-iteration chunks and stops short of the NMI-set tick; the
+      interpreter runs the last real iterations so NMI vectoring is
+      cycle-exact. Sharp edges that each produced (or would have produced)
+      real divergence: chunks capped under one scanline (one +40 DRAM
+      refresh per hPos-536 crossing, like real execution); under active
+      HDMA the horizon stops short of each h==1104 arming tick so the
+      crossing iteration drains at the exact access cadence (the worldmap
+      spin RUNS with HDMA armed -- a binary HDMA gate would have killed
+      the whole win); at exactly hPos==1104 the arming event has NOT run
+      yet -- distance 0, not a full line (this one shipped briefly and
+      produced sporadic frame diffs from frame 229 of 008 before the
+      engagement-counter methodology caught... the CRC battery caught it;
+      fixed). Desktop: interpreted opcodes 4.18M -> 1.87M (-55%) on 008.
+      Validation: FB CRCs identical vs R8 on 9 fixtures, 1000-frame
+      long-horizon FB+WRAM identical (008, 009), oracle verdicts 7/7 (the
+      oracle's pure-interpreter pass itself runs with M2 active). Device
+      D6 (008, skip 0, same-day): 23.5 -> 26.9 fps (+14%), 41.5 -> ~37
+      ms/frame; post-M2 profile: CPU-interpreter buckets ~33% -> ~17%,
+      render back to lever #1 (~40% incl. per-line evaluateSprites and
+      the ~20% sprite lines still on the generic path). Residual spin in
+      vblank (gate) is small and left for later. DAY TOTAL on worldmap
+      008: 7.3 -> 26.9 fps (x3.7).
 - [x] 🤖 **R8 — specialise and fuse the mode-7 line pipeline (2026-07-11,
       ff4-gnw `45739e4` + `78078d6`, merged, device-measured)**: census of
       FF4's real mode-7 usage (008/011/012) showed pure uniform scale
