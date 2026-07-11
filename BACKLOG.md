@@ -426,6 +426,20 @@ fix target. Full narrative in MemPalace `wing=ff4-gnw room=obstacles-and-solutio
       the mosaic fixtures (005: 12k lines, 012: 7k) + full sweep 41/41;
       mosaicStartLine added to the R4/R5 signature. Desktop transition
       window −28% on x86; M7 larger.
+- [x] 🤖 **R10b -- the R10 word stores were LIBC CALLS on device (2026-07-11,
+      ff4-gnw `05eca58`, device-measured)**: LR-sampling the flash bucket
+      showed every memcpy hit returning into ppu_runLine: device gcc
+      emits memcpy(px,&word,4) as a call -- 57k/frame, while the desktop
+      compiler inlines it. R10 was a net LOSS on device, invisible until
+      the D6R ring + LR-sampling existed. PPU_STORE32 (packed may_alias
+      struct) forces one str on both toolchains, all 4 sites. D6R A/B
+      (walking 009): -1229+/-2 ms per block = -4.10 ms/frame EXACT --
+      bigger than the call cost alone (pipeline/branch effects). Field
+      walking 34.7 -> 40.3 fps. CAMPAIGN TOTAL: 30.2 -> 40.3 fps (+33%).
+      THIRD toolchain-divergence lesson of the day (DTCM link wall,
+      desktop-masked call emission): desktop wall-clock NEVER validates a
+      device perf claim -- only the ring does. Flash bucket must be
+      re-profiled post-fix before attacking compose.
 - [x] 🤖 **APU A1/A2 -- lazy timers + silent-channel gaussian skip + mod-12
       LUT (2026-07-11, ff4-gnw `5f87104`, ff4-port `f8b7f27`,
       device-measured)**: sound kept, bit-exact -- provable with the new
