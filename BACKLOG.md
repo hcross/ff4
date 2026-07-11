@@ -426,6 +426,22 @@ fix target. Full narrative in MemPalace `wing=ff4-gnw room=obstacles-and-solutio
       the mosaic fixtures (005: 12k lines, 012: 7k) + full sweep 41/41;
       mosaicStartLine added to the R4/R5 signature. Desktop transition
       window −28% on x86; M7 larger.
+- [x] 🤖 **D00BB6A DrawNpcs L2 -- the scroll-engine port (2026-07-11,
+      ff4-gnw `6150db5`, ff4-port `0cc5efb`, umbrella `762af25`,
+      device-measured; ported by the snes-re agent, independently
+      re-verified before commit)**: the metrology's #1 interpreted target
+      (~55% of remaining interpreted opcodes) -- the per-frame NPC+party
+      sprite builder against scroll/camera. Entry $00:BB6A, SEVENTH
+      off-by-2, and this time the WHOLE REGION is shifted +2 (all internal
+      targets and the four frame tables too; the bank-$14 tables are
+      unshifted). CalcObjScreenPos called natively; trivial $88E2 callee
+      inlined. Spike 5000/0; FB CRCs identical (009 idle+walk, 008, 004,
+      001); dispatch non-vacuous (26 hits/frame); verdicts 7/7. D6R A/B
+      (walking 009): -717+/-10 ms per block = -2.38 ms/frame. Field
+      walking 42.4 -> 47.2 fps. CAMPAIGN TOTAL 2026-07-11 evening:
+      30.2 -> 47.2 fps (+56%) in five landed steps (ResetAllSprites
+      -1.30, APU A1/A2 -2.90, R10b -4.10, R10c -1.20, DrawNpcs -2.38)
+      plus one honest revert (R12).
 - [x] 🤖 **R12 -- compose layer-line elision: TRIED, MEASURED NEGATIVE,
       REVERTED (2026-07-11, ff4-gnw `9c2aa85` reverted by `0842109`)**:
       eliding the dead outLayer memset+stores when the fast output path
