@@ -426,6 +426,21 @@ fix target. Full narrative in MemPalace `wing=ff4-gnw room=obstacles-and-solutio
       the mosaic fixtures (005: 12k lines, 012: 7k) + full sweep 41/41;
       mosaicStartLine added to the R4/R5 signature. Desktop transition
       window −28% on x86; M7 larger.
+- [x] 🤖 **R12 -- compose layer-line elision: TRIED, MEASURED NEGATIVE,
+      REVERTED (2026-07-11, ff4-gnw `9c2aa85` reverted by `0842109`)**:
+      eliding the dead outLayer memset+stores when the fast output path
+      runs (always, on field/worldmap) via two always_inline
+      specializations of the compose body was byte-identical (9/9 CRCs,
+      walk FB+audio) but +50+/-1 ms per D6R block on device (+0.17
+      ms/frame): the doubled compose code blew the M7's 16 KB I-cache,
+      costing more than the elided data work. Reverted same hour; ring
+      confirmed block times restored to the exact R10c values (7057/
+      7070/7110). LESSON (pairs with the R4 negative result): on a
+      16 KB-icache in-order core, code-size-for-work trades invert --
+      specialization-by-duplication of large bodies is a loss; only
+      duplicate SMALL loops (the R8 sprite select was fine). A
+      no-duplication variant (conditional memset only) would save <0.1
+      ms -- not worth churn. Compose stays as-is.
 - [x] 🤖 **R10c -- aligned word stores (2026-07-11, ff4-gnw `9b4c2fd`,
       device-measured)**: post-R10b disassembly showed the packed
       may_alias store STILL lowered to four strb + byte extractions
