@@ -426,6 +426,27 @@ fix target. Full narrative in MemPalace `wing=ff4-gnw room=obstacles-and-solutio
       the mosaic fixtures (005: 12k lines, 012: 7k) + full sweep 41/41;
       mosaicStartLine added to the R4/R5 signature. Desktop transition
       window −28% on x86; M7 larger.
+- [x] 🤖 **APU A1/A2 -- lazy timers + silent-channel gaussian skip + mod-12
+      LUT (2026-07-11, ff4-gnw `5f87104`, ff4-port `f8b7f27`,
+      device-measured)**: sound kept, bit-exact -- provable with the new
+      --audio-crc harness channel (FB/WRAM CRCs are deaf to the sound
+      path). A1: apu_cycle ran the 3-timer bookkeeping every SPC cycle
+      (~17k/frame) for counters read a handful of times per frame;
+      apu_syncTimers reproduces the per-cycle loop in closed form
+      (including the 8-bit equality march of divider vs target through
+      wrap), materialized at every observable access and around
+      savestates (.lss format unchanged). A2: gain==0 channels skip the
+      gaussian interpolation (post-gain sample is 0 for every reader);
+      dsp_getSample's four %12 become a 24-entry LUT. Validation: AUDIO
+      CRCs bit-identical on 5x300 frames (009 idle+walk, 008, 004, 012),
+      FB CRCs 9/9, verdicts 7/7. D6R A/B (walking 009): -870+/-4 ms per
+      block on EVERY block = -2.90 ms/frame exact; APU block ~7.3 ->
+      ~4.4 ms (-40%). Field walking: 31.5 -> 34.7 fps (+10%; campaign
+      total 30.2 -> 34.7, +15%). APU residual ~4.4 ms = dsp_cycleChannel
+      structural work (8 channels x BRR/envelope/echo) -- next tier
+      would be a per-sample flat rewrite (bigger surgery) or SPC opcode
+      batching; re-rank against compose (~4 ms est.) and draw-npcs port
+      first.
 - [x] 🤖 **Field metrology campaign, phase 1 (2026-07-11, ff4-gnw `6092260`,
       ff4-port `7ed5449`, retro-go-sd local `9b044f61`+`b1fdb3bc`)**: built
       the measurement rig Hoani asked for on 009-first-free-roam, then used
