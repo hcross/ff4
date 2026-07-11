@@ -426,6 +426,25 @@ fix target. Full narrative in MemPalace `wing=ff4-gnw room=obstacles-and-solutio
       the mosaic fixtures (005: 12k lines, 012: 7k) + full sweep 41/41;
       mosaicStartLine added to the R4/R5 signature. Desktop transition
       window −28% on x86; M7 larger.
+- [x] 🤖 **R9 — per-frame sprite line-coverage map (2026-07-11, ff4-gnw
+      `a22c86a`, merged, device-measured)**: evaluateSprites scanned all
+      128 OAM entries per line (224x/frame) just to find y-range members;
+      a lazily-rebuilt 256-bit coverage map (exact same membership
+      formula; invalidated on OAM/high-OAM/OBSEL/SETINI writes, reset,
+      savestate load) skips scan AND memset on provably-empty lines
+      (~80% on the worldmap). Covered lines run the original evaluator
+      unchanged. The first cut indexed OAM per-sprite instead of
+      per-WORD-pair and failed 5/9 CRC fixtures -- proof the battery
+      exercises sprite coverage. Validation: 9/9 CRCs vs R8b, 1000f
+      long-horizon x2, verdicts 7/7, device link pre-verified. Device
+      (aligned window): 27.6 -> 27.8 fps -- noise-level; the OAM scan is
+      cheaper on the M7 than estimated (linear, cache-friendly).
+      Structural saving on every scene, but the render residual is now
+      dominated by the fused decode/output loops themselves. NEXT LEVERS
+      by measured share: the unidentified input_read map-bucket (~17%
+      post-M2 -- resolve its real content first), interpreter residual
+      (~17%: worldmap subtree dispatch or vblank-spin extension), APU
+      (~8%, human call).
 - [x] 🤖 **R8b — mode-7 sprite lines fused too (2026-07-11, ff4-gnw
       `15544dd` + DTCM fix `1dfe19a`, merged, device-measured)**: the ~20%
       of mode-7 lines carrying sprites still ran the generic pipeline.
