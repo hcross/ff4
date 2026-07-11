@@ -426,6 +426,31 @@ fix target. Full narrative in MemPalace `wing=ff4-gnw room=obstacles-and-solutio
       the mosaic fixtures (005: 12k lines, 012: 7k) + full sweep 41/41;
       mosaicStartLine added to the R4/R5 signature. Desktop transition
       window −28% on x86; M7 larger.
+- [x] 🤖 **R8 — specialise and fuse the mode-7 line pipeline (2026-07-11,
+      ff4-gnw `45739e4` + `78078d6`, merged, device-measured)**: census of
+      FF4's real mode-7 usage (008/011/012) showed pure uniform scale
+      (m7matrix[1]=[2]=0 -- no rotation, one map row per line), no
+      flips/largeField/mosaic/math/dc, clip 0, ~80% sprite-free lines.
+      Three byte-identical changes: (1) HOT decode variant -- incremental
+      accX (no per-pixel multiply), hoisted row bases, tilemap fetch
+      memoised per tile column, explicit LE byte loads; (2) fused
+      decode->output for the dominant line -- out = pal3[pixel] directly
+      (backdrop == pal3[0]), R5 store written in place, skipping window
+      build + compose + generic output; (3) brightness LUT cached
+      (was 32 muls+divides per line x224). TRAP worth remembering: FF4's
+      worldmap runs layer 0 main-screen-WINDOWED (inverted window1
+      [1,254] masking only columns 0/255 -- the mode-7 edge-artifact
+      hide); the first fused gate required !windowed and therefore NEVER
+      engaged -- caught by instrumented engagement counters, not by the
+      CRC battery (which passed vacuously on the unexercised path); fixed
+      by span-masking the decoded line (ppu_lrWinMaskU8). Validation:
+      FB CRCs identical vs R7 on 9 fixtures (fused live, ~78% of 008's
+      m7 lines), oracle verdicts 7/7. Device D6 (008, skip 0, same-day):
+      emu+render 53.7 -> 41.5 ms/frame (-23%), fps 18.4 -> 23.5 (+28%);
+      cumulative over the day 139.9 -> 41.5 (x3.4), fps 7.3 -> 23.5
+      (x3.2). Post-R8 profile: emu ~33% is now lever #1 (M2 vblank-spin
+      fast-forward / worldmap dispatch), render bucket ~32% (incl.
+      per-line ppu_evaluateSprites), APU ~12%.
 - [x] 🤖 **R7 — mode 7 on the line-renderer fast path (2026-07-11, ff4-gnw
       `45dc9da`, merged; device flash pending)**: the direct product of the
       D6/PC-profile read below. ppu_lrDecodeM7Line reproduces the legacy
