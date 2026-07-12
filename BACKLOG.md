@@ -76,7 +76,17 @@ See [REPRISE.md](REPRISE.md) — dedicated workstream, tracked separately.
       (observed bug: monsters do not counter-attack, cf. `[TASK] ff4-combat-visual-bugs`)
 - [ ] 🤖 `TimerDur_0b/03` — ROM bank $0F access (`snes_readByte` instead of `ram[]`)
 - [ ] 🤖 `TimerDur_07` — dispatch wrapper for the non-standard signature `(Snes*, uint16_t x)`
-- [ ] 🤖 `ExecSound_ext_stub` — real SPC responder (re-enables music/SFX)
+- [ ] 🤖 `ExecSound_ext_stub` — real SPC responder (re-enables music/SFX).
+      Scope sharpened 2026-07-12: fixture 009's APU state has NO sound
+      driver uploaded (SPC still at IPL, `out=00 BB 00 00`), so its DSP
+      stream is structurally silent — desktop `--audio-crc` gives a
+      constant `CC2625BE` = CRC32 of 2136 zero bytes. Device volume is
+      now forced to 25% at boot (retro-go-sd `b00d11c6`) and the whole
+      output path was verified healthy end-to-end; there is simply
+      nothing to play. Lighter alternative to the full responder:
+      re-capture a savestate on desktop from a real boot with music
+      playing (driver then lives in the saved SPC RAM and resumes on
+      device).
 - [x] 🤖 `gen_dispatch.py` — resolved in the opposite direction (2026-07-03):
       the rich per-entry comments and hand-tuned oracle machinery in
       `dispatch_all.c` make full regeneration infeasible without an engine
