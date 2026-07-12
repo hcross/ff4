@@ -515,6 +515,51 @@ fix target. Full narrative in MemPalace `wing=ff4-gnw room=obstacles-and-solutio
       would be a per-sample flat rewrite (bigger surgery) or SPC opcode
       batching; re-rank against compose (~4 ms est.) and draw-npcs port
       first.
+- [x] 🤖 **Hardcore fluidity campaign (2026-07-12, ff4-gnw `090f0b7`+`725a67a`,
+      ff4-port `ef1ae5d`, retro-go-sd local `db480fe0`+`f6d6ada6`)**: user
+      report "static near-native, walking lags (sprite animations slow)".
+      Delivered, each step measured at the D6R ring, byte-identical
+      validated (FB CRCs 5 fixtures + 600-frame walk, regress verdicts
+      unchanged 13/13):
+      (1) R11 native RGB565 pixelBuffer -- the device blit was converting
+      57k pixels/frame; now a row memcpy. -487+/-4 ms/block on EVERY block
+      = -1.62 ms/frame EXACT; blit 2.0 -> 0.42 ms/f; -114 KB overlay BSS.
+      Walking 21.2 -> 19.6 ms/f (47.2 -> 51.1 fps).
+      (2) CPU overclock BOOST 2 (354 MHz, user-approved): 19.6 -> 15.5
+      ms/f homologous, the exact 280/354 ratio. TRAP FOUND: ENABLE_BOOT_OC
+      is silently reverted by the persisted cpu_oc_level that rg_main.c
+      (pre-autoboot) and gw_sleep.c (wake) re-apply -- fixed by pinning
+      FF4_CPU_OC_LEVEL=2 at app start (persist + reapply).
+      (3) R13 ITCM hot code (DSP chain, SPC core, apu bus, compose/decode/
+      runLine; 14.3 KB payload at the overlay blob's tail, copied to ITCM
+      pre-BSS-wipe): -25+/-3 ms/block = -0.08 ms/f -- modest (16 KB
+      I-cache already held the loop) but durable infrastructure.
+      COUPLING: ITCM offsets live in intflash, payload in frogfs -- ALWAYS
+      flash both together (a frogfs-only flash produced a blue-screen
+      crash: garbage ITCM).
+      (4) 60 Hz pacer (HAL_GetTick thirds-of-ms accumulator, resync when
+      >100 ms behind; metrology builds unthrottled). First cut had the
+      resync comparison INVERTED -> fast-forward after heavy stretches.
+      NEGATIVE results kept honest: R2b fine-grained invalidation REFUTED
+      before coding it (--vramgen-delta: field scrolls by registers, idle
+      38/300 frames with VRAM writes vs walking 43/241); compose top-down
+      first-writer-wins with early-exit: EXACTLY 0 ms on device (field
+      lines never fully covered -> `remaining` never hits zero), reverted.
+      INCIDENTS: gnwmanager stale hash-skip silently no-ops intflash
+      flashes ("0it" bars) -> erase-then-flash workaround; `gnwmanager
+      erase bank2` then clobbered bank1 (bootloader) -> temporary brick,
+      recovered exactly per provision skill §4 (flash-bootloader).
+      Frictions tagged (harness-friction: tool x2, process x1).
+      END STATE: auto-walk square 15.5-17.1 ms/f (58-65 emulated fps,
+      paced to 60); static 60 fps confirmed by user. REMAINING GAP (the
+      new #1 lever): the user's REAL free-roam walk costs 22.9 ms/f
+      (43.7 fps @354) with 32-38 ms/f spikes -- it exercises interpreted
+      event/NPC paths the metrology square never touches (miss PCs
+      $00:B1xx/$00:B7xx family seen on the same map). NEXT: capture the
+      real-walk miss profile (D4 ring + LR-sampling while the user walks),
+      port the hot cluster via WF-DECOMP, re-measure. The D6R blocks
+      10-18 of the user's session (stable 6850-6881 ms) are the reference
+      workload.
 - [x] 🤖 **Field metrology campaign, phase 1 (2026-07-11, ff4-gnw `6092260`,
       ff4-port `7ed5449`, retro-go-sd local `9b044f61`+`b1fdb3bc`)**: built
       the measurement rig Hoani asked for on 009-first-free-roam, then used
