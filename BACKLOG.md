@@ -515,6 +515,18 @@ fix target. Full narrative in MemPalace `wing=ff4-gnw room=obstacles-and-solutio
       would be a per-sample flat rewrite (bigger surgery) or SPC opcode
       batching; re-rank against compose (~4 ms est.) and draw-npcs port
       first.
+- [x] 🤖 **Span-compose (R18) -- implemented, byte-identical, REFUTED
+      (2026-07-13, late)**: per-segment opacity/priority metadata from all
+      BG decoders + sprite segment mask + metadata-driven span compose
+      (test-free 8-px claims, classic 8-px fallback). All 8 CRC passes
+      identical on the first build; device D6R on the LR bench:
+      **+775 +/- 5 ms/block = +2.58 ms/frame SLOWER** -- reverted, playable
+      R16 firmware restored (md5-verified). Fourth and decisive
+      pass-restructuring data point: the M7 rewards long tight per-pixel
+      loops; segment-shaped control flow loses even when it provably skips
+      work. Render wall confirmed at 26.2 ms/frame scroll. Plan re-ranked:
+      APU tier 2 is the only sizeable un-attacked bucket; adaptive pacing
+      (user-gated) becomes the realistic path to perceived 60-in-scroll.
 - [x] 🤖 **Sub-frame pass, evening (2026-07-13, ff4-gnw `1f59d69`, ff4-port
       `39aa068`)**: executed PLAN-SUBFRAME step 0 + lever probes. Post-R15/R16
       profile: runLine 50.8% -- ONE 128-byte loop at ~4 ms/frame = the

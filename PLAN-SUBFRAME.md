@@ -42,9 +42,34 @@ same day; the plan below is updated with their verdicts:
 - Net kept from the pass: FF4_ML_LAYER probe knob + TRCMISS diagnostics
   (ff4-gnw `1f59d69`, ff4-port `39aa068`).
 
-## Revised lever order
+## Span-compose verdict (2026-07-13, late): REFUTED on device
 
-1. **Span-compose (the real render lever, structural).** At decode time,
+Fully implemented (per-segment opacity/priority metadata accumulated in
+every decoder, sprite segment mask, metadata-driven span compose with
+test-free 8-pixel claims and a classic 8-pixel fallback), byte-identical
+on all 8 CRC passes on the FIRST build -- and **+775 +/- 5 ms/block =
++2.58 ms/frame SLOWER** on the LR bench. Reverted. The fragmentation
+overhead (per-segment step walk, 8-pixel fallbacks on sprite/mixed
+segments, metadata accumulation in the copy loops, full sprite scan)
+exceeds the linear 10-pass compose it replaces. FOURTH and decisive
+data point: this M7 rewards long, tight per-pixel loops; segment-shaped
+control flow loses even when it provably skips work. The render wall
+stands at ~26.2 ms/frame scroll with the R15+R16 pipeline.
+
+## Revised lever order (post span-compose refutation)
+
+1. ~~Span-compose~~ **REFUTED, see above. Do not revisit segment-shaped
+   compose on this platform.**
+1bis. **APU tier 2** is now the only sizeable un-attacked bucket
+   (~3.1 ms): SPC opcode batching, then dsp flat rewrite.
+2. **Interpreter residue** (~1.3 ms): port the remaining hot leaves if
+   the real-walk profile surfaces any.
+3. **Adaptive pacing** (user-gated): with the render wall confirmed,
+   closing the last ~5 ms to 60-in-scroll by software alone is unlikely;
+   an adaptive render-skip on overrun frames becomes the realistic path
+   to perceived 60 everywhere.
+
+### (superseded) Span-compose design notes At decode time,
    emit per-8px-tile span metadata (fully-opaque / fully-transparent /
    mixed + uniform priority). The compose then walks SPANS, claiming
    whole runs with memcpy-like inner loops and only falling back to
