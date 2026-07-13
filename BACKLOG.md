@@ -515,6 +515,20 @@ fix target. Full narrative in MemPalace `wing=ff4-gnw room=obstacles-and-solutio
       would be a per-sample flat rewrite (bigger surgery) or SPC opcode
       batching; re-rank against compose (~4 ms est.) and draw-npcs port
       first.
+- [x] 🤖 **Adaptive render skip -- THE fix for walking fluidity
+      (2026-07-13, retro-go-sd local `9c58d2e0`, user-validated)**: with
+      the render wall confirmed, skip the RENDER (never the emulation) of
+      at most every other frame when the 60 Hz pacer falls >3 ms behind.
+      Game clock stays an exact 60 Hz everywhere; display floats 60 (idle,
+      0% skips) to ~30 (heavy scroll, strict alternation). Guards: no two
+      consecutive skips, parity rephase every 16 skips (anti 30 Hz alias
+      on SNES 2-frame flicker). Probe-measured during the user's real
+      walk: 1152 emulated frames / ~19.3 s = ~59.7 emulated fps at a 47%
+      skip rate; user verdict: "fluide partout" -- his own long-standing
+      hunch, now measured. Counters g_adaskip_rendered/skipped;
+      -DFF4_ADAPTIVE_SKIP=0 disables. The device debt list keeps the
+      software levers (APU tier 2, interpreter residue) as OPTIONAL
+      refinements that would only lower the skip rate.
 - [x] 🤖 **Span-compose (R18) -- implemented, byte-identical, REFUTED
       (2026-07-13, late)**: per-segment opacity/priority metadata from all
       BG decoders + sprite segment mask + metadata-driven span compose

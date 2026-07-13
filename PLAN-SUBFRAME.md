@@ -64,10 +64,11 @@ stands at ~26.2 ms/frame scroll with the R15+R16 pipeline.
    (~3.1 ms): SPC opcode batching, then dsp flat rewrite.
 2. **Interpreter residue** (~1.3 ms): port the remaining hot leaves if
    the real-walk profile surfaces any.
-3. **Adaptive pacing** (user-gated): with the render wall confirmed,
-   closing the last ~5 ms to 60-in-scroll by software alone is unlikely;
-   an adaptive render-skip on overrun frames becomes the realistic path
-   to perceived 60 everywhere.
+3. ~~Adaptive pacing~~ **SHIPPED AND USER-VALIDATED (2026-07-13,
+   retro-go-sd `9c58d2e0`)**: exact 60 Hz game clock everywhere, display
+   60<->30, 47% skip rate measured during the user's real walk, verdict
+   "fluide partout". APU tier 2 / interpreter work remain as optional
+   refinements that would only lower the skip rate.
 
 ### (superseded) Span-compose design notes At decode time,
    emit per-8px-tile span metadata (fully-opaque / fully-transparent /
