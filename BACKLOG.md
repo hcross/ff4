@@ -515,6 +515,39 @@ fix target. Full narrative in MemPalace `wing=ff4-gnw room=obstacles-and-solutio
       would be a per-sample flat rewrite (bigger surgery) or SPC opcode
       batching; re-rank against compose (~4 ms est.) and draw-npcs port
       first.
+- [x] 🤖 **Continuous-scroll campaign (2026-07-13, ff4-gnw `b6a044f`+`1cae001`,
+      ff4-port `dfaee9d`, retro-go-sd local `3fe869d3`)**: the user's walking
+      dip, chased with agent-driven synthetic inputs (his suggestion).
+      DIAGNOSIS: the AUTO_WALK square stalls against the corridor walls on
+      its up/down legs -- the bench under-measured real walking by ~2x.
+      FF4_AUTO_WALK_LR (left/right only, every frame scrolls) reproduces
+      deterministically: 29.7 ms/frame @354 MHz. Desktop miss-profile of
+      the same workload (miss_profiler --walk-lr): NO new interpreted
+      routines vs the square -- the cost is renderer, not un-ported code.
+      LR-sampled: ppu_runLine 47%, compose 16%, memset 11.5%, APU 11%.
+      DELIVERED (each step byte-identical + D6R-measured on the LR bench):
+      R15 window-mask line cache (s_lrWin rebuilt EVERY line -- six 256-byte
+      memsets, 344 KB/frame -- now generation-gated on the window regs):
+      -860+/-10 ms/block = -2.87 ms/frame EXACT. R16 map-space decoded-line
+      cache for BG1 (512-px map line decoded once per map line, windowed
+      copy per frame; 131 KB overlay BSS, 4bpp/8px-tiles gated, BG2 blocked
+      on RAM margin 17 KB): -190+/-25 = -0.63 ms/frame. Scroll total:
+      29.7 -> 26.2 ms/frame (33.6 -> 38.2 fps).
+      HONEST REVERTS: compose top-down first-writer-wins (0 ms net even on
+      pure scroll -- field lines never fully covered) and ppu_runLine-in-ITCM
+      (+18 ms/block, veneer cost to its AXI callees beats the fetch win).
+      INCIDENT (root-caused): flashing while the device runs the 354 MHz
+      overclock produced MARGINAL FLASH WRITES -- 277 bytes with unprogrammed
+      bits scattered over 5 sectors of bank2, plus one interrupted flash
+      leaving an old frogfs beside a new intflash (ITCM offset mismatch ->
+      boot runaway diagnosed as VTOR pointing into RAM). NEW FLASH PROTOCOL:
+      reset-halt before flashing, always flash intflash+frogfs together,
+      md5-verify both regions after every flash (gnwmanager dump), verify
+      bank1 vectors after any erase.
+      NEXT (sub-frame campaign, dedicated session): BG2 map-space cache
+      (needs ~131 KB -- candidates: shrink the R5 store, or slot-share),
+      compose-reads-map-space indirection (kills the extraction copy),
+      APU tier 2, sprite/OAM path. Scroll target 16.7 ms needs ~-9.5 more.
 - [x] 🤖 **Hardcore fluidity campaign (2026-07-12, ff4-gnw `090f0b7`+`725a67a`,
       ff4-port `ef1ae5d`, retro-go-sd local `db480fe0`+`f6d6ada6`)**: user
       report "static near-native, walking lags (sprite animations slow)".
