@@ -19,6 +19,43 @@
   effects (R10b, R12, runLine-ITCM): it ranks *candidates*, the ring
   decides.
 
+## Status after the 2026-07-13 evening pass
+
+Step 0, lever 1's probe and a fused-compose attempt were executed the
+same day; the plan below is updated with their verdicts:
+
+- **Step 0 done.** Post-R15/R16 split: runLine 50.8% (~13.3 ms), compose
+  22.3% (~5.8), memset 6.9%, APU ~12%, interpreter ~5%. Fine-grained PC
+  histogram pinned ONE 128-byte loop at ~4 ms: the per-pixel
+  raw->s_lrVal copy of the direct BG decode (~10 instr/px, 114k px/frame).
+  R2b thrash ruled out by measurement (TRCMISS: 541 misses/frame walking
+  = ~0.2 ms).
+- **Lever 1 probe done: BG2 == BG1 within noise** (+/-25 ms/block).
+  A second cache would land ~-0.6 ms/frame but needs 131 KB the margin
+  cannot fund without sacrificing the R5 idle store. PARKED.
+- **Fused compose->RGB565 (R17) tried and REVERTED: -0.083 ms/frame.**
+  Third data point (after top-down compose and runLine-ITCM) proving the
+  wall: ~6 equivalent 256-entry per-pixel traversals per line; removing
+  one while adding a claim test to the others is a wash. The remaining
+  render win must reduce per-pixel work in ALL passes at once -->
+  **span-compose** (see below), not another pass fusion.
+- Net kept from the pass: FF4_ML_LAYER probe knob + TRCMISS diagnostics
+  (ff4-gnw `1f59d69`, ff4-port `39aa068`).
+
+## Revised lever order
+
+1. **Span-compose (the real render lever, structural).** At decode time,
+   emit per-8px-tile span metadata (fully-opaque / fully-transparent /
+   mixed + uniform priority). The compose then walks SPANS, claiming
+   whole runs with memcpy-like inner loops and only falling back to
+   per-pixel work on mixed spans. This cuts work in every pass at once
+   -- the only shape the three neutral experiments say can win big.
+   Estimated -2 to -4 ms, real refactor, needs the full CRC battery.
+2. **APU tier 2** (unchanged, ~3.1 ms bucket): SPC opcode batching, then
+   dsp flat rewrite. Estimated -1 to -2 ms combined.
+3. **Sprite/OAM path** (within runLine's remainder) -- profile first.
+4. **Adaptive pacing** as the user-gated fallback (unchanged).
+
 ## Step 0 — re-profile (30 min, do this first)
 
 The 47/16/11.5/11 split predates R15/R16. Re-run the LR-sample

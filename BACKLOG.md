@@ -515,6 +515,19 @@ fix target. Full narrative in MemPalace `wing=ff4-gnw room=obstacles-and-solutio
       would be a per-sample flat rewrite (bigger surgery) or SPC opcode
       batching; re-rank against compose (~4 ms est.) and draw-npcs port
       first.
+- [x] 🤖 **Sub-frame pass, evening (2026-07-13, ff4-gnw `1f59d69`, ff4-port
+      `39aa068`)**: executed PLAN-SUBFRAME step 0 + lever probes. Post-R15/R16
+      profile: runLine 50.8% -- ONE 128-byte loop at ~4 ms/frame = the
+      per-pixel raw->s_lrVal copy of the direct BG decode; R2b thrash ruled
+      out (TRCMISS 541/frame walking = ~0.2 ms). BG2-cache probe: identical
+      to BG1 within noise; second cache parked on RAM (needs 131 KB, margin
+      17 KB). Fused compose->RGB565 (R17): -0.083 ms/frame, REVERTED --
+      third neutral pass-fusion result, establishing the wall: ~6 equivalent
+      per-pixel traversals/line; only span-compose (per-tile opacity
+      metadata, span-claiming compose) reduces them all at once. Plan
+      updated with revised lever order (span-compose > APU tier 2). Kept:
+      FF4_ML_LAYER probe knob + TRCMISS diagnostics. Scroll stays at
+      26.2 ms/frame (R15+R16).
 - [x] 🤖 **Continuous-scroll campaign (2026-07-13, ff4-gnw `b6a044f`+`1cae001`,
       ff4-port `dfaee9d`, retro-go-sd local `3fe869d3`)**: the user's walking
       dip, chased with agent-driven synthetic inputs (his suggestion).
