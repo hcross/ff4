@@ -544,10 +544,11 @@ fix target. Full narrative in MemPalace `wing=ff4-gnw room=obstacles-and-solutio
       reset-halt before flashing, always flash intflash+frogfs together,
       md5-verify both regions after every flash (gnwmanager dump), verify
       bank1 vectors after any erase.
-      NEXT (sub-frame campaign, dedicated session): BG2 map-space cache
-      (needs ~131 KB -- candidates: shrink the R5 store, or slot-share),
-      compose-reads-map-space indirection (kills the extraction copy),
-      APU tier 2, sprite/OAM path. Scroll target 16.7 ms needs ~-9.5 more.
+      NEXT (sub-frame campaign, dedicated session): detailed plan in
+      [PLAN-SUBFRAME.md](PLAN-SUBFRAME.md) -- re-profile first, then BG2
+      map-space (RAM decision gate), compose-reads-map-space, APU tier 2,
+      sprite/OAM path, adaptive pacing as a user-gated fallback. Scroll
+      target 16.7 ms needs ~-9.5 more.
 - [x] 🤖 **Hardcore fluidity campaign (2026-07-12, ff4-gnw `090f0b7`+`725a67a`,
       ff4-port `ef1ae5d`, retro-go-sd local `db480fe0`+`f6d6ada6`)**: user
       report "static near-native, walking lags (sprite animations slow)".
