@@ -544,13 +544,15 @@ fix target. Full narrative in MemPalace `wing=ff4-gnw room=obstacles-and-solutio
       host); desktop = find paths + byte-exactness proofs, device = rank
       and size (now recorded in ff4-gnw
       `docs/firmware-and-hardware.md`).
-- [ ] 🤖 **R19 — inline compose base-coat fills + math-test LUT — RING
-      GATE PENDING (branch `perf/lr-microgains` `d716e76`)**: targets the
-      two LR-sampled buckets (libc memset called from AXI code ~6 %, R17
-      per-pixel math test ~24 %); desktop byte-exact on the same 7
-      evidence runs as R17/R18, desktop timing deliberately not cited
-      (device-specific win). Do NOT merge without the D6R ring A/B
-      (span-compose precedent); baseline ring-R18.txt 14 094 ms/block.
+- [x] 🤖 **R19 — inline compose base-coat fills + math-test LUT
+      (2026-07-14, ff4-gnw `5bbcfe9` merged to main; ring-confirmed
+      −0.85 ms/frame vs the ring-R18 baseline of 14 094 ms/block)**:
+      targets the two LR-sampled buckets (libc memset called from AXI
+      code ~6 %, R17 per-pixel math test ~24 %); desktop byte-exact on
+      the same 7 evidence runs as R17/R18, desktop timing deliberately
+      not cited (device-specific win). Held on branch
+      `perf/lr-microgains` until the D6R ring A/B passed (span-compose
+      precedent), then merged.
 - [x] 🤖 **R18 — fused main+sub compose for math lines (2026-07-13,
       ff4-gnw `a729557`, merged)**: with needSub set, the two
       ppu_lrComposeLine calls repeated the whole back-to-front priority

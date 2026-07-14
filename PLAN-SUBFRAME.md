@@ -77,10 +77,11 @@ leaves the no-math fast path (SLOWLN/MATHLN diag channels, ff4-port
   frame).
 - **R18 — fused main+sub compose for math lines (ff4-gnw `a729557`,
   MERGED)**: ring −0.87 ms/frame on top of R17.
-- **R19 — inline base-coat fills + math-test LUT (branch
-  `perf/lr-microgains` `d716e76`)**: desktop byte-exact on the same 7
-  evidence runs; **ring gate still pending** — do not merge without the
-  D6R A/B (span-compose precedent).
+- **R19 — inline base-coat fills + math-test LUT (ff4-gnw `5bbcfe9`,
+  MERGED 2026-07-14)**: desktop byte-exact on the same 7 evidence runs;
+  held on `perf/lr-microgains` until the D6R ring A/B passed
+  (span-compose precedent), then ring-confirmed **−0.85 ms/frame** and
+  merged.
 - ⚠ **Identifier reuse**: "R17"/"R18" in the *earlier* sections of this
   file name the two reverted 2026-07-13 attempts (fused compose→RGB565,
   span-compose). Those never shipped; since the night pass, R17/R18
