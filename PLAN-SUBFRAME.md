@@ -17,7 +17,11 @@
   both regions (`gnwmanager dump`) → check bank1 vectors after any erase.
 - The desktop sampler over-estimates compose and misses device-only
   effects (R10b, R12, runLine-ITCM): it ranks *candidates*, the ring
-  decides.
+  decides. Hardened by the third occurrence (2026-07-14, LR-sampling vs
+  desktop profile on the 014 bench): the desktop sampler is
+  **disqualified for ranking device buckets** at all — compose weighs
+  ~10× less on the M7 than on the host. Desktop = find paths + prove
+  byte-exactness; device = rank and size.
 
 ## Status after the 2026-07-13 evening pass
 
@@ -56,6 +60,43 @@ data point: this M7 rewards long, tight per-pixel loops; segment-shaped
 control flow loses even when it provably skips work. The render wall
 stands at ~26.2 ms/frame scroll with the R15+R16 pipeline.
 
+## Status after the 2026-07-13/14 night pass — bench moved to 014
+
+The campaign moved to the heavier `014-baron-castle-exterior` bench
+(catalogued in
+[ff4-port `FIXTURES.md`](https://github.com/hcross/ff4-port/blob/main/FIXTURES.md),
+ff4-port `1b6e1ba`): 171 of 224 lines carry the field
+pseudo-transparency math config for which the corridor bench never
+leaves the no-math fast path (SLOWLN/MATHLN diag channels, ff4-port
+`2c87c57`/`504a164`).
+
+- **R17 — whole-line half-add-subscreen math path (ff4-gnw `9137799`,
+  MERGED)**: device ring A/B on the 014 walking bench **−9.89 ms/frame
+  (−17.1 %)**. Key trap documented in the code: psStore lines are the
+  common case while walking (scroll rebuilds the R5 skip baseline every
+  frame).
+- **R18 — fused main+sub compose for math lines (ff4-gnw `a729557`,
+  MERGED)**: ring −0.87 ms/frame on top of R17.
+- **R19 — inline base-coat fills + math-test LUT (branch
+  `perf/lr-microgains` `d716e76`)**: desktop byte-exact on the same 7
+  evidence runs; **ring gate still pending** — do not merge without the
+  D6R A/B (span-compose precedent).
+- ⚠ **Identifier reuse**: "R17"/"R18" in the *earlier* sections of this
+  file name the two reverted 2026-07-13 attempts (fused compose→RGB565,
+  span-compose). Those never shipped; since the night pass, R17/R18
+  refer to the merged changes above. Disambiguate by date.
+- **Frame decomposition (2026-07-14)**: Baron zone ≈ 10.2 ms/f
+  emulation + ~37 ms/f render. For the accepted v1 adaptive skip
+  (ADR-007, below) to hold the 60 Hz game clock at ≥30 displayed fps,
+  render must reach **≤ ~19 ms/f** — the campaign's fluidity target.
+- **On-device LR-sampling profile (PC+LR histogram via openocd TCL,
+  ~25 samples/s)**: R17 output pass ~24 %, compose+memsets ~23 %, BG
+  decode ~18 %, APU ~12 % — renderer stacking stays lever #1.
+  Symbolization traps recorded in MemPalace obstacles (retro-go
+  overlays share VMAs — restrict symbolization to `build/ff4/*.o`;
+  addr2line is equally blinded — resolve intra-function offsets in the
+  pre-link `ppu.o`).
+
 ## Revised lever order (post span-compose refutation)
 
 1. ~~Span-compose~~ **REFUTED, see above. Do not revisit segment-shaped
@@ -64,11 +105,14 @@ stands at ~26.2 ms/frame scroll with the R15+R16 pipeline.
    (~3.1 ms): SPC opcode batching, then dsp flat rewrite.
 2. **Interpreter residue** (~1.3 ms): port the remaining hot leaves if
    the real-walk profile surfaces any.
-3. ~~Adaptive pacing~~ **SHIPPED AND USER-VALIDATED (2026-07-13,
+3. ~~Adaptive pacing~~ **v1 SHIPPED AND USER-VALIDATED (2026-07-13,
    retro-go-sd `9c58d2e0`)**: exact 60 Hz game clock everywhere, display
    60<->30, 47% skip rate measured during the user's real walk, verdict
-   "fluide partout". APU tier 2 / interpreter work remain as optional
-   refinements that would only lower the skip rate.
+   "fluid everywhere". CORRECTION 2026-07-14: v1's 50 % skip cap means
+   zones above ~33 ms rendered frame still run in slow motion (Baron
+   exterior), and the deeper v2 skip was REJECTED by the user — see
+   ADR-007 below. Renderer cost reduction is therefore NOT an optional
+   refinement; it is the only remaining fluidity lever.
 
 ### (superseded) Span-compose design notes At decode time,
    emit per-8px-tile span metadata (fully-opaque / fully-transparent /
@@ -150,14 +194,19 @@ memoize per-line sprite evaluation keyed on (OAM gen, line) — OAM
 changes once per frame (DrawNpcs), lines re-evaluate 224× against the
 same OAM. Estimated −0.5 to −1 ms.
 
-## Fallback — adaptive frame pacing (UX decision, last resort)
+## Fallback — adaptive frame pacing (CLOSED by ADR-007, 2026-07-14)
 
-If the levers land ~21-22 ms scroll (46+ fps) and 16.7 stays out of
-reach: an *adaptive* skip (render-skip only when the emulated frame
-overruns, odd-period guard against the 30 Hz alias) trades a rare
-skipped render for full-speed game logic. Distinct from the fixed
-FF4_FRAMESKIP the user rejected ("slideshow") — needs his sign-off
-with a live A/B on device.
+The odd-period adaptive skip this section used to propose was built
+(retro-go-sd `21bfd6d1`, steady 1/3/5/7 period, exact 60 Hz game clock)
+and **rejected by the user on the device** — "looks like static
+frameskip" — the second rejection on the same perceptual axis after
+fixed `FF4_FRAMESKIP` ("slideshow", 2026-07-09). Reverted (`32239edd`),
+v1 restored. See
+[ADR-007](https://github.com/hcross/ff4-port/blob/main/docs/adr/adr-007-display-cadence-floor.md):
+the v1 alternating skip (≤50 %) is the ceiling of acceptable skipping;
+the display-cadence floor outranks game-clock exactness. Do not
+re-propose deeper skip without Hoani explicitly reopening the ADR —
+the only remaining fluidity lever is render cost itself.
 
 ## Session checklist
 

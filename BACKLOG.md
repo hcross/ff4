@@ -515,6 +515,66 @@ fix target. Full narrative in MemPalace `wing=ff4-gnw room=obstacles-and-solutio
       would be a per-sample flat rewrite (bigger surgery) or SPC opcode
       batching; re-rank against compose (~4 ms est.) and draw-npcs port
       first.
+- [x] 🤖 **Adaptive-skip v2 (steady odd period) — implemented, REJECTED by
+      the user, reverted (2026-07-14, retro-go-sd `21bfd6d1` reverted by
+      `32239edd`)**: period escalates 1/3/5/7 under load, game clock an
+      EXACT 60 Hz everywhere, display a steady ~8.6 fps in the heavy zone
+      — verdict: "looks like static frameskip". Second rejection on the
+      same perceptual axis (fixed FF4_FRAMESKIP=2, 2026-07-09,
+      "slideshow"), promoted to a durable design constraint:
+      **[ADR-007](https://github.com/hcross/ff4-port/blob/main/docs/adr/adr-007-display-cadence-floor.md)
+      — the display-cadence floor outranks game-clock exactness**. The v1
+      alternating skip (≤50 %) is the ceiling of acceptable skipping; its
+      cap means zones above ~33 ms rendered frame run in slow motion, so
+      the ONLY cure is cheaper rendering (target render ≤ ~19 ms/f for v1
+      to hold 60 Hz at ≥30 displayed fps). Do not re-propose deeper skip
+      without explicit reopening.
+- [x] 🤖 **On-device LR-sampling + frame decomposition of the Baron zone
+      (2026-07-14)**: PC+LR histogram via openocd TCL (~25 samples/s,
+      2500 samples) on the 014 walking bench. Decomposition: emu 10.2 ms/f
+      vs render ~37 ms/f. Ranked device buckets: R17 output pass ~24 %,
+      compose+memsets ~23 %, BG decode ~18 %, APU ~12 % — renderer
+      stacking stays lever #1. TWO symbolization traps (full recipe in
+      MemPalace obstacles): retro-go overlays share VMAs, so a global nm
+      map attributes PCs to OTHER ports — restrict to `build/ff4/*.o`
+      symbols; addr2line is equally blinded — resolve intra-function
+      offsets in the pre-link `ppu.o`. THIRD and strongest occurrence of
+      the sampler lesson: the desktop sampler is DISQUALIFIED for ranking
+      device buckets (compose weighs ~10× less on the M7 than on the
+      host); desktop = find paths + byte-exactness proofs, device = rank
+      and size (now recorded in ff4-gnw
+      `docs/firmware-and-hardware.md`).
+- [ ] 🤖 **R19 — inline compose base-coat fills + math-test LUT — RING
+      GATE PENDING (branch `perf/lr-microgains` `d716e76`)**: targets the
+      two LR-sampled buckets (libc memset called from AXI code ~6 %, R17
+      per-pixel math test ~24 %); desktop byte-exact on the same 7
+      evidence runs as R17/R18, desktop timing deliberately not cited
+      (device-specific win). Do NOT merge without the D6R ring A/B
+      (span-compose precedent); baseline ring-R18.txt 14 094 ms/block.
+- [x] 🤖 **R18 — fused main+sub compose for math lines (2026-07-13,
+      ff4-gnw `a729557`, merged)**: with needSub set, the two
+      ppu_lrComposeLine calls repeated the whole back-to-front priority
+      scan once per screen; ppu_lrComposeBothLines paints both buffer
+      pairs in one scan, per-screen windowing preserved. Ring-confirmed
+      **−0.87 ms/frame** on top of R17; no-math lines untouched.
+- [x] 🤖 **014 perf bench + R17 whole-line half-add-subscreen path
+      (2026-07-13, ff4-port `1b6e1ba`+`2c87c57`+`504a164`, ff4-gnw
+      `1fe3992`+`9137799`, merged)**: the new bench
+      `014-baron-castle-exterior` (fixtures `be05230`, catalogued in
+      FIXTURES.md) is the heaviest real zone — 171/224 lines carry the
+      field pseudo-transparency math config (BG1+BG2 half-add against the
+      subscreen) that the corridor bench never touches, classified with
+      the new CGRAMGEN/PAL4RB/SLOWLN/MATHLN diag channels under
+      `--vramgen-delta`. R17 specializes a whole-line path for those
+      lines (constant-false window/clip/prevent/direct-color tests fold
+      away; the half-add clamps fold on 5-bit channels). Device ring A/B
+      on the 014 walking bench: **−9.89 ms/frame (−17.1 %)**. KEY trap
+      documented in code: psStore lines are the common case while walking
+      (scroll rebuilds the R5 skip baseline every frame). ⚠ IDENTIFIER
+      REUSE: this R17 and the R18 above are NOT the "Fused compose→RGB565
+      (R17)" / "Span-compose (R18)" of the two entries below — those were
+      reverted the same day without shipping and their numbers were
+      reassigned; disambiguate by date and commit hash.
 - [x] 🤖 **Adaptive render skip -- THE fix for walking fluidity
       (2026-07-13, retro-go-sd local `9c58d2e0`, user-validated)**: with
       the render wall confirmed, skip the RENDER (never the emulation) of
@@ -524,11 +584,16 @@ fix target. Full narrative in MemPalace `wing=ff4-gnw room=obstacles-and-solutio
       consecutive skips, parity rephase every 16 skips (anti 30 Hz alias
       on SNES 2-frame flicker). Probe-measured during the user's real
       walk: 1152 emulated frames / ~19.3 s = ~59.7 emulated fps at a 47%
-      skip rate; user verdict: "fluide partout" -- his own long-standing
-      hunch, now measured. Counters g_adaskip_rendered/skipped;
-      -DFF4_ADAPTIVE_SKIP=0 disables. The device debt list keeps the
-      software levers (APU tier 2, interpreter residue) as OPTIONAL
-      refinements that would only lower the skip rate.
+      skip rate; user verdict: "fluid everywhere" (translated) -- his own
+      long-standing hunch, now measured. Counters
+      g_adaskip_rendered/skipped; -DFF4_ADAPTIVE_SKIP=0 disables. The
+      device debt list keeps the software levers (APU tier 2, interpreter
+      residue) as OPTIONAL refinements that would only lower the skip
+      rate. CORRECTION 2026-07-14: v1's 50 % skip cap means zones above
+      ~33 ms rendered frame (Baron exterior) still run in slow motion,
+      and the deeper v2 skip was rejected by the user (ADR-007, entry
+      above) -- renderer cost reduction is NOT optional; it is the only
+      remaining fluidity lever.
 - [x] 🤖 **Span-compose (R18) -- implemented, byte-identical, REFUTED
       (2026-07-13, late)**: per-segment opacity/priority metadata from all
       BG decoders + sprite segment mask + metadata-driven span compose
@@ -845,6 +910,36 @@ fix target. Full narrative in MemPalace `wing=ff4-gnw room=obstacles-and-solutio
       specifically to 30 fps (non-gameplay screen, likely imperceptible) —
       cheap to test, no shared-code risk, doesn't fix the underlying PPU cost
       but may be sufficient to eliminate perceived lag.
+
+## 8. Retro-go integration — pause menu & device savestates (2026-07-14)
+
+Delivered over 7 debug rounds during the 2026-07-13/14 night session and
+**user-validated on device** ("all slots work"). The integration itself
+lives in the retro-go-sd scaffold branch (local commits
+`34ede4ac..a3792a60`) — FF4 repos document only the FF4-side mechanisms
+(see [ff4-gnw `docs/firmware-and-hardware.md`](https://github.com/hcross/ff4-gnw/blob/main/docs/firmware-and-hardware.md),
+"Savestates on the device") and reference the scaffold commits.
+
+- [x] 🤖 Full PAUSE/SET pause menu: save/load on 4 slots, brightness,
+      volume, quit-to-launcher; Frameskip + A/B-swap entries;
+      Turbo/Scaling/Filtering/Speed masked (framework opt-out, defaults
+      unchanged for the other ports).
+- [x] 🤖 Device savestates: streamed through the statehandler byte hooks
+      (write hook + the new read-side twin, ff4-gnw `200212e`),
+      TAMP-compressed ~4:1 (273 → 67.7 KB measured), two-pass save with
+      in-flight header-length injection (LittleFS CTZ `fseek`-rewrite
+      trap), 768 KB internal filesystem.
+- [x] 🤖 Device→desktop fixture pipeline #2: device-saved states load
+      byte-identical in the desktop harness — extraction recipe in
+      [ff4-port `FIXTURES.md`](https://github.com/hcross/ff4-port/blob/main/FIXTURES.md).
+- [x] 🤖 MCU heap headroom: static singletons for the small LakeSnes
+      components (ff4-gnw `a411391`, incl. the two-instance Input trap).
+- [ ] 🤖 The Apu (64 KB SPC RAM) stays on the MCU heap — no static region
+      fits (overlay slack ~15 KB, DTCM full, AHB uncached). Branch
+      `fix/static-snes-components` parked pending an overlay-budget
+      decision.
+- [ ] 🧑 Push the local retro-go-sd commits (`34ede4ac..a3792a60` + the
+      earlier scaffold series) — upstream/fork decision is Hoani's.
 
 ---
 

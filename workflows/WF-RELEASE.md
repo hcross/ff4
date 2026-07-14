@@ -78,6 +78,9 @@ arm-none-eabi-gdb -q -nx -batch -x scripts/frames-oracle.gdb build/gw_retro_go.e
 Dump the device framebuffer (gnw-hardware:debug) on key scenes (title, field,
 combat) and **pixel-diff** vs a known desktop reference. A black screen with SCB at
 0 is **not** a fault — it's a rendering/title problem, not a boot one.
+If `gnwmanager screenshot` cannot resolve symbols on the firmware, capture
+via GDB instead (proven 2026-07-14): read the `fb1`/`fb2` framebuffer
+pointers, dump the raw buffers, convert from RGB565.
 
 ### 7. Qualify — **speed** axis
 Measure: dispatch rate (%), effective frames/s, time spent in WaitVblank.
@@ -104,5 +107,11 @@ Update the `[TASK:*]`, ADR/obstacles, diary. If recovery is needed
   until the power-cycle.
 - **Fidelity by screenshot**, never by liveness alone (corrupted rendering
   passes the frame oracle).
+- **`gnwmanager dump` / `gnwmanager ls` replace the running app with
+  gnwmanager's stub** — the game is no longer running afterwards. Always
+  `gnwmanager start 0x08100000` to hand the device back (2026-07-14).
+- **Never GDB-`call` device functions** — the watchdog fires mid-call
+  (2026-07-14). Read/dump memory and use per-frame-written counters
+  instead.
 - Automate as much as possible (GDB batch); reserve human involvement for
   wiring / power / LCD reading.
