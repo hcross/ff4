@@ -76,17 +76,19 @@ See [REPRISE.md](REPRISE.md) — dedicated workstream, tracked separately.
       (observed bug: monsters do not counter-attack, cf. `[TASK] ff4-combat-visual-bugs`)
 - [ ] 🤖 `TimerDur_0b/03` — ROM bank $0F access (`snes_readByte` instead of `ram[]`)
 - [ ] 🤖 `TimerDur_07` — dispatch wrapper for the non-standard signature `(Snes*, uint16_t x)`
-- [ ] 🤖 `ExecSound_ext_stub` — real SPC responder (re-enables music/SFX).
-      Scope sharpened 2026-07-12: fixture 009's APU state has NO sound
-      driver uploaded (SPC still at IPL, `out=00 BB 00 00`), so its DSP
-      stream is structurally silent — desktop `--audio-crc` gives a
-      constant `CC2625BE` = CRC32 of 2136 zero bytes. Device volume is
-      now forced to 25% at boot (retro-go-sd `b00d11c6`) and the whole
-      output path was verified healthy end-to-end; there is simply
-      nothing to play. Lighter alternative to the full responder:
-      re-capture a savestate on desktop from a real boot with music
-      playing (driver then lives in the saved SPC RAM and resumes on
-      device).
+- [x] 🤖 `ExecSound_ext_stub` — RESOLVED 2026-07-14 (`ff4-gnw` `7420465`,
+      feat/unstub-sound): no responder was needed — the stub's premise
+      (SPC handshake never completing on G&W) no longer held with
+      today's APU emulation. Stub and table entry removed;
+      `ExecSound_ext` runs interpreted (title boot: 682 distinct
+      `--audio-crc` values over 800 frames vs the constant silence CRC;
+      fixture 012, the historic handshake-freeze repro with an IPL-only
+      APU, reaches full combat — old driverless savestates stay silent
+      but functional). `ExecSound_ext_emu` became a real
+      `run_emulated_func` delegation (map-transition music from ported
+      callers). Follow-ups: `D04861E ExecInterrupt_c` RETIRED pending
+      requalification with `--audio-crc` evidence; frame-level FBCRC
+      baselines predating the unstub no longer apply.
 - [x] 🤖 `gen_dispatch.py` — resolved in the opposite direction (2026-07-03):
       the rich per-entry comments and hand-tuned oracle machinery in
       `dispatch_all.c` make full regeneration infeasible without an engine
