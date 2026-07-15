@@ -13,7 +13,9 @@ construction, but not a native port: no perf gain).
 **Scope**: L-levels are proven against the **vanilla** JP image
 (CRC32 `CAA15E97`) only. Per-variant validity for translation-patch images
 lives in [`ff4-port/patches/manifest.json`](https://github.com/hcross/ff4-port/blob/main/patches/manifest.json)
-— never here (ADR-008).
+— never here (ADR-008). Which hooks are *gated* (native body not run) under
+each variant, and why, is the generated
+[registry/VARIANT_GAPS.md](registry/VARIANT_GAPS.md).
 
 ## Audit methodology
 

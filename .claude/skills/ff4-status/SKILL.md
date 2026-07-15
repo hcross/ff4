@@ -41,6 +41,15 @@ print('CRC32:', crc, '(expect CAA15E97 for JP 1.1)')
 # (reverser_system.md and reverser_hardcore.md forked silently once already —
 # P13-P17 landed in one and not the other, cf. W1-5)
 python3 ff4-port/prompts/generate_pitfalls.py --check
+
+# Per-routine ranges + variant dispatch profiles in sync? (ADR-008: a new
+# dispatch hook unknown to rom_profiles.c runs UNGATED under patched
+# variants — these two catch the forgotten regeneration after a translate)
+python3 registry/gen_ranges.py --check
+python3 registry/patch_impact.py --check
+# patch_impact --check needs the canonical variant images on disk; if it
+# exits 2 with "missing — build it first", run:
+#   python3 ff4-port/patches/apply_ips.py --patch-id j2e-en-v321
 ```
 
 If any of these fail: **stop and diagnose before doing anything else** —

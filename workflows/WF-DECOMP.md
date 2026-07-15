@@ -120,6 +120,25 @@ python3 registry/registry_promote.py D<id> --to L2 \
 This validates the level transition (won't let you skip L1) and
 re-renders DISPATCH_REGISTRY.md automatically.
 
+**If the dispatch table gained a NEW hook** (first-time dispatch, not a
+level promotion): regenerate the per-routine ranges and the variant
+profiles, then review the routine's variant status — a hook unknown to
+`ff4-gnw/rom_profiles.c` runs **ungated** under every patched variant,
+which is wrong the moment a patch touches its asm (ADR-008,
+ff4-port/docs/adr):
+
+```sh
+python3 registry/gen_ranges.py          # new entry needs a proven range
+python3 registry/patch_impact.py        # regenerates rom_profiles.c + VARIANT_GAPS.md
+                                        # (variant images: apply_ips.py --patch-id <id>)
+```
+
+Then read the routine's row in [registry/VARIANT_GAPS.md](../registry/VARIANT_GAPS.md):
+`fail-closed` means its range could not be proven (typical for code in
+data-modeled banks, see registry/RANGES.md) — the native win does NOT
+extend to variants until the range is pinned. The `--check` modes of both
+tools guard against forgetting this step (ff4-status runs them).
+
 ### 7. Closure
 Update the `[TASK:*]` (→ `checkpoint` if continuing, `done` otherwise).
 Record any non-trivial discovery as an ADR (`room=architecture-decisions`)
