@@ -100,7 +100,9 @@ The decision record is
 [ADR-008 in `ff4-port`](https://github.com/hcross/ff4-port/blob/main/docs/adr/adr-008-translation-patches-crc-profiles.md);
 the applier and per-variant validation status live in
 [`ff4-port/patches/`](https://github.com/hcross/ff4-port/blob/main/patches/README.md).
-First variant: J2e English v3.21 (desktop-validated; device bench pending).
+First variant: J2e English v3.21, device-validated on the Game & Watch
+(2026-07-15) — languages are switched in-game via the pause menu's
+**Language** entry (confirmation dialog, then automatic restart).
 ROM images with an unknown CRC32 are refused on the device.
 
 ## Tracking progress

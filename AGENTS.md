@@ -178,7 +178,7 @@ Decision record:
 
 Registry L-levels stay scoped to the **vanilla** JP image; per-variant
 validity lives in the manifest only. First variant: J2e EN v3.21 (CRC32
-`F135CAE6`), desktop-validated.
+`F135CAE6`), device-validated (2026-07-15).
 
 #### LakeSnes specifics (fork in `ff4-gnw/snes/`)
 
