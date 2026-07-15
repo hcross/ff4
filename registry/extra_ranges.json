@@ -1,0 +1,21 @@
+{
+  "note": "MANUAL companion to dispatch_ranges.json. Records ROM data regions that a dispatched C body has FROZEN a copy of (static const arrays copied verbatim from ROM) and that lie OUTSIDE that dispatch's own code range. If a translation patch modifies these bytes, the dispatch's frozen copy goes stale even though its code range shows no overlap -- so the impact tool must gate the listed dispatch_id on any intersection with these ranges. Addresses are SNES 'bank:addr' (LoROM). See RANGES.md for the audit method, date, and the exclusion rationale.",
+  "audit_date": "2026-07-15",
+  "audit_method": "Grepped ff4-gnw/{battle,field,menu,cutscene,sound}/ and ff4_helpers.c for 'static const'. 15 files carry one. Classified each by (a) is the array actually READ by the body, (b) copied-from-ROM vs algorithmic, (c) does the ROM source lie outside the dispatch's own code range. ROM source addresses pinned by unique byte-search against ff4-port/upstream/rom/ff4-jp1.sfc (CRC32 CAA15E97) -- 'the ROM bytes are the truth'.",
+  "entries": [
+    {
+      "dispatch_id": "D00BB6A",
+      "reason": "DrawNpcs_c (ff4-gnw/field/DrawNpcs.c) inlines four walk-cycle animation tables as static const (tbl_BDF8/BDFC/BE00/BE08). They are byte-identical to the contiguous ROM block $00:BDF8-$00:BE0F, which sits PAST DrawNpcs's own code range ($00:BB6A-$00:BDB1, see dispatch_ranges.json) -- so a patch to these bytes would not intersect the code range but would still stale the frozen copies. Confirmed by unique ROM byte-search; the D00BB6A registry note also documents the +2 relocation of these tables ($BDF6/BDFA/BDFE/BE06 -> $BDF8/BDFC/BE00/BE08).",
+      "ranges": [
+        { "start": "00:BDF8", "end": "00:BE0F" }
+      ]
+    },
+    {
+      "dispatch_id": "D0387D8",
+      "reason": "NoFanfareTbl (battle message-ID lookup, 7x 16-bit values + $ff terminator) lives at ROM $13:FE67-$13:FE75, pinned by unique byte-search and confirmed by the ld65 label NoFanfareTbl@0x13FE67. It is consumed by CheckFanfare ($03:87D8 = dispatch D0387D8), whose C port (ff4-gnw/battle/CheckFanfare.c) sets up a pointer to the table and delegates the read to the interpreter; a frozen 15-byte copy also exists in ff4-gnw/battle/NoFanfareTbl.c (helper NoFanfareTbl_c, currently unwired). Either consumption path is invalidated if the translation patch moves or rewrites this table, so D0387D8 must gate on it. This is the team-lead-named canonical case; recorded fail-closed even though the frozen helper is not yet wired.",
+      "ranges": [
+        { "start": "13:FE67", "end": "13:FE75" }
+      ]
+    }
+  ]
+}

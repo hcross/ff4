@@ -1,0 +1,5 @@
+# Out-of-band build scratch for registry/gen_ranges.py (assemble + link).
+# All contents are regenerated on demand and proven against the true ROM at
+# build time; nothing here is tracked except this .gitignore itself.
+*
+!.gitignore
