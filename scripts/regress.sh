@@ -15,22 +15,31 @@
 # state, not portable, and licensed-asset-adjacent by construction.
 #
 # Usage: scripts/regress.sh [--frames N] [--reset] [--fixtures NAME,NAME,...]
-#   --reset      forget all recorded baselines and start fresh this run
-#   --fixtures   comma-separated fixture basenames (no .lss), e.g.
-#                --fixtures 001-scene-after-leaving,004-menu — scope to a
-#                fast subset. The combat-adjacent fixtures (002, 005, 006)
+#                           [--rom PATH]
+#   --reset      forget the recorded baselines OF THE SELECTED ROM and start
+#                fresh this run
+#   --fixtures   comma-separated fixture basenames (no .lss) resolved under
+#                ff4-port/fixtures/, OR paths (anything containing a '/'),
+#                e.g. --fixtures 001-scene-after-leaving,004-menu — scope to
+#                a fast subset. The combat-adjacent fixtures (002, 005, 006)
 #                are markedly slower: AGENTS.md documents the interpreter
 #                running ~6x slower than native per headless frame, and
 #                these seeds exercise more of it; a full run across all 11
 #                fixtures at a meaningful frame count is a multi-minute
 #                affair, not a quick check — scope down while iterating.
+#   --rom        run against another ROM image (default: the vanilla JP 1.1).
+#                Baselines are keyed by the ROM's CRC32 in per-CRC subdirs,
+#                so variant verdicts (e.g. the J2e image, translation-patch
+#                ADR) never collide with vanilla ones. Vanilla fixtures
+#                cannot load against a 2 MiB variant (statehandler romSize
+#                guard) — pass the variant's own seeds via --fixtures.
 set -euo pipefail
 
 HERE="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 UMBRELLA="$(cd "$HERE/.." && pwd)"
 DESKTOP="$UMBRELLA/ff4-port/desktop"
 ROM="$UMBRELLA/ff4-port/upstream/rom/ff4-jp1.sfc"
-BASELINE_DIR="$UMBRELLA/.regress-baselines"
+BASELINE_ROOT="$UMBRELLA/.regress-baselines"
 FRAMES=300
 RESET=0
 FIXTURES_FILTER=""
@@ -40,6 +49,7 @@ while [ $# -gt 0 ]; do
     --frames) FRAMES="$2"; shift 2 ;;
     --reset) RESET=1; shift ;;
     --fixtures) FIXTURES_FILTER="$2"; shift 2 ;;
+    --rom) ROM="$2"; shift 2 ;;
     *) echo "unknown arg: $1" >&2; exit 2 ;;
   esac
 done
@@ -50,11 +60,6 @@ done
 # backlog); kept in sync by hand for now.
 EXCLUDE="--exclude 15cadc --exclude 048004 --exclude 03fe03 --exclude 15ca5e"
 
-mkdir -p "$BASELINE_DIR"
-if [ "$RESET" -eq 1 ]; then
-  rm -f "$BASELINE_DIR"/*.verdict
-fi
-
 echo "=== regress.sh: building headless-all (no SDL required) ==="
 make -C "$DESKTOP" headless-all
 
@@ -64,12 +69,35 @@ if [ ! -f "$ROM" ]; then
   exit 2
 fi
 
+# Baselines are per-ROM-image: verdicts recorded against one CRC32 must
+# never be compared with runs against another (translation-patch ADR).
+ROM_CRC="$(python3 -c "
+import zlib
+print(format(zlib.crc32(open('$ROM','rb').read()) & 0xFFFFFFFF, '08X'))
+")"
+BASELINE_DIR="$BASELINE_ROOT/$ROM_CRC"
+mkdir -p "$BASELINE_DIR"
+# One-time migration: flat pre-per-CRC baselines were all recorded against
+# the vanilla ROM (CAA15E97) — adopt them into its subdir.
+if [ "$ROM_CRC" = "CAA15E97" ]; then
+  for f in "$BASELINE_ROOT"/*.verdict; do
+    [ -f "$f" ] && mv -n "$f" "$BASELINE_DIR/"
+  done
+fi
+echo "=== regress.sh: ROM crc32 $ROM_CRC — baselines in $BASELINE_DIR ==="
+if [ "$RESET" -eq 1 ]; then
+  rm -f "$BASELINE_DIR"/*.verdict
+fi
+
 shopt -s nullglob
 if [ -n "$FIXTURES_FILTER" ]; then
   fixtures=()
   IFS=',' read -ra names <<< "$FIXTURES_FILTER"
   for n in "${names[@]}"; do
-    f="$UMBRELLA/ff4-port/fixtures/$n.lss"
+    case "$n" in
+      */*) f="$n" ;;  # explicit path (variant seeds live outside fixtures/)
+      *)   f="$UMBRELLA/ff4-port/fixtures/$n.lss" ;;
+    esac
     if [ ! -f "$f" ]; then
       echo "error: fixture not found: $f" >&2
       exit 2
