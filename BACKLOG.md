@@ -960,12 +960,22 @@ refusal under `FF4_REQUIRE_KNOWN_ROM`). Tooling one-liners in
       oracle A/B IDENTICAL on 4 variant seeds (dialogue ×2, free-roam,
       menu), gated counter 0 on vanilla / 22 on J2e boot, vanilla regress
       verdicts unchanged, all `--check` suites green, 16 pytest pass.
-- [ ] 🧑 Device bench validation: D6 cadence on J2e dialogue and world map
-      (watch `UpdateMode7Regs`/`UpdateWipe*`, gated on J2e), the
-      unknown-ROM refusal screen, and a Language round-trip (persisted
-      setting, applied at next launch).
-- [ ] 🧑 Push the local 2026-07-15 commits (all three ff4 repos + the
-      retro-go-sd scaffold branch), then re-pin the umbrella submodules.
+- [x] 🧑 Device bench validation (2026-07-15, scaffold `cb67a933`,
+      `SD_CARD=0 EXTFLASH_SIZE_MB=8`, both ROMs baked): JP↔EN Language
+      round-trip via confirm dialog + automatic reset, English intro on
+      LCD, per-language savestate slots with no cross-language bleed.
+      Three UX/persistence defects found and fixed at the bench (no-op
+      settings API in this fork → dedicated `/ff4_lang` file; auto-reset
+      after confirmation; slot namespacing via the app descriptor's
+      `romPath`, not per-handler suffixes).
+- [ ] 🧑 D6 cadence measurement on J2e dialogue and world map — the one
+      remaining device check (`UpdateMode7Regs`/`UpdateWipe*` are
+      fail-closed-gated on J2e; resolve their ranges manually to un-gate
+      if the world map drops below the ADR-007 floor). The unknown-ROM
+      refusal screen also remains to be exercised (needs a corrupt ROM
+      staged).
+- [x] 🧑 Push the local 2026-07-15 commits (all three ff4 repos + the
+      retro-go-sd scaffold branch on the `hcross` fork).
 - [ ] 🤖 J2e seeds still missing: battle-with-messages + naming-screen
       (tracked in the manifest's `gaps` field; needs a deeper save —
       exposure is low, bank $03 battle code is nearly untouched).
