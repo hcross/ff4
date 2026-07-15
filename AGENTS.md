@@ -161,6 +161,25 @@ Useful `make` targets: `make oracle SEED=…`, `make oracle-baseline SEED=…`
 > abandoned, cf. §B.2). `port/` is the translation zone; a routine validated
 > by its spike is promoted to `ff4-gnw/<domain>/`.
 
+#### Translation-patch variants & ROM identity (ADR-008)
+
+Community translation patches: **one language = one canonical pre-patched
+ROM image + one dispatch profile keyed by the image's full-file CRC32**.
+Decision record:
+[`ff4-port/docs/adr/adr-008-translation-patches-crc-profiles.md`](https://github.com/hcross/ff4-port/blob/main/docs/adr/adr-008-translation-patches-crc-profiles.md).
+
+| Component | Role |
+|-----------|------|
+| `ff4-port/patches/` | Offline IPS applier (`apply_ips.py`: canonical variant image + modified-range report); `manifest.json` pins hashes, application parameters and per-variant validation status. See [`patches/README.md`](https://github.com/hcross/ff4-port/blob/main/patches/README.md). |
+| `registry/gen_ranges.py` | Per-routine byte extents (`dispatch_ranges.json`, proven out-of-band ld65 relink) + frozen-data dependencies (`extra_ranges.json`). Documented in [registry/RANGES.md](registry/RANGES.md). |
+| `registry/patch_impact.py` | Byte-diff × ranges × transitive callee closure → **generates** `ff4-gnw/rom_profiles.c` (`--check`-guarded). DELEG wrappers exempt; unresolved entries always-gated (fail-closed). |
+| `ff4-gnw/rom_ident.c` + gate array | Full-file CRC32 at `ff4_init` arms the per-slot `ff4_dispatch_gate[]` in `dispatch_all.c`; gated hooks fall through to the interpreter (counted in `ff4_dispatch_gated`, **not** as misses). Unknown CRC: device refuses (`FF4_REQUIRE_KNOWN_ROM`), desktop warns and disables dispatch. |
+| `scripts/regress.sh --rom` | Runs the regression suite against another image; baselines keyed per ROM CRC32 (`.regress-baselines/<CRC32>/`). |
+
+Registry L-levels stay scoped to the **vanilla** JP image; per-variant
+validity lives in the manifest only. First variant: J2e EN v3.21 (CRC32
+`F135CAE6`), desktop-validated.
+
 #### LakeSnes specifics (fork in `ff4-gnw/snes/`)
 
 - `snes_runFrameBounded` — anti-hang guard (50M opcodes/frame). Cause of the
@@ -268,16 +287,21 @@ At session end: update the `[TASK:*]` drawer, record decisions
 
 ### B.5 Living tracking documents
 
-- **[DISPATCH_REGISTRY.md](DISPATCH_REGISTRY.md)** — registry of the 205 active
-  dispatches (206 rows including the retired `ExecBtlGfx`), 3 tables
-  (decompilation/tests, game validation, releases). **Table 1 and the
+- **[DISPATCH_REGISTRY.md](DISPATCH_REGISTRY.md)** — registry of the active
+  dispatches (row counts and distribution are generated — see the file), 3
+  tables (decompilation/tests, game validation, releases). **Table 1 and the
   distribution line are generated** from [`registry/dispatch_state.jsonl`](registry/dispatch_state.jsonl)
   (between the `<!-- REGISTRY:*:START/END -->` markers) — never hand-edit
   either; use `python3 registry/registry_promote.py D<id> --to L<n> --evidence
   <path> --note "..."` to change a level (validates the transition and
   re-renders automatically). `registry/render_registry.py --check` detects
   drift; `registry/migrate_registry.py --check` cross-checks the ID/PC set
-  against `ff4-gnw/dispatch_all.c`.
+  against `ff4-gnw/dispatch_all.c` — stripping C comments first, since
+  retired entries live on as tombstone comments that a naive regex
+  re-detects (any tool pattern-matching `dispatch_all.c` must do the same).
+  `registry/gen_ranges.py --check` / `registry/patch_impact.py --check`
+  guard the variant byte-ranges and the generated `ff4-gnw/rom_profiles.c`
+  (cf. §A.4 translation-patch variants, ADR-008).
 - **[BACKLOG.md](BACKLOG.md)** — existing → target work.
 - **[REPRISE.md](REPRISE.md)** — selective reset per layer, requalification order.
 

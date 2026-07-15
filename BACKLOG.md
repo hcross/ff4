@@ -945,6 +945,38 @@ lives in the retro-go-sd scaffold branch (local commits
 - [ ] 🧑 Push the local retro-go-sd commits (`34ede4ac..a3792a60` + the
       earlier scaffold series) — upstream/fork decision is Hoani's.
 
+## 9. Translation-patch variants — CRC-keyed dispatch profiles (2026-07-15)
+
+Mechanism per [ADR-008 in ff4-port](https://github.com/hcross/ff4-port/blob/main/docs/adr/adr-008-translation-patches-crc-profiles.md):
+one language = one canonical pre-patched image + one dispatch profile keyed
+by the image's CRC32. Delivered across `ff4-port/patches/` (applier +
+manifest), umbrella `registry/` (`gen_ranges.py`, `patch_impact.py`,
+`scripts/regress.sh --rom`), `ff4-gnw` (`rom_ident.c`, per-slot gate array)
+and the retro-go-sd scaffold (Language pause-menu option, unknown-ROM
+refusal under `FF4_REQUIRE_KNOWN_ROM`). Tooling one-liners in
+[AGENTS.md](AGENTS.md) §A.4.
+
+- [x] 🤖 J2e EN v3.21 (CRC32 `F135CAE6`) desktop-validated (2026-07-15):
+      oracle A/B IDENTICAL on 4 variant seeds (dialogue ×2, free-roam,
+      menu), gated counter 0 on vanilla / 22 on J2e boot, vanilla regress
+      verdicts unchanged, all `--check` suites green, 16 pytest pass.
+- [ ] 🧑 Device bench validation: D6 cadence on J2e dialogue and world map
+      (watch `UpdateMode7Regs`/`UpdateWipe*`, gated on J2e), the
+      unknown-ROM refusal screen, and a Language round-trip (persisted
+      setting, applied at next launch).
+- [ ] 🧑 Push the local 2026-07-15 commits (all three ff4 repos + the
+      retro-go-sd scaffold branch), then re-pin the umbrella submodules.
+- [ ] 🤖 J2e seeds still missing: battle-with-messages + naming-screen
+      (tracked in the manifest's `gaps` field; needs a deeper save —
+      exposure is low, bank $03 battle code is nearly untouched).
+- [ ] 🤖 Registry audit: ~54 dispatch entries sit at PCs in banks the
+      reference disassembly models as data (12/15/16) — no labels,
+      `resolved:false` in `dispatch_ranges.json`, always-gated on
+      variants; several are real in-game routines (`UpdateMode7Regs` on
+      the world map), and bank-16 doppelganger entries exist (`D16F533`
+      vs the live `D00F535`). Full write-up: MemPalace obstacles drawer
+      `e73e65f2`.
+
 ---
 
 **Legend**: 🤖 doable by agent · 🧑 requires the human (hardware, push,

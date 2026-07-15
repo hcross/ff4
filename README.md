@@ -90,6 +90,19 @@ exactly as if nothing had changed. Full mechanism and its known limits:
 [`AGENTS.md`](AGENTS.md) §A.2; one-paragraph definition:
 [`docs/primer/00-glossary.md`](docs/primer/00-glossary.md).
 
+## Playing in other languages — translation patches
+
+Community translation patches are supported as **canonical pre-patched ROM
+images**, each identified by its CRC32 and paired with a generated *dispatch
+profile* that gates the few native routines the patch invalidated back to
+the interpreter (which reads the patched bytes, so it is always correct).
+The decision record is
+[ADR-008 in `ff4-port`](https://github.com/hcross/ff4-port/blob/main/docs/adr/adr-008-translation-patches-crc-profiles.md);
+the applier and per-variant validation status live in
+[`ff4-port/patches/`](https://github.com/hcross/ff4-port/blob/main/patches/README.md).
+First variant: J2e English v3.21 (desktop-validated; device bench pending).
+ROM images with an unknown CRC32 are refused on the device.
+
 ## Tracking progress
 
 [`DISPATCH_REGISTRY.md`](DISPATCH_REGISTRY.md) is the living, generated

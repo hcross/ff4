@@ -61,3 +61,10 @@
   compare their internal state and catch divergences immediately rather
   than only when something visibly breaks on screen. See
   [`03-reverse-engineering-and-shadow-execution.md`](03-reverse-engineering-and-shadow-execution.md).
+- **Variant (ROM) / dispatch profile** — a canonical pre-patched ROM image
+  carrying a community translation patch, identified by its CRC32. At
+  boot, the matching *dispatch profile* gates the few C routines whose
+  original assembly the patch rewrote back to the interpreter (which
+  reads the patched bytes, so it is always correct). Unknown images are
+  refused on the device. Authoritative definition:
+  [ADR-008 in `ff4-port`](https://github.com/hcross/ff4-port/blob/main/docs/adr/adr-008-translation-patches-crc-profiles.md).

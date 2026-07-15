@@ -10,6 +10,10 @@
 `EXCL` intentional DMA-bypass (off-scale) ·
 `DELEG` delegate wrapper (executes the asm via `run_emulated_func` — equivalent by
 construction, but not a native port: no perf gain).
+**Scope**: L-levels are proven against the **vanilla** JP image
+(CRC32 `CAA15E97`) only. Per-variant validity for translation-patch images
+lives in [`ff4-port/patches/manifest.json`](https://github.com/hcross/ff4-port/blob/main/patches/manifest.json)
+— never here (ADR-008).
 
 ## Audit methodology
 
