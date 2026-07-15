@@ -88,6 +88,11 @@ def cross_check(records: list[dict], dispatch_all_c: Path) -> list[str]:
         warnings.append(f"dispatch_all.c not found at {dispatch_all_c} — skipping cross-check")
         return warnings
     text = dispatch_all_c.read_text(errors="replace")
+    # Strip comments first: retired entries stay behind as tombstone comments
+    # that keep the "{ 0xPC, name }" shape (e.g. D048004 / D04861E, 2026-07-14)
+    # and must not count as live table entries.
+    text = re.sub(r"/\*.*?\*/", "", text, flags=re.DOTALL)
+    text = re.sub(r"//[^\n]*", "", text)
     code_pcs = set(m.group(1).upper() for m in re.finditer(
         r"\{\s*0x([0-9A-Fa-f]{6})\s*,", text))
     registry_pcs = set(r["pc"] for r in records if r["level"] not in ("RETIRED",))
