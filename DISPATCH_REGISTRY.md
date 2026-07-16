@@ -299,9 +299,15 @@ The 23 L1: 11 `no_source` (bundled btlgfx → custom spike), 8 `no_contract`
 
 Populated by **WF-VALID** ([workflows/WF-VALID.md](workflows/WF-VALID.md)) — → L3.
 
-| ID | Savestate | Frames | WRAM CRC (native) | WRAM CRC (interp) | Drift | Final PC | Maturity | Date |
-|----|-----------|--------|-------------------|-------------------|-------|----------|----------|------|
-| _(empty — to be populated by WF-VALID)_ | | | | | | | | |
+| ID | Savestate | Frames | WRAM CRC (native) | WRAM CRC (interp) | Drift | Final PC | Maturity | Date | Variant(s) confirmed |
+|----|-----------|--------|-------------------|-------------------|-------|----------|----------|------|----------------------|
+| _(empty — to be populated by WF-VALID)_ | | | | | | | | | |
+
+"Variant(s) confirmed" — blank if the WF-VALID pass was vanilla-only (the
+default; no obligation to run more), otherwise the translation-patch
+variant ID(s) whose canonical image also passed the same oracle isolation
+(ADR-008, ff4-port/docs/adr) — a fact about that validation session, not a
+registry L-level (L-levels stay vanilla-scoped).
 
 ---
 

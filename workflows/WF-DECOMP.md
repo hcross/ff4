@@ -118,14 +118,20 @@ python3 registry/registry_promote.py D<id> --to L2 \
     --evidence parity/<spike-run-output-or-log> --note "fuzzed spike, N/N pass"
 ```
 This validates the level transition (won't let you skip L1) and
-re-renders DISPATCH_REGISTRY.md automatically.
+re-renders DISPATCH_REGISTRY.md automatically. `translator/qualify.py D<id>`
+collapses this whole L1→L2 sequence (spike + promote) into one command,
+**and** automatically runs the variant spike-check below as part of it
+(`--no-variant-check` to skip for fast iteration) — prefer it over the raw
+`registry_promote.py` calls shown above unless you have a reason not to.
+
+Two variant-related triggers at this step, orthogonal to each other and to
+whichever promotion path you used:
 
 **If the dispatch table gained a NEW hook** (first-time dispatch, not a
 level promotion): regenerate the per-routine ranges and the variant
-profiles, then review the routine's variant status — a hook unknown to
-`ff4-gnw/rom_profiles.c` runs **ungated** under every patched variant,
-which is wrong the moment a patch touches its asm (ADR-008,
-ff4-port/docs/adr):
+profiles — a hook unknown to `ff4-gnw/rom_profiles.c` runs **ungated**
+under every patched variant, which is wrong the moment a patch touches its
+asm (ADR-008, ff4-port/docs/adr):
 
 ```sh
 python3 registry/gen_ranges.py          # new entry needs a proven range
@@ -138,6 +144,22 @@ Then read the routine's row in [registry/VARIANT_GAPS.md](../registry/VARIANT_GA
 data-modeled banks, see registry/RANGES.md) — the native win does NOT
 extend to variants until the range is pinned. The `--check` modes of both
 tools guard against forgetting this step (ff4-status runs them).
+
+**Every L1→L2 promotion** (new hook or not): confirm the just-proven spike
+also holds against every known JP-lineage variant the routine is NOT gated
+for — cheap (reuses the vanilla spike binary, no seed to manufacture),
+catches what static byte-range analysis cannot see (a frozen ROM-data copy
+baked into the C, an indirect callee target the closure walk missed):
+
+```sh
+python3 ff4-port/patches/spike_check.py D<id> --all-variants
+```
+
+`qualify.py` already does this automatically. A `diverged` verdict here is
+real, rare signal — see the printed remediation pointer (add the missing
+dependency to `registry/extra_ranges.json`, rerun `patch_impact.py`); never
+hand-edit the gate. `registry/VARIANT_GAPS.md`'s "Spike sanity" line per
+variant tracks how much of the not-gated set has been confirmed this way.
 
 ### 7. Closure
 Update the `[TASK:*]` (→ `checkpoint` if continuing, `done` otherwise).

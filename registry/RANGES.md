@@ -89,6 +89,31 @@ boundary). They still carry a **best-effort containing range** as a hint (65 of
 > so this is unconditionally safe regardless of the hint's accuracy. The hint
 > range exists only for diagnostics / future tightening.
 
+### De-gating a `resolved: false` entry (manual, rare, evidence-required)
+
+Someone MAY decide a `resolved: false` entry's fail-closed gating is overly
+conservative for a specific variant — e.g. `registry/VARIANT_GAPS.md`'s "cheap,
+high-yield remedy" of pinning the range manually and re-running
+`registry/patch_impact.py` so the entry moves to the not-gated set. That
+change is real (it un-gates a routine on-device) and cannot rest on the pin
+alone:
+
+1. Pin the range (either fix the underlying resolution so `gen_ranges.py`
+   resolves it naturally, or add a manual entry `patch_impact.py` can
+   consult — do not silently widen the fail-closed hint).
+2. Re-run `registry/patch_impact.py`; confirm the entry now shows as
+   not-gated for the variant.
+3. **Mandatory, not opportunistic** (unlike ordinary WF-VALID variant
+   passes, see workflows/WF-VALID.md step 1): run
+   `python3 ff4-port/patches/spike_check.py D<id> --variant <id>` AND an
+   oracle isolation pass on the variant's canonical image (capture a
+   dedicated seed if none reaches the routine yet). Both must pass before
+   the de-gating is trusted.
+
+De-gating is a deliberate, rare, human claim about the patched asm; it must
+carry its own fresh evidence rather than ride on whatever the opportunistic
+spike/oracle catalogue already happens to cover.
+
 ---
 
 ## `extra_ranges.json` — MANUAL
