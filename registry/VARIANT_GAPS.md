@@ -31,6 +31,8 @@ moment it enters the table.
 
 67 of 208 live table entries gated (13 proven invalidations, 54 fail-closed); 12 DELEG wrappers exempt. Patch footprint: 89473 bytes over 4886 ranges.
 
+Spike sanity (j2e-en-v321): 96/129 not-gated entries confirmed by `patches/spike_check.py`; 12 have no locatable/CONTRACT-bearing spike source; 21 not yet checked (`python3 patches/spike_check.py --sweep --variant j2e-en-v321`).
+
 ### Proven invalidations
 
 | ID | Routine | Level | Reason |

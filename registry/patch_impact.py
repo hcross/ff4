@@ -13,7 +13,11 @@ frozen-data dependencies (registry/extra_ranges.json), and emit:
   - registry/VARIANT_GAPS.md (GENERATED, tracked: the per-variant "gap"
     report -- every ported routine whose native body does NOT run under a
     variant, with the reason and the remediation path; the durable,
-    reviewable face of the gated sets)
+    reviewable face of the gated sets. Also reads (read-only)
+    ff4-port/patches/spike_checks.json, if present, to report how much of
+    the NOT-gated set has been empirically re-confirmed by
+    ff4-port/patches/spike_check.py -- the empirical backstop for the data
+    dependencies this static byte-range analysis cannot see)
   - a human-review report on stdout (every gated entry with its reason;
     ALARM when the set exceeds the review threshold)
   - ff4-port/patches/out/<id>.impact.json (machine-readable detail)
@@ -67,6 +71,7 @@ STATE = HERE / "dispatch_state.jsonl"
 DISPATCH_ALL_C = ROOT / "ff4-gnw" / "dispatch_all.c"
 PROFILES_C = ROOT / "ff4-gnw" / "rom_profiles.c"
 GAPS_MD = HERE / "VARIANT_GAPS.md"
+SPIKE_CHECKS = ROOT / "ff4-port" / "patches" / "spike_checks.json"
 UPSTREAM = ROOT / "ff4-port" / "upstream"
 
 REVIEW_ALARM = 25  # human-review threshold on a variant's gated-set size
@@ -203,6 +208,7 @@ def analyze_patch(entry: dict, identity: dict, ranges_doc: dict, extra_doc: dict
 
     gated: list[dict] = []
     exempt_deleg: list[str] = []
+    not_gated_ids: list[str] = []
     for r in ranges_doc["entries"]:
         if r["pc"] not in table_pcs:
             continue  # RETIRED tombstones etc. — nothing to gate
@@ -227,6 +233,8 @@ def analyze_patch(entry: dict, identity: dict, ranges_doc: dict, extra_doc: dict
         if reasons:
             gated.append({"id": r["id"], "pc": r["pc"], "name": r["name"],
                           "level": r["level"], "reasons": reasons})
+        else:
+            not_gated_ids.append(r["id"])
 
     gated.sort(key=lambda g: g["pc"])
     return {
@@ -237,6 +245,7 @@ def analyze_patch(entry: dict, identity: dict, ranges_doc: dict, extra_doc: dict
         "modified_bytes": sum(e - s for s, e in mod),
         "gated": gated,
         "exempt_deleg": sorted(exempt_deleg),
+        "not_gated_ids": sorted(not_gated_ids),
     }
 
 
@@ -307,6 +316,38 @@ def _is_fail_closed(g: dict) -> bool:
     return any(r.startswith("unresolved range") for r in g["reasons"])
 
 
+def load_spike_checks() -> list[dict]:
+    """patches/spike_checks.json's checks, or [] if the sidecar doesn't
+    exist yet (nobody has run patches/spike_check.py). Read-only here --
+    this tool never writes that file, spike_check.py owns it."""
+    if not SPIKE_CHECKS.is_file():
+        return []
+    return json.loads(SPIKE_CHECKS.read_text()).get("checks", [])
+
+
+def spike_coverage_summary(patch_id: str, not_gated_ids: set[str], checks: list[dict]) -> str:
+    """One line: how much of the NOT-gated set patches/spike_check.py has
+    actually re-confirmed against this variant's canonical image (ADR-008)
+    -- the empirical backstop for what this static analysis cannot see
+    (frozen ROM-data copies, indirect callee targets the closure walk
+    misses). Purely additive to the gated-set tables above."""
+    by_id = {c["dispatch_id"]: c for c in checks if c["variant"] == patch_id}
+    passed = sum(1 for i in not_gated_ids if by_id.get(i, {}).get("status") == "pass")
+    diverged = [i for i in not_gated_ids if by_id.get(i, {}).get("status") == "diverged"]
+    no_source = sum(1 for i in not_gated_ids
+                    if by_id.get(i, {}).get("status") in ("no_source", "no_contract"))
+    unchecked = len(not_gated_ids) - passed - len(diverged) - no_source
+    line = (f"Spike sanity ({patch_id}): {passed}/{len(not_gated_ids)} not-gated entries "
+           f"confirmed by `patches/spike_check.py`; {no_source} have no locatable/"
+           f"CONTRACT-bearing spike source; {unchecked} not yet checked "
+           f"(`python3 patches/spike_check.py --sweep --variant {patch_id}`).")
+    if diverged:
+        line += (f"\n\n**!! {len(diverged)} DIVERGED — investigate before trusting this "
+                f"profile**: {', '.join(sorted(diverged))}. See `patches/spike_checks.json` "
+                f"for detail; the static analysis missed a real dependency for these.")
+    return line
+
+
 def render_variant_gaps(analyses: list[dict], table_count: int) -> str:
     """The tracked, human-reviewable face of the gated sets: which ported
     routines do NOT run natively under each variant, and why."""
@@ -336,6 +377,7 @@ def render_variant_gaps(analyses: list[dict], table_count: int) -> str:
         "regenerates this report so a fresh hook's variant status is reviewed the\n"
         "moment it enters the table.\n",
     ]
+    checks = load_spike_checks()
     for a in analyses:
         proven = [g for g in a["gated"] if not _is_fail_closed(g)]
         unresolved = [g for g in a["gated"] if _is_fail_closed(g)]
@@ -345,6 +387,7 @@ def render_variant_gaps(analyses: list[dict], table_count: int) -> str:
                    f"{len(a['exempt_deleg'])} DELEG wrappers exempt. "
                    f"Patch footprint: {a['modified_bytes']} bytes over "
                    f"{a['modified_ranges']} ranges.\n")
+        out.append(f"\n{spike_coverage_summary(a['patch_id'], set(a['not_gated_ids']), checks)}\n")
         out.append("\n### Proven invalidations\n\n| ID | Routine | Level | Reason |\n|---|---|---|---|\n")
         for g in proven:
             out.append(f"| {g['id']} | `{g['name']}` | {g['level']} | {'; '.join(g['reasons'])} |\n")
