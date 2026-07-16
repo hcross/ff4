@@ -32,7 +32,7 @@ leaving 2 compile_error (inter-routine dependency / include).
 > isolated than L3 (in-game oracle). **FAILs** = real divergences to investigate (WF-VALID).
 
 <!-- REGISTRY:DISTRIBUTION:START -->
-**Distribution** (generated from `registry/dispatch_state.jsonl` — do not hand-edit; edit the JSONL via `registry/registry_promote.py` and re-run `python registry/render_registry.py`): L1=12 · L2=171 · L3=7 · EXCL=3 · DELEG=12 · RETIRED=10 (total 205).
+**Distribution** (generated from `registry/dispatch_state.jsonl` — do not hand-edit; edit the JSONL via `registry/registry_promote.py` and re-run `python registry/render_registry.py`): L1=12 · L2=170 · L3=7 · EXCL=3 · DELEG=12 · RETIRED=11 (total 204).
 <!-- REGISTRY:DISTRIBUTION:END -->
 `ExecBtlGfx` (D038085) REMOVED from the dispatch on 2026-06-30 (206→205): BLOCKING
 animation (multi-frame WaitVblank/WaitFrame) incompatible with the synchronous
@@ -188,7 +188,7 @@ The 23 L1: 11 `no_source` (bundled btlgfx → custom spike), 8 `no_contract`
 | `D03E4D9` | $03:E4D9 | `TwinFailed_c` | battle | L2 | fuzzed spike, 0 fails |
 | `D03FE03` | $03:FE03 | `TfrSprites_c` | field | EXCL | F6 — manual OAM, excluded from baseline |
 | `D048004` | $04:8004 | `ExecSound_ext_stub` | sound: | RETIRED | sound unstubbed 2026-07-14: the SPC handshake completes in today's emulation; stub and table entry removed (feat/unstub-sound) (evidence: desktop: title boot 800f with $04:8004 interpreted = 682 distinct --audio-crc values (music), no stall; fixture 012 (historic SPC-freeze repro) reaches full combat) |
-| `D0485E1` | $04:85E1 | `PlayGameSfx_c` | sound | L2 | fuzzed spike, 0 fails |
+| `D0485E1` | $04:85E1 | `PlayGameSfx_c` | sound | RETIRED | Retired 2026-07-16: writes/polls ram[0x2140..3] (WRAM $7E:2140) instead of the APU I/O ports hAPUIO0-3 (MMIO $2140-3 via the bus) -- SAME Pitfall-13 bug as the sibling D04861E (ExecInterrupt_c). The native body never sends the SFX command to the SPC and its poll exits immediately, skipping the SNES<->SPC handshake that paces battle attack animations -> the fire/spell attack animation (Red Fang->Fire2) is SKIPPED, combat jumps straight to the enemy death animation. Reproduced headless on vanilla (006) and J2e (j2e-combat-001): native 0 orange fire px vs pure interpreter ~24k; removing this single hook restores it. Retired (interpreted) rather than bus-fixed, matching ExecInterrupt_c -- native APU-handshake polling from a mono-frame dispatch is fragile and triggering the SPC has ~0 perf value. Regression-clean (vanilla regress.sh no verdict changes; J2e oracle 4/4 IDENTICAL). Requalify with --audio-crc evidence. See KNOWN_FINDINGS F14. |
 | `D04861E` | $04:861E | `ExecInterrupt_c` | sound | RETIRED | interpreted until requalified with --audio-crc evidence (evidence: removed from dispatch table with the sound unstub: registry-flagged false-L2 suspect (ram[0x2140..3] writes instead of APU in-ports, Pitfall 13) must not eat live SPC mailbox commands) |
 | `D088690` | $08:8690 | `LoadTitleGfx_c` | field | L1 | no CONTRACT block |
 | `D08885E` | $08:885E | `TfrTitleCrystalTiles_c` | field | DELEG | delegate wrapper — equivalent by construction (executes the asm) |
