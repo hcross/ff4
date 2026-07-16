@@ -32,7 +32,7 @@ leaving 2 compile_error (inter-routine dependency / include).
 > isolated than L3 (in-game oracle). **FAILs** = real divergences to investigate (WF-VALID).
 
 <!-- REGISTRY:DISTRIBUTION:START -->
-**Distribution** (generated from `registry/dispatch_state.jsonl` — do not hand-edit; edit the JSONL via `registry/registry_promote.py` and re-run `python registry/render_registry.py`): L1=12 · L2=174 · L3=7 · EXCL=3 · DELEG=12 · RETIRED=7 (total 208).
+**Distribution** (generated from `registry/dispatch_state.jsonl` — do not hand-edit; edit the JSONL via `registry/registry_promote.py` and re-run `python registry/render_registry.py`): L1=12 · L2=171 · L3=7 · EXCL=3 · DELEG=12 · RETIRED=10 (total 205).
 <!-- REGISTRY:DISTRIBUTION:END -->
 `ExecBtlGfx` (D038085) REMOVED from the dispatch on 2026-06-30 (206→205): BLOCKING
 animation (multi-frame WaitVblank/WaitFrame) incompatible with the synchronous
@@ -229,9 +229,9 @@ The 23 L1: 11 `no_source` (bundled btlgfx → custom spike), 8 `no_contract`
 | `D14FB1E` | $14:FB1E | `WipeScanlineTbl_c` | field | L2 | fuzzed spike, 0 fails |
 | `D14FD00` | $14:FD00 | `InitCtrl_ext2_c` | menu | L2 | fuzzed spike, 0 fails |
 | `D14FD03` | $14:FD03 | `UpdateCtrl_ext_c` | menu | L2 | fuzzed spike, 0 fails |
-| `D14FD06` | $14:FD06 | `ClearText_ext_c` | menu | L2 | fuzzed spike, 0 fails |
-| `D14FD09` | $14:FD09 | `UpdateWindowColor_ext_c` | menu | L2 | fuzzed spike, 0 fails |
-| `D14FD0C` | $14:FD0C | `UpdateScrollRegs_ext_c` | menu | L2 | fuzzed spike, 0 fails |
+| `D14FD06` | $14:FD06 | `ClearText_ext_c` | menu | RETIRED | clear_text_emu was a permanent no-op stub, silently breaking field-menu rendering; a run_emulated_func delegation fix was correct+regression-free on desktop but hard-faulted on device (nested run_emulated_func stack depth) -- retired instead, same class as CheckMenu_c/ExecBtlGfx_c. See ff4-port/desktop/KNOWN_FINDINGS.md F13. (evidence: ff4-port/desktop/KNOWN_FINDINGS.md) |
+| `D14FD09` | $14:FD09 | `UpdateWindowColor_ext_c` | menu | RETIRED | update_window_color_emu was a permanent no-op stub, same class/fix history as D14FD06 (clear_text_emu). See KNOWN_FINDINGS.md F13. (evidence: ff4-port/desktop/KNOWN_FINDINGS.md) |
+| `D14FD0C` | $14:FD0C | `UpdateScrollRegs_ext_c` | menu | RETIRED | update_scroll_regs_emu was a permanent no-op stub -- confirmed root cause of the field-menu blank status/Gil windows (009-first-free-roam). Delegation fix hard-faulted on device; retired instead. See KNOWN_FINDINGS.md F13. (evidence: ff4-port/desktop/KNOWN_FINDINGS.md) |
 | `D1585AB` | $15:85AB | `InitWorld_c` | field | L2 | fuzzed spike, 0 fails |
 | `D1589ED` | $15:89ED | `InitInterrupts_c` | field | L2 | fuzzed spike, 0 fails |
 | `D158B2A` | $15:8B2A | `InitDMA_c` | field | L2 | fuzzed spike, 0 fails |
