@@ -1,0 +1,3699 @@
+[
+ {
+  "id": "D00834E",
+  "name": "InitMapRAM_c",
+  "level": "L3",
+  "flags": [
+   "DMA_TRIGGER"
+  ],
+  "contract": {
+   "mf": 1,
+   "xf": 0,
+   "dp": 12,
+   "db": 0
+  },
+  "observed": [
+   {
+    "dp": 1536,
+    "db": 0,
+    "m": 1,
+    "x": 0,
+    "hits": 1,
+    "fixtures": [
+     "008-overworld-mode7"
+    ]
+   }
+  ],
+  "verdict": "MISMATCH",
+  "mismatch_fields": [
+   "dp"
+  ]
+ },
+ {
+  "id": "D018010",
+  "name": "UpdateCtrlField_ext_c",
+  "level": "L2",
+  "flags": [],
+  "contract": {
+   "mf": 0,
+   "xf": 0,
+   "dp": 0,
+   "db": 126
+  },
+  "observed": [
+   {
+    "dp": 1536,
+    "db": 0,
+    "m": 1,
+    "x": 0,
+    "hits": 4218,
+    "fixtures": [
+     "005-pre-combat",
+     "007-title-screen",
+     "008-overworld-mode7",
+     "009-first-free-roam",
+     "010-castle-exit-anim",
+     "011-worldmap-entry",
+     "012-first-worldmap-combat",
+     "013-airship-dialogue-pre-combat",
+     "014-baron-castle-exterior"
+    ]
+   }
+  ],
+  "verdict": "MISMATCH",
+  "mismatch_fields": [
+   "db",
+   "dp",
+   "mf"
+  ]
+ },
+ {
+  "id": "D0382CB",
+  "name": "InitHWRegs_c",
+  "level": "L3",
+  "flags": [
+   "DMA_TRIGGER"
+  ],
+  "contract": {
+   "mf": 1,
+   "xf": 0,
+   "dp": 0,
+   "db": 0
+  },
+  "observed": [
+   {
+    "dp": 1536,
+    "db": 0,
+    "m": 1,
+    "x": 0,
+    "hits": 2,
+    "fixtures": [
+     "005-pre-combat",
+     "012-first-worldmap-combat"
+    ]
+   }
+  ],
+  "verdict": "MISMATCH",
+  "mismatch_fields": [
+   "dp"
+  ]
+ },
+ {
+  "id": "D0383B9",
+  "name": "Mult16_c",
+  "level": "L3",
+  "flags": [],
+  "contract": {
+   "mf": 0,
+   "xf": 0,
+   "dp": 0,
+   "db": 126
+  },
+  "observed": [
+   {
+    "dp": 0,
+    "db": 126,
+    "m": 1,
+    "x": 0,
+    "hits": 437,
+    "fixtures": [
+     "005-pre-combat",
+     "006-in-combat",
+     "012-first-worldmap-combat"
+    ]
+   },
+   {
+    "dp": 0,
+    "db": 126,
+    "m": 0,
+    "x": 0,
+    "hits": 2,
+    "fixtures": [
+     "005-pre-combat",
+     "012-first-worldmap-combat"
+    ]
+   }
+  ],
+  "verdict": "MISMATCH",
+  "mismatch_fields": [
+   "mf"
+  ]
+ },
+ {
+  "id": "D038407",
+  "name": "Div16_c",
+  "level": "L2",
+  "flags": [],
+  "contract": {
+   "mf": 0,
+   "xf": 0,
+   "dp": 0,
+   "db": 126
+  },
+  "observed": [
+   {
+    "dp": 0,
+    "db": 126,
+    "m": 1,
+    "x": 0,
+    "hits": 18,
+    "fixtures": [
+     "005-pre-combat",
+     "006-in-combat",
+     "012-first-worldmap-combat"
+    ]
+   }
+  ],
+  "verdict": "MISMATCH",
+  "mismatch_fields": [
+   "mf"
+  ]
+ },
+ {
+  "id": "D0384E3",
+  "name": "Add16_c",
+  "level": "L2",
+  "flags": [],
+  "contract": {
+   "mf": 0,
+   "xf": 0,
+   "dp": 0,
+   "db": 126
+  },
+  "observed": [
+   {
+    "dp": 0,
+    "db": 126,
+    "m": 1,
+    "x": 0,
+    "hits": 4,
+    "fixtures": [
+     "005-pre-combat",
+     "006-in-combat"
+    ]
+   }
+  ],
+  "verdict": "MISMATCH",
+  "mismatch_fields": [
+   "mf"
+  ]
+ },
+ {
+  "id": "D0387D8",
+  "name": "CheckFanfare_c",
+  "level": "L2",
+  "flags": [
+   "TAIL_JML"
+  ],
+  "contract": {
+   "mf": 0,
+   "xf": 0,
+   "dp": 0,
+   "db": 126
+  },
+  "observed": [
+   {
+    "dp": 0,
+    "db": 126,
+    "m": 1,
+    "x": 0,
+    "hits": 1,
+    "fixtures": [
+     "006-in-combat"
+    ]
+   }
+  ],
+  "verdict": "MISMATCH",
+  "mismatch_fields": [
+   "mf"
+  ]
+ },
+ {
+  "id": "D03FE03",
+  "name": "TfrSprites_c",
+  "level": "EXCL",
+  "flags": [
+   "DMA_TRIGGER",
+   "DP_SENSITIVE"
+  ],
+  "contract": {
+   "mf": 1,
+   "xf": 0,
+   "dp": 0,
+   "db": 254
+  },
+  "observed": [
+   {
+    "dp": 4428,
+    "db": 17,
+    "m": 1,
+    "x": 0,
+    "hits": 1,
+    "fixtures": [
+     "002-combat"
+    ]
+   },
+   {
+    "dp": 0,
+    "db": 126,
+    "m": 1,
+    "x": 0,
+    "hits": 1635,
+    "fixtures": [
+     "005-pre-combat",
+     "006-in-combat",
+     "012-first-worldmap-combat"
+    ]
+   }
+  ],
+  "verdict": "MISMATCH",
+  "mismatch_fields": [
+   "db",
+   "dp"
+  ]
+ },
+ {
+  "id": "D14FD03",
+  "name": "UpdateCtrl_ext_c",
+  "level": "L2",
+  "flags": [],
+  "contract": {
+   "mf": 1,
+   "xf": 0,
+   "dp": 0,
+   "db": 253
+  },
+  "observed": [
+   {
+    "dp": 55,
+    "db": 126,
+    "m": 1,
+    "x": 0,
+    "hits": 1569,
+    "fixtures": [
+     "005-pre-combat",
+     "006-in-combat",
+     "012-first-worldmap-combat"
+    ]
+   }
+  ],
+  "verdict": "MISMATCH",
+  "mismatch_fields": [
+   "db",
+   "dp"
+  ]
+ },
+ {
+  "id": "D15C144",
+  "name": "_15c144_c",
+  "level": "L2",
+  "flags": [
+   "DP_SENSITIVE"
+  ],
+  "contract": {
+   "mf": 1,
+   "xf": 0,
+   "dp": 0,
+   "db": 0
+  },
+  "observed": [
+   {
+    "dp": 1536,
+    "db": 0,
+    "m": 1,
+    "x": 0,
+    "hits": 1,
+    "fixtures": [
+     "008-overworld-mode7"
+    ]
+   }
+  ],
+  "verdict": "MISMATCH",
+  "mismatch_fields": [
+   "dp"
+  ]
+ },
+ {
+  "id": "D15C23D",
+  "name": "_15c23d_c",
+  "level": "L3",
+  "flags": [],
+  "contract": {
+   "mf": 1,
+   "xf": 0,
+   "dp": 0,
+   "db": 0
+  },
+  "observed": [
+   {
+    "dp": 1536,
+    "db": 0,
+    "m": 1,
+    "x": 0,
+    "hits": 3619,
+    "fixtures": [
+     "005-pre-combat",
+     "007-title-screen",
+     "008-overworld-mode7",
+     "009-first-free-roam",
+     "010-castle-exit-anim",
+     "011-worldmap-entry",
+     "012-first-worldmap-combat",
+     "014-baron-castle-exterior"
+    ]
+   }
+  ],
+  "verdict": "MISMATCH",
+  "mismatch_fields": [
+   "dp"
+  ]
+ },
+ {
+  "id": "D009179",
+  "name": "ResetAllSprites_c",
+  "level": "L2",
+  "flags": [
+   "DP_SENSITIVE"
+  ],
+  "contract": {
+   "mf": 1,
+   "xf": 0,
+   "dp": 1536,
+   "db": 0
+  },
+  "observed": [
+   {
+    "dp": 1536,
+    "db": 0,
+    "m": 1,
+    "x": 0,
+    "hits": 2286,
+    "fixtures": [
+     "008-overworld-mode7",
+     "009-first-free-roam",
+     "011-worldmap-entry",
+     "014-baron-castle-exterior"
+    ]
+   }
+  ],
+  "verdict": "ok"
+ },
+ {
+  "id": "D009F6E",
+  "name": "UpdateLocalTiles_c",
+  "level": "L2",
+  "flags": [],
+  "contract": {
+   "mf": 1,
+   "xf": 0,
+   "dp": 1536,
+   "db": 0
+  },
+  "observed": [
+   {
+    "dp": 1536,
+    "db": 0,
+    "m": 1,
+    "x": 0,
+    "hits": 4086,
+    "fixtures": [
+     "008-overworld-mode7",
+     "009-first-free-roam",
+     "011-worldmap-entry",
+     "014-baron-castle-exterior"
+    ]
+   }
+  ],
+  "verdict": "ok"
+ },
+ {
+  "id": "D00BB6A",
+  "name": "DrawNpcs_c",
+  "level": "L2",
+  "flags": [],
+  "contract": {
+   "mf": 1,
+   "xf": 0,
+   "dp": 1536,
+   "db": 0
+  },
+  "observed": [
+   {
+    "dp": 1536,
+    "db": 0,
+    "m": 1,
+    "x": 0,
+    "hits": 1200,
+    "fixtures": [
+     "009-first-free-roam",
+     "014-baron-castle-exterior"
+    ]
+   }
+  ],
+  "verdict": "ok"
+ },
+ {
+  "id": "D03805F",
+  "name": "DrawMP_c",
+  "level": "L2",
+  "flags": [
+   "WAIT_BLOCKING"
+  ],
+  "contract": {
+   "mf": 1,
+   "xf": 0,
+   "dp": 0,
+   "db": 126
+  },
+  "observed": [
+   {
+    "dp": 0,
+    "db": 126,
+    "m": 1,
+    "x": 0,
+    "hits": 36,
+    "fixtures": [
+     "005-pre-combat",
+     "006-in-combat",
+     "012-first-worldmap-combat"
+    ]
+   }
+  ],
+  "verdict": "ok"
+ },
+ {
+  "id": "D038379",
+  "name": "RandXA_c",
+  "level": "L2",
+  "flags": [],
+  "contract": {
+   "mf": 1,
+   "xf": 0,
+   "dp": 0,
+   "db": 126
+  },
+  "observed": [
+   {
+    "dp": 0,
+    "db": 126,
+    "m": 1,
+    "x": 0,
+    "hits": 49,
+    "fixtures": [
+     "005-pre-combat",
+     "006-in-combat",
+     "012-first-worldmap-combat"
+    ]
+   }
+  ],
+  "verdict": "ok"
+ },
+ {
+  "id": "D0383E0",
+  "name": "Mult8_c",
+  "level": "L2",
+  "flags": [],
+  "contract": {
+   "mf": 1,
+   "xf": 0,
+   "dp": 0,
+   "db": 126
+  },
+  "observed": [
+   {
+    "dp": 0,
+    "db": 126,
+    "m": 1,
+    "x": 0,
+    "hits": 1944,
+    "fixtures": [
+     "005-pre-combat",
+     "006-in-combat",
+     "012-first-worldmap-combat"
+    ]
+   }
+  ],
+  "verdict": "ok"
+ },
+ {
+  "id": "D03858B",
+  "name": "Rand99_c",
+  "level": "L2",
+  "flags": [],
+  "contract": {
+   "mf": 1,
+   "xf": 0,
+   "dp": 0,
+   "db": 126
+  },
+  "observed": [
+   {
+    "dp": 0,
+    "db": 126,
+    "m": 1,
+    "x": 0,
+    "hits": 1,
+    "fixtures": [
+     "012-first-worldmap-combat"
+    ]
+   }
+  ],
+  "verdict": "ok"
+ },
+ {
+  "id": "D038803",
+  "name": "CheckWinAnim_c",
+  "level": "L2",
+  "flags": [
+   "TAIL_JML"
+  ],
+  "contract": {
+   "mf": 1,
+   "xf": 0,
+   "dp": 0,
+   "db": 126
+  },
+  "observed": [
+   {
+    "dp": 0,
+    "db": 126,
+    "m": 1,
+    "x": 0,
+    "hits": 1,
+    "fixtures": [
+     "006-in-combat"
+    ]
+   }
+  ],
+  "verdict": "ok"
+ },
+ {
+  "id": "D0395CE",
+  "name": "InitCharRows_c",
+  "level": "L3",
+  "flags": [],
+  "contract": {
+   "mf": 1,
+   "xf": 0,
+   "dp": 0,
+   "db": 126
+  },
+  "observed": [
+   {
+    "dp": 0,
+    "db": 126,
+    "m": 1,
+    "x": 0,
+    "hits": 2,
+    "fixtures": [
+     "005-pre-combat",
+     "012-first-worldmap-combat"
+    ]
+   }
+  ],
+  "verdict": "ok"
+ },
+ {
+  "id": "D039741",
+  "name": "GetPendingAction_c",
+  "level": "L2",
+  "flags": [],
+  "contract": {
+   "mf": 1,
+   "xf": 0,
+   "dp": 0,
+   "db": 126
+  },
+  "observed": [
+   {
+    "dp": 0,
+    "db": 126,
+    "m": 1,
+    "x": 0,
+    "hits": 34,
+    "fixtures": [
+     "005-pre-combat",
+     "006-in-combat",
+     "012-first-worldmap-combat"
+    ]
+   }
+  ],
+  "verdict": "ok"
+ },
+ {
+  "id": "D0397B3",
+  "name": "InitAction_c",
+  "level": "L2",
+  "flags": [],
+  "contract": {
+   "mf": 1,
+   "xf": 0,
+   "dp": 0,
+   "db": 126
+  },
+  "observed": [
+   {
+    "dp": 0,
+    "db": 126,
+    "m": 1,
+    "x": 0,
+    "hits": 15,
+    "fixtures": [
+     "005-pre-combat",
+     "006-in-combat",
+     "012-first-worldmap-combat"
+    ]
+   }
+  ],
+  "verdict": "ok"
+ },
+ {
+  "id": "D039FD8",
+  "name": "ApplySpeedMod_c",
+  "level": "L2",
+  "flags": [],
+  "contract": {
+   "mf": 1,
+   "xf": 0,
+   "dp": 0,
+   "db": 126
+  },
+  "observed": [
+   {
+    "dp": 0,
+    "db": 126,
+    "m": 1,
+    "x": 0,
+    "hits": 22,
+    "fixtures": [
+     "005-pre-combat",
+     "006-in-combat",
+     "012-first-worldmap-combat"
+    ]
+   }
+  ],
+  "verdict": "ok"
+ },
+ {
+  "id": "D03C987",
+  "name": "CalcHits_c",
+  "level": "L2",
+  "flags": [],
+  "contract": {
+   "mf": 1,
+   "xf": 0,
+   "dp": 0,
+   "db": 126
+  },
+  "observed": [
+   {
+    "dp": 0,
+    "db": 126,
+    "m": 1,
+    "x": 0,
+    "hits": 12,
+    "fixtures": [
+     "005-pre-combat",
+     "006-in-combat"
+    ]
+   }
+  ],
+  "verdict": "ok"
+ },
+ {
+  "id": "D03C99F",
+  "name": "CalcDmg_c",
+  "level": "L2",
+  "flags": [],
+  "contract": {
+   "mf": 1,
+   "xf": 0,
+   "dp": 0,
+   "db": 126
+  },
+  "observed": [
+   {
+    "dp": 0,
+    "db": 126,
+    "m": 1,
+    "x": 0,
+    "hits": 6,
+    "fixtures": [
+     "005-pre-combat",
+     "006-in-combat"
+    ]
+   }
+  ],
+  "verdict": "ok"
+ },
+ {
+  "id": "D03E030",
+  "name": "RemoveTarget_c",
+  "level": "L2",
+  "flags": [],
+  "contract": {
+   "mf": 1,
+   "xf": 0,
+   "dp": 0,
+   "db": 126
+  },
+  "observed": [
+   {
+    "dp": 0,
+    "db": 126,
+    "m": 1,
+    "x": 0,
+    "hits": 10,
+    "fixtures": [
+     "005-pre-combat",
+     "006-in-combat"
+    ]
+   }
+  ],
+  "verdict": "ok"
+ },
+ {
+  "id": "D03E100",
+  "name": "CheckStrongElem_c",
+  "level": "L2",
+  "flags": [],
+  "contract": {
+   "mf": 1,
+   "xf": 0,
+   "dp": 0,
+   "db": 126
+  },
+  "observed": [
+   {
+    "dp": 0,
+    "db": 126,
+    "m": 1,
+    "x": 0,
+    "hits": 6,
+    "fixtures": [
+     "005-pre-combat",
+     "006-in-combat"
+    ]
+   }
+  ],
+  "verdict": "ok"
+ },
+ {
+  "id": "D03E133",
+  "name": "CheckWeakElem_c",
+  "level": "L2",
+  "flags": [],
+  "contract": {
+   "mf": 1,
+   "xf": 0,
+   "dp": 0,
+   "db": 126
+  },
+  "observed": [
+   {
+    "dp": 0,
+    "db": 126,
+    "m": 1,
+    "x": 0,
+    "hits": 6,
+    "fixtures": [
+     "005-pre-combat",
+     "006-in-combat"
+    ]
+   }
+  ],
+  "verdict": "ok"
+ },
+ {
+  "id": "D00808E",
+  "name": "AfterBattle_c",
+  "level": "L2",
+  "flags": [
+   "TAIL_JML",
+   "DP_SENSITIVE"
+  ],
+  "contract": {
+   "mf": 1,
+   "xf": 0,
+   "dp": 0,
+   "db": 128
+  },
+  "observed": [],
+  "verdict": "not_hit"
+ },
+ {
+  "id": "D0080A0",
+  "name": "FieldMain_c",
+  "level": "L2",
+  "flags": [
+   "WAIT_BLOCKING",
+   "DP_SENSITIVE"
+  ],
+  "contract": {
+   "mf": 1,
+   "xf": 0,
+   "dp": 0,
+   "db": 128
+  },
+  "observed": [],
+  "verdict": "not_hit"
+ },
+ {
+  "id": "D008302",
+  "name": "UpdatePlayerSpeed_c",
+  "level": "L2",
+  "flags": [
+   "DP_SENSITIVE"
+  ],
+  "contract": {
+   "mf": 1,
+   "xf": 0,
+   "dp": 0,
+   "db": 131
+  },
+  "observed": [],
+  "verdict": "not_hit"
+ },
+ {
+  "id": "D009FC2",
+  "name": "GetTileProps_c",
+  "level": "L2",
+  "flags": [],
+  "contract": {
+   "mf": 1,
+   "xf": 0,
+   "dp": 1536,
+   "db": 0
+  },
+  "observed": [],
+  "verdict": "not_hit"
+ },
+ {
+  "id": "D00AA58",
+  "name": "CheckTilePass_c",
+  "level": "L2",
+  "flags": [
+   "DP_SENSITIVE"
+  ],
+  "contract": {
+   "mf": 1,
+   "xf": 0,
+   "dp": 0,
+   "db": 170
+  },
+  "observed": [],
+  "verdict": "not_hit"
+ },
+ {
+  "id": "D00AB13",
+  "name": "ClearPlayerNPCMap_c",
+  "level": "L2",
+  "flags": [
+   "DP_SENSITIVE"
+  ],
+  "contract": {
+   "mf": 1,
+   "xf": 0,
+   "dp": 0,
+   "db": 171
+  },
+  "observed": [],
+  "verdict": "not_hit"
+ },
+ {
+  "id": "D00AC7D",
+  "name": "CheckVehicleBlock_c",
+  "level": "DELEG",
+  "flags": [],
+  "contract": {
+   "mf": 1,
+   "xf": 0,
+   "dp": 0,
+   "db": 0
+  },
+  "observed": [],
+  "verdict": "not_hit"
+ },
+ {
+  "id": "D00BDB2",
+  "name": "CalcObjScreenPos_c",
+  "level": "L2",
+  "flags": [],
+  "contract": {
+   "mf": 1,
+   "xf": 0,
+   "dp": 1536,
+   "db": 0
+  },
+  "observed": [],
+  "verdict": "not_hit"
+ },
+ {
+  "id": "D00BE47",
+  "name": "CalcVehicleSpritePos_c",
+  "level": "DELEG",
+  "flags": [],
+  "contract": {
+   "mf": 1,
+   "xf": 0,
+   "dp": 0,
+   "db": 190
+  },
+  "observed": [],
+  "verdict": "not_hit"
+ },
+ {
+  "id": "D00C0C4",
+  "name": "PlayerSpriteTiles_c",
+  "level": "L2",
+  "flags": [],
+  "contract": {
+   "mf": 1,
+   "xf": 0,
+   "dp": 0,
+   "db": 192
+  },
+  "observed": [],
+  "verdict": "not_hit"
+ },
+ {
+  "id": "D00C3BD",
+  "name": "UpdateWhalePal_c",
+  "level": "L2",
+  "flags": [
+   "DP_SENSITIVE"
+  ],
+  "contract": {
+   "mf": 1,
+   "xf": 0,
+   "dp": 0,
+   "db": 126
+  },
+  "observed": [],
+  "verdict": "not_hit"
+ },
+ {
+  "id": "D00CB5F",
+  "name": "TfrBGAnimGfx_c",
+  "level": "L1",
+  "flags": [
+   "DMA_TRIGGER",
+   "DP_SENSITIVE"
+  ],
+  "contract": {
+   "mf": 1,
+   "xf": 0,
+   "dp": 0,
+   "db": 203
+  },
+  "observed": [],
+  "verdict": "not_hit"
+ },
+ {
+  "id": "D00FFBC",
+  "name": "InitCharProp_ext_c",
+  "level": "L2",
+  "flags": [],
+  "contract": {
+   "mf": 1,
+   "xf": 0,
+   "dp": 0,
+   "db": 0
+  },
+  "observed": [],
+  "verdict": "not_hit"
+ },
+ {
+  "id": "D00FFE0",
+  "name": "Vectors_c",
+  "level": "L2",
+  "flags": [],
+  "contract": {
+   "mf": 1,
+   "xf": 0,
+   "dp": 0,
+   "db": 255
+  },
+  "observed": [],
+  "verdict": "not_hit"
+ },
+ {
+  "id": "D01D718",
+  "name": "FadeIn_c",
+  "level": "DELEG",
+  "flags": [
+   "WAIT_BLOCKING"
+  ],
+  "contract": {
+   "mf": 1,
+   "xf": 0,
+   "dp": 0,
+   "db": 126
+  },
+  "observed": [],
+  "verdict": "not_hit"
+ },
+ {
+  "id": "D01DFD2",
+  "name": "LoadBattleSpeedPosText_c",
+  "level": "L2",
+  "flags": [],
+  "contract": {
+   "mf": 0,
+   "xf": 0,
+   "dp": 0,
+   "db": 223
+  },
+  "observed": [],
+  "verdict": "not_hit"
+ },
+ {
+  "id": "D038009",
+  "name": "ExecBattle_c",
+  "level": "L2",
+  "flags": [],
+  "contract": {
+   "mf": 0,
+   "xf": 0,
+   "dp": 0,
+   "db": 0
+  },
+  "observed": [],
+  "verdict": "not_hit"
+ },
+ {
+  "id": "D0384FC",
+  "name": "Sub16_c",
+  "level": "L2",
+  "flags": [],
+  "contract": {
+   "mf": 0,
+   "xf": 0,
+   "dp": 0,
+   "db": 126
+  },
+  "observed": [],
+  "verdict": "not_hit"
+ },
+ {
+  "id": "D038579",
+  "name": "RandMonster_c",
+  "level": "L2",
+  "flags": [],
+  "contract": {
+   "mf": 1,
+   "xf": 0,
+   "dp": 0,
+   "db": 126
+  },
+  "observed": [],
+  "verdict": "not_hit"
+ },
+ {
+  "id": "D03859B",
+  "name": "AddMsg1_c",
+  "level": "L2",
+  "flags": [],
+  "contract": {
+   "mf": 1,
+   "xf": 0,
+   "dp": 0,
+   "db": 126
+  },
+  "observed": [],
+  "verdict": "not_hit"
+ },
+ {
+  "id": "D0385A6",
+  "name": "AddMsg2_c",
+  "level": "L2",
+  "flags": [],
+  "contract": {
+   "mf": 1,
+   "xf": 0,
+   "dp": 0,
+   "db": 126
+  },
+  "observed": [],
+  "verdict": "not_hit"
+ },
+ {
+  "id": "D0385B1",
+  "name": "AddMsg3_c",
+  "level": "L2",
+  "flags": [],
+  "contract": {
+   "mf": 1,
+   "xf": 0,
+   "dp": 0,
+   "db": 126
+  },
+  "observed": [],
+  "verdict": "not_hit"
+ },
+ {
+  "id": "D0387E4",
+  "name": "CheckBattleList_c",
+  "level": "L2",
+  "flags": [],
+  "contract": {
+   "mf": 1,
+   "xf": 0,
+   "dp": 0,
+   "db": 126
+  },
+  "observed": [],
+  "verdict": "not_hit"
+ },
+ {
+  "id": "D039788",
+  "name": "CheckTimer_c",
+  "level": "L2",
+  "flags": [],
+  "contract": {
+   "mf": 1,
+   "xf": 0,
+   "dp": 0,
+   "db": 126
+  },
+  "observed": [],
+  "verdict": "not_hit"
+ },
+ {
+  "id": "D039E65",
+  "name": "TimerDur_00_c",
+  "level": "L2",
+  "flags": [],
+  "contract": {
+   "mf": 1,
+   "xf": 0,
+   "dp": 0,
+   "db": 126
+  },
+  "observed": [],
+  "verdict": "not_hit"
+ },
+ {
+  "id": "D039E71",
+  "name": "TimerDur_02_c",
+  "level": "L2",
+  "flags": [
+   "TAIL_JML"
+  ],
+  "contract": {
+   "mf": 1,
+   "xf": 0,
+   "dp": 0,
+   "db": 126
+  },
+  "observed": [],
+  "verdict": "not_hit"
+ },
+ {
+  "id": "D039F1C",
+  "name": "TimerDur_08_c",
+  "level": "L2",
+  "flags": [
+   "TAIL_JML"
+  ],
+  "contract": {
+   "mf": 1,
+   "xf": 0,
+   "dp": 0,
+   "db": 126
+  },
+  "observed": [],
+  "verdict": "not_hit"
+ },
+ {
+  "id": "D039F75",
+  "name": "TimerDur_0a_c",
+  "level": "L2",
+  "flags": [
+   "TAIL_JML"
+  ],
+  "contract": {
+   "mf": 1,
+   "xf": 0,
+   "dp": 0,
+   "db": 126
+  },
+  "observed": [],
+  "verdict": "not_hit"
+ },
+ {
+  "id": "D03B33F",
+  "name": "Cmd_21_c",
+  "level": "L2",
+  "flags": [],
+  "contract": {
+   "mf": 1,
+   "xf": 0,
+   "dp": 0,
+   "db": 126
+  },
+  "observed": [],
+  "verdict": "not_hit"
+ },
+ {
+  "id": "D03BA04",
+  "name": "AITarget_1e_c",
+  "level": "L2",
+  "flags": [
+   "TAIL_JML"
+  ],
+  "contract": {
+   "mf": 1,
+   "xf": 0,
+   "dp": 0,
+   "db": 126
+  },
+  "observed": [],
+  "verdict": "not_hit"
+ },
+ {
+  "id": "D03BA67",
+  "name": "AITarget_1f_c",
+  "level": "L2",
+  "flags": [
+   "TAIL_JML"
+  ],
+  "contract": {
+   "mf": 1,
+   "xf": 0,
+   "dp": 0,
+   "db": 126
+  },
+  "observed": [],
+  "verdict": "not_hit"
+ },
+ {
+  "id": "D03BA74",
+  "name": "AITarget_20_c",
+  "level": "L2",
+  "flags": [
+   "TAIL_JML"
+  ],
+  "contract": {
+   "mf": 1,
+   "xf": 0,
+   "dp": 0,
+   "db": 126
+  },
+  "observed": [],
+  "verdict": "not_hit"
+ },
+ {
+  "id": "D03BA81",
+  "name": "AITarget_21_c",
+  "level": "L2",
+  "flags": [
+   "TAIL_JML"
+  ],
+  "contract": {
+   "mf": 1,
+   "xf": 0,
+   "dp": 0,
+   "db": 126
+  },
+  "observed": [],
+  "verdict": "not_hit"
+ },
+ {
+  "id": "D03BA8E",
+  "name": "AITarget_22_c",
+  "level": "L2",
+  "flags": [
+   "TAIL_JML"
+  ],
+  "contract": {
+   "mf": 1,
+   "xf": 0,
+   "dp": 0,
+   "db": 126
+  },
+  "observed": [],
+  "verdict": "not_hit"
+ },
+ {
+  "id": "D03BAEF",
+  "name": "AITarget_23_c",
+  "level": "L2",
+  "flags": [
+   "TAIL_JML"
+  ],
+  "contract": {
+   "mf": 1,
+   "xf": 0,
+   "dp": 0,
+   "db": 126
+  },
+  "observed": [],
+  "verdict": "not_hit"
+ },
+ {
+  "id": "D03BAFE",
+  "name": "AITarget_24_c",
+  "level": "L2",
+  "flags": [
+   "TAIL_JML"
+  ],
+  "contract": {
+   "mf": 1,
+   "xf": 0,
+   "dp": 0,
+   "db": 126
+  },
+  "observed": [],
+  "verdict": "not_hit"
+ },
+ {
+  "id": "D03BB0D",
+  "name": "AITarget_25_c",
+  "level": "L2",
+  "flags": [
+   "TAIL_JML"
+  ],
+  "contract": {
+   "mf": 1,
+   "xf": 0,
+   "dp": 0,
+   "db": 126
+  },
+  "observed": [],
+  "verdict": "not_hit"
+ },
+ {
+  "id": "D03BB6B",
+  "name": "AITarget_29_c",
+  "level": "L2",
+  "flags": [
+   "TAIL_JML"
+  ],
+  "contract": {
+   "mf": 1,
+   "xf": 0,
+   "dp": 0,
+   "db": 126
+  },
+  "observed": [],
+  "verdict": "not_hit"
+ },
+ {
+  "id": "D03BDA9",
+  "name": "AICond_02_c",
+  "level": "L2",
+  "flags": [],
+  "contract": {
+   "mf": 1,
+   "xf": 0,
+   "dp": 0,
+   "db": 126
+  },
+  "observed": [],
+  "verdict": "not_hit"
+ },
+ {
+  "id": "D03BE1E",
+  "name": "AICond_05_c",
+  "level": "L2",
+  "flags": [],
+  "contract": {
+   "mf": 1,
+   "xf": 0,
+   "dp": 0,
+   "db": 126
+  },
+  "observed": [],
+  "verdict": "not_hit"
+ },
+ {
+  "id": "D03BE31",
+  "name": "AICond_06_c",
+  "level": "L2",
+  "flags": [],
+  "contract": {
+   "mf": 1,
+   "xf": 0,
+   "dp": 0,
+   "db": 126
+  },
+  "observed": [],
+  "verdict": "not_hit"
+ },
+ {
+  "id": "D03BEE4",
+  "name": "AICond_09_c",
+  "level": "L2",
+  "flags": [],
+  "contract": {
+   "mf": 1,
+   "xf": 0,
+   "dp": 0,
+   "db": 126
+  },
+  "observed": [],
+  "verdict": "not_hit"
+ },
+ {
+  "id": "D03BF05",
+  "name": "AICond_0b_c",
+  "level": "L2",
+  "flags": [],
+  "contract": {
+   "mf": 1,
+   "xf": 0,
+   "dp": 0,
+   "db": 126
+  },
+  "observed": [],
+  "verdict": "not_hit"
+ },
+ {
+  "id": "D03BFF6",
+  "name": "AICondTarget_25_c",
+  "level": "L2",
+  "flags": [
+   "TAIL_JML"
+  ],
+  "contract": {
+   "mf": 1,
+   "xf": 0,
+   "dp": 0,
+   "db": 126
+  },
+  "observed": [],
+  "verdict": "not_hit"
+ },
+ {
+  "id": "D03C03B",
+  "name": "AICondTarget_26_c",
+  "level": "L2",
+  "flags": [
+   "TAIL_JML"
+  ],
+  "contract": {
+   "mf": 1,
+   "xf": 0,
+   "dp": 0,
+   "db": 126
+  },
+  "observed": [],
+  "verdict": "not_hit"
+ },
+ {
+  "id": "D03C042",
+  "name": "AICondTarget_27_c",
+  "level": "L2",
+  "flags": [
+   "TAIL_JML"
+  ],
+  "contract": {
+   "mf": 1,
+   "xf": 0,
+   "dp": 0,
+   "db": 126
+  },
+  "observed": [],
+  "verdict": "not_hit"
+ },
+ {
+  "id": "D03C049",
+  "name": "AnyTarget_c",
+  "level": "L2",
+  "flags": [
+   "TAIL_JML"
+  ],
+  "contract": {
+   "mf": 1,
+   "xf": 0,
+   "dp": 0,
+   "db": 126
+  },
+  "observed": [],
+  "verdict": "not_hit"
+ },
+ {
+  "id": "D03C06C",
+  "name": "AICondTarget_23_c",
+  "level": "L2",
+  "flags": [
+   "TAIL_JML"
+  ],
+  "contract": {
+   "mf": 1,
+   "xf": 0,
+   "dp": 0,
+   "db": 126
+  },
+  "observed": [],
+  "verdict": "not_hit"
+ },
+ {
+  "id": "D03D378",
+  "name": "MagicDmgEffect_c",
+  "level": "L2",
+  "flags": [],
+  "contract": {
+   "mf": 1,
+   "xf": 0,
+   "dp": 0,
+   "db": 126
+  },
+  "observed": [],
+  "verdict": "not_hit"
+ },
+ {
+  "id": "D03D466",
+  "name": "MagicEffect_04_c",
+  "level": "L2",
+  "flags": [],
+  "contract": {
+   "mf": 1,
+   "xf": 0,
+   "dp": 0,
+   "db": 126
+  },
+  "observed": [],
+  "verdict": "not_hit"
+ },
+ {
+  "id": "D03D613",
+  "name": "MagicEffect_08_c",
+  "level": "L2",
+  "flags": [],
+  "contract": {
+   "mf": 1,
+   "xf": 0,
+   "dp": 0,
+   "db": 126
+  },
+  "observed": [],
+  "verdict": "not_hit"
+ },
+ {
+  "id": "D03D83F",
+  "name": "MagicEffect_0d_c",
+  "level": "L2",
+  "flags": [],
+  "contract": {
+   "mf": 1,
+   "xf": 0,
+   "dp": 0,
+   "db": 126
+  },
+  "observed": [],
+  "verdict": "not_hit"
+ },
+ {
+  "id": "D03D863",
+  "name": "MagicEffect_0e_c",
+  "level": "L2",
+  "flags": [],
+  "contract": {
+   "mf": 1,
+   "xf": 0,
+   "dp": 0,
+   "db": 126
+  },
+  "observed": [],
+  "verdict": "not_hit"
+ },
+ {
+  "id": "D03D972",
+  "name": "MagicEffect_13_c",
+  "level": "L2",
+  "flags": [],
+  "contract": {
+   "mf": 1,
+   "xf": 0,
+   "dp": 0,
+   "db": 126
+  },
+  "observed": [],
+  "verdict": "not_hit"
+ },
+ {
+  "id": "D03D9EC",
+  "name": "MagicEffect_15_c",
+  "level": "L2",
+  "flags": [],
+  "contract": {
+   "mf": 1,
+   "xf": 0,
+   "dp": 0,
+   "db": 126
+  },
+  "observed": [],
+  "verdict": "not_hit"
+ },
+ {
+  "id": "D03DA0C",
+  "name": "MagicEffect_16_c",
+  "level": "L2",
+  "flags": [],
+  "contract": {
+   "mf": 0,
+   "xf": 0,
+   "dp": 0,
+   "db": 126
+  },
+  "observed": [],
+  "verdict": "not_hit"
+ },
+ {
+  "id": "D03DC9B",
+  "name": "MagicEffect_20_c",
+  "level": "L2",
+  "flags": [],
+  "contract": {
+   "mf": 1,
+   "xf": 0,
+   "dp": 0,
+   "db": 126
+  },
+  "observed": [],
+  "verdict": "not_hit"
+ },
+ {
+  "id": "D03DCBB",
+  "name": "MagicEffect_21_c",
+  "level": "L2",
+  "flags": [
+   "TAIL_JML"
+  ],
+  "contract": {
+   "mf": 1,
+   "xf": 0,
+   "dp": 0,
+   "db": 126
+  },
+  "observed": [],
+  "verdict": "not_hit"
+ },
+ {
+  "id": "D03DCD6",
+  "name": "MagicEffect_22_c",
+  "level": "L2",
+  "flags": [],
+  "contract": {
+   "mf": 1,
+   "xf": 0,
+   "dp": 0,
+   "db": 126
+  },
+  "observed": [],
+  "verdict": "not_hit"
+ },
+ {
+  "id": "D03DD06",
+  "name": "MagicEffect_24_c",
+  "level": "L2",
+  "flags": [
+   "TAIL_JML"
+  ],
+  "contract": {
+   "mf": 1,
+   "xf": 0,
+   "dp": 0,
+   "db": 126
+  },
+  "observed": [],
+  "verdict": "not_hit"
+ },
+ {
+  "id": "D03DD65",
+  "name": "MagicEffect_2c_c",
+  "level": "L2",
+  "flags": [],
+  "contract": {
+   "mf": 1,
+   "xf": 0,
+   "dp": 0,
+   "db": 126
+  },
+  "observed": [],
+  "verdict": "not_hit"
+ },
+ {
+  "id": "D03DD95",
+  "name": "MagicEffect_28_c",
+  "level": "L2",
+  "flags": [
+   "TAIL_JML"
+  ],
+  "contract": {
+   "mf": 1,
+   "xf": 0,
+   "dp": 0,
+   "db": 126
+  },
+  "observed": [],
+  "verdict": "not_hit"
+ },
+ {
+  "id": "D03DDB1",
+  "name": "MagicEffect_2a_c",
+  "level": "L2",
+  "flags": [],
+  "contract": {
+   "mf": 1,
+   "xf": 0,
+   "dp": 0,
+   "db": 126
+  },
+  "observed": [],
+  "verdict": "not_hit"
+ },
+ {
+  "id": "D03DDC9",
+  "name": "MagicEffect_2b_c",
+  "level": "L2",
+  "flags": [
+   "TAIL_JML"
+  ],
+  "contract": {
+   "mf": 1,
+   "xf": 0,
+   "dp": 0,
+   "db": 126
+  },
+  "observed": [],
+  "verdict": "not_hit"
+ },
+ {
+  "id": "D03DDDD",
+  "name": "MagicEffect_2f_c",
+  "level": "L2",
+  "flags": [],
+  "contract": {
+   "mf": 1,
+   "xf": 0,
+   "dp": 0,
+   "db": 126
+  },
+  "observed": [],
+  "verdict": "not_hit"
+ },
+ {
+  "id": "D03DFD2",
+  "name": "MagicEffect_32_c",
+  "level": "L2",
+  "flags": [],
+  "contract": {
+   "mf": 1,
+   "xf": 0,
+   "dp": 0,
+   "db": 126
+  },
+  "observed": [],
+  "verdict": "not_hit"
+ },
+ {
+  "id": "D03E43B",
+  "name": "Cmd_22_c",
+  "level": "L2",
+  "flags": [],
+  "contract": {
+   "mf": 1,
+   "xf": 0,
+   "dp": 0,
+   "db": 126
+  },
+  "observed": [],
+  "verdict": "not_hit"
+ },
+ {
+  "id": "D03E4D9",
+  "name": "TwinFailed_c",
+  "level": "L2",
+  "flags": [
+   "TAIL_JML"
+  ],
+  "contract": {
+   "mf": 0,
+   "xf": 0,
+   "dp": 0,
+   "db": 126
+  },
+  "observed": [],
+  "verdict": "not_hit"
+ },
+ {
+  "id": "D08885E",
+  "name": "TfrTitleCrystalTiles_c",
+  "level": "DELEG",
+  "flags": [
+   "DP_SENSITIVE"
+  ],
+  "contract": {
+   "mf": 1,
+   "xf": 0,
+   "dp": 0,
+   "db": 136
+  },
+  "observed": [],
+  "verdict": "not_hit"
+ },
+ {
+  "id": "D0E8B3C",
+  "name": "CheckBattle_c",
+  "level": "L2",
+  "flags": [],
+  "contract": {
+   "mf": 1,
+   "xf": 0,
+   "dp": 0,
+   "db": 139
+  },
+  "observed": [],
+  "verdict": "not_hit"
+ },
+ {
+  "id": "D12E35B",
+  "name": "WaitVblankEvent_c",
+  "level": "L2",
+  "flags": [
+   "WAIT_BLOCKING"
+  ],
+  "contract": {
+   "mf": 1,
+   "xf": 0,
+   "dp": 0,
+   "db": 0
+  },
+  "observed": [],
+  "verdict": "not_hit"
+ },
+ {
+  "id": "D12E55A",
+  "name": "FindEventTerminator_c",
+  "level": "DELEG",
+  "flags": [],
+  "contract": {
+   "mf": 1,
+   "xf": 0,
+   "dp": 0,
+   "db": 229
+  },
+  "observed": [],
+  "verdict": "not_hit"
+ },
+ {
+  "id": "D12E613",
+  "name": "EventCmd_d8_c",
+  "level": "L2",
+  "flags": [
+   "TAIL_JML"
+  ],
+  "contract": {
+   "mf": 1,
+   "xf": 0,
+   "dp": 0,
+   "db": 126
+  },
+  "observed": [],
+  "verdict": "not_hit"
+ },
+ {
+  "id": "D12E7D3",
+  "name": "EventCmd_d7_c",
+  "level": "L2",
+  "flags": [
+   "TAIL_JML",
+   "DP_SENSITIVE"
+  ],
+  "contract": {
+   "mf": 1,
+   "xf": 0,
+   "dp": 0,
+   "db": 231
+  },
+  "observed": [],
+  "verdict": "not_hit"
+ },
+ {
+  "id": "D12EB47",
+  "name": "EventCmd_e0_c",
+  "level": "L2",
+  "flags": [
+   "TAIL_JML",
+   "DP_SENSITIVE"
+  ],
+  "contract": {
+   "mf": 1,
+   "xf": 0,
+   "dp": 0,
+   "db": 0
+  },
+  "observed": [],
+  "verdict": "not_hit"
+ },
+ {
+  "id": "D12EC06",
+  "name": "EventCmd_e6_c",
+  "level": "L2",
+  "flags": [
+   "DP_SENSITIVE"
+  ],
+  "contract": {
+   "mf": 1,
+   "xf": 0,
+   "dp": 0,
+   "db": 236
+  },
+  "observed": [],
+  "verdict": "not_hit"
+ },
+ {
+  "id": "D12EC3E",
+  "name": "EventCmd_dd_c",
+  "level": "L2",
+  "flags": [
+   "TAIL_JML",
+   "DP_SENSITIVE"
+  ],
+  "contract": {
+   "mf": 1,
+   "xf": 0,
+   "dp": 0,
+   "db": 236
+  },
+  "observed": [],
+  "verdict": "not_hit"
+ },
+ {
+  "id": "D12ED1D",
+  "name": "SetCurrGil_c",
+  "level": "L2",
+  "flags": [
+   "DP_SENSITIVE"
+  ],
+  "contract": {
+   "mf": 1,
+   "xf": 0,
+   "dp": 0,
+   "db": 237
+  },
+  "observed": [],
+  "verdict": "not_hit"
+ },
+ {
+  "id": "D12EE1C",
+  "name": "EventCmd_d0_c",
+  "level": "L2",
+  "flags": [
+   "TAIL_JML",
+   "DP_SENSITIVE"
+  ],
+  "contract": {
+   "mf": 1,
+   "xf": 0,
+   "dp": 0,
+   "db": 238
+  },
+  "observed": [],
+  "verdict": "not_hit"
+ },
+ {
+  "id": "D12EE25",
+  "name": "EventCmd_d1_c",
+  "level": "L2",
+  "flags": [
+   "WAIT_BLOCKING",
+   "TAIL_JML",
+   "DP_SENSITIVE"
+  ],
+  "contract": {
+   "mf": 1,
+   "xf": 0,
+   "dp": 0,
+   "db": 238
+  },
+  "observed": [],
+  "verdict": "not_hit"
+ },
+ {
+  "id": "D12EE35",
+  "name": "TfrInvertPal_c",
+  "level": "L2",
+  "flags": [
+   "DMA_TRIGGER"
+  ],
+  "contract": {
+   "mf": 1,
+   "xf": 0,
+   "dp": 0,
+   "db": 238
+  },
+  "observed": [],
+  "verdict": "not_hit"
+ },
+ {
+  "id": "D13BFE3",
+  "name": "_00bfe3_c",
+  "level": "L2",
+  "flags": [
+   "DP_SENSITIVE"
+  ],
+  "contract": {
+   "mf": 1,
+   "xf": 0,
+   "dp": 0,
+   "db": 191
+  },
+  "observed": [],
+  "verdict": "not_hit"
+ },
+ {
+  "id": "D13C11F",
+  "name": "ReloadNPCs_c",
+  "level": "L2",
+  "flags": [
+   "DP_SENSITIVE"
+  ],
+  "contract": {
+   "mf": 1,
+   "xf": 0,
+   "dp": 0,
+   "db": 193
+  },
+  "observed": [],
+  "verdict": "not_hit"
+ },
+ {
+  "id": "D13D730",
+  "name": "LoadTheEndGfx_c",
+  "level": "L2",
+  "flags": [],
+  "contract": {
+   "mf": 0,
+   "xf": 0,
+   "dp": 0,
+   "db": 10
+  },
+  "observed": [],
+  "verdict": "not_hit"
+ },
+ {
+  "id": "D13DB10",
+  "name": "_13db10_c",
+  "level": "L2",
+  "flags": [],
+  "contract": {
+   "mf": 0,
+   "xf": 0,
+   "dp": 0,
+   "db": 126
+  },
+  "observed": [],
+  "verdict": "not_hit"
+ },
+ {
+  "id": "D13DB23",
+  "name": "_13db23_c",
+  "level": "L2",
+  "flags": [],
+  "contract": {
+   "mf": 0,
+   "xf": 0,
+   "dp": 0,
+   "db": 126
+  },
+  "observed": [],
+  "verdict": "not_hit"
+ },
+ {
+  "id": "D13E07D",
+  "name": "_13e07d_c",
+  "level": "L2",
+  "flags": [],
+  "contract": {
+   "mf": 1,
+   "xf": 0,
+   "dp": 0,
+   "db": 126
+  },
+  "observed": [],
+  "verdict": "not_hit"
+ },
+ {
+  "id": "D13E139",
+  "name": "GetEarthSpritePos_c",
+  "level": "L2",
+  "flags": [],
+  "contract": {
+   "mf": 1,
+   "xf": 0,
+   "dp": 0,
+   "db": 126
+  },
+  "observed": [],
+  "verdict": "not_hit"
+ },
+ {
+  "id": "D13E247",
+  "name": "InitStars_c",
+  "level": "L2",
+  "flags": [],
+  "contract": {
+   "mf": 1,
+   "xf": 0,
+   "dp": 0,
+   "db": 126
+  },
+  "observed": [],
+  "verdict": "not_hit"
+ },
+ {
+  "id": "D13E2DC",
+  "name": "GetOtherPlanetTile_c",
+  "level": "L2",
+  "flags": [],
+  "contract": {
+   "mf": 1,
+   "xf": 0,
+   "dp": 0,
+   "db": 126
+  },
+  "observed": [],
+  "verdict": "not_hit"
+ },
+ {
+  "id": "D13E512",
+  "name": "Mult16_1_c",
+  "level": "L2",
+  "flags": [],
+  "contract": {
+   "mf": 1,
+   "xf": 0,
+   "dp": 0,
+   "db": 126
+  },
+  "observed": [],
+  "verdict": "not_hit"
+ },
+ {
+  "id": "D13EB24",
+  "name": "NewLine_c",
+  "level": "L2",
+  "flags": [],
+  "contract": {
+   "mf": 1,
+   "xf": 0,
+   "dp": 0,
+   "db": 126
+  },
+  "observed": [],
+  "verdict": "not_hit"
+ },
+ {
+  "id": "D13EB60",
+  "name": "_13eb60_c",
+  "level": "L2",
+  "flags": [
+   "DMA_TRIGGER"
+  ],
+  "contract": {
+   "mf": 1,
+   "xf": 0,
+   "dp": 0,
+   "db": 126
+  },
+  "observed": [],
+  "verdict": "not_hit"
+ },
+ {
+  "id": "D13EBB8",
+  "name": "_13ebb8_c",
+  "level": "L2",
+  "flags": [
+   "DMA_TRIGGER"
+  ],
+  "contract": {
+   "mf": 1,
+   "xf": 0,
+   "dp": 0,
+   "db": 126
+  },
+  "observed": [],
+  "verdict": "not_hit"
+ },
+ {
+  "id": "D13EF4C",
+  "name": "_13ef4c_c",
+  "level": "L2",
+  "flags": [],
+  "contract": {
+   "mf": 1,
+   "xf": 0,
+   "dp": 0,
+   "db": 126
+  },
+  "observed": [],
+  "verdict": "not_hit"
+ },
+ {
+  "id": "D13FE36",
+  "name": "AutoBattle_0003_c",
+  "level": "L2",
+  "flags": [],
+  "contract": {
+   "mf": 1,
+   "xf": 0,
+   "dp": 0,
+   "db": 126
+  },
+  "observed": [],
+  "verdict": "not_hit"
+ },
+ {
+  "id": "D14F58E",
+  "name": "_14f58e_c",
+  "level": "L2",
+  "flags": [],
+  "contract": {
+   "mf": 1,
+   "xf": 0,
+   "dp": 0,
+   "db": 0
+  },
+  "observed": [],
+  "verdict": "not_hit"
+ },
+ {
+  "id": "D14F626",
+  "name": "GilWindowTiles3_c",
+  "level": "L2",
+  "flags": [],
+  "contract": {
+   "mf": 1,
+   "xf": 0,
+   "dp": 0,
+   "db": 0
+  },
+  "observed": [],
+  "verdict": "not_hit"
+ },
+ {
+  "id": "D14F63E",
+  "name": "GilWindowTiles4_c",
+  "level": "L2",
+  "flags": [],
+  "contract": {
+   "mf": 1,
+   "xf": 0,
+   "dp": 0,
+   "db": 0
+  },
+  "observed": [],
+  "verdict": "not_hit"
+ },
+ {
+  "id": "D14F6D6",
+  "name": "DlgTilesTop_c",
+  "level": "L2",
+  "flags": [],
+  "contract": {
+   "mf": 1,
+   "xf": 0,
+   "dp": 0,
+   "db": 0
+  },
+  "observed": [],
+  "verdict": "not_hit"
+ },
+ {
+  "id": "D14F796",
+  "name": "MapTitleTilesTop_c",
+  "level": "L2",
+  "flags": [],
+  "contract": {
+   "mf": 1,
+   "xf": 0,
+   "dp": 0,
+   "db": 0
+  },
+  "observed": [],
+  "verdict": "not_hit"
+ },
+ {
+  "id": "D14F7B6",
+  "name": "MapTitleTilesBtm_c",
+  "level": "L2",
+  "flags": [],
+  "contract": {
+   "mf": 1,
+   "xf": 0,
+   "dp": 0,
+   "db": 0
+  },
+  "observed": [],
+  "verdict": "not_hit"
+ },
+ {
+  "id": "D14FA16",
+  "name": "LavaAnimPal_c",
+  "level": "L2",
+  "flags": [],
+  "contract": {
+   "mf": 1,
+   "xf": 0,
+   "dp": 0,
+   "db": 250
+  },
+  "observed": [],
+  "verdict": "not_hit"
+ },
+ {
+  "id": "D14FB1E",
+  "name": "WipeScanlineTbl_c",
+  "level": "L2",
+  "flags": [],
+  "contract": {
+   "mf": 1,
+   "xf": 0,
+   "dp": 0,
+   "db": 0
+  },
+  "observed": [],
+  "verdict": "not_hit"
+ },
+ {
+  "id": "D14FD00",
+  "name": "InitCtrl_ext2_c",
+  "level": "L2",
+  "flags": [],
+  "contract": {
+   "mf": 1,
+   "xf": 0,
+   "dp": 0,
+   "db": 126
+  },
+  "observed": [],
+  "verdict": "not_hit"
+ },
+ {
+  "id": "D1585AB",
+  "name": "InitWorld_c",
+  "level": "L2",
+  "flags": [
+   "DP_SENSITIVE"
+  ],
+  "contract": {
+   "mf": 1,
+   "xf": 0,
+   "dp": 0,
+   "db": 0
+  },
+  "observed": [],
+  "verdict": "not_hit"
+ },
+ {
+  "id": "D1589ED",
+  "name": "InitInterrupts_c",
+  "level": "L2",
+  "flags": [
+   "DP_SENSITIVE"
+  ],
+  "contract": {
+   "mf": 1,
+   "xf": 0,
+   "dp": 0,
+   "db": 137
+  },
+  "observed": [],
+  "verdict": "not_hit"
+ },
+ {
+  "id": "D158B2A",
+  "name": "InitDMA_c",
+  "level": "L2",
+  "flags": [
+   "DMA_TRIGGER"
+  ],
+  "contract": {
+   "mf": 1,
+   "xf": 0,
+   "dp": 0,
+   "db": 0
+  },
+  "observed": [],
+  "verdict": "not_hit"
+ },
+ {
+  "id": "D158D5D",
+  "name": "PlayMapSong_c",
+  "level": "DELEG",
+  "flags": [],
+  "contract": {
+   "mf": 1,
+   "xf": 0,
+   "dp": 0,
+   "db": 141
+  },
+  "observed": [],
+  "verdict": "not_hit"
+ },
+ {
+  "id": "D158DFC",
+  "name": "WaitKeyUp_c",
+  "level": "L2",
+  "flags": [
+   "WAIT_BLOCKING",
+   "DP_SENSITIVE"
+  ],
+  "contract": {
+   "mf": 1,
+   "xf": 0,
+   "dp": 0,
+   "db": 0
+  },
+  "observed": [],
+  "verdict": "not_hit"
+ },
+ {
+  "id": "D158E05",
+  "name": "WaitKeyDown_c",
+  "level": "L2",
+  "flags": [
+   "WAIT_BLOCKING",
+   "DP_SENSITIVE"
+  ],
+  "contract": {
+   "mf": 1,
+   "xf": 0,
+   "dp": 0,
+   "db": 142
+  },
+  "observed": [],
+  "verdict": "not_hit"
+ },
+ {
+  "id": "D158E47",
+  "name": "UpdateWaterLavaAnim_c",
+  "level": "L2",
+  "flags": [],
+  "contract": {
+   "mf": 1,
+   "xf": 0,
+   "dp": 0,
+   "db": 142
+  },
+  "observed": [],
+  "verdict": "not_hit"
+ },
+ {
+  "id": "D158E57",
+  "name": "TfrWaterLavaGfx_c",
+  "level": "L2",
+  "flags": [],
+  "contract": {
+   "mf": 1,
+   "xf": 0,
+   "dp": 0,
+   "db": 0
+  },
+  "observed": [],
+  "verdict": "not_hit"
+ },
+ {
+  "id": "D158F34",
+  "name": "TfrLavaGfx_c",
+  "level": "L2",
+  "flags": [
+   "DP_SENSITIVE"
+  ],
+  "contract": {
+   "mf": 1,
+   "xf": 0,
+   "dp": 0,
+   "db": 143
+  },
+  "observed": [],
+  "verdict": "not_hit"
+ },
+ {
+  "id": "D159104",
+  "name": "UpdateMode7Regs_c",
+  "level": "L2",
+  "flags": [
+   "DP_SENSITIVE"
+  ],
+  "contract": {
+   "mf": 1,
+   "xf": 0,
+   "dp": 0,
+   "db": 145
+  },
+  "observed": [],
+  "verdict": "not_hit"
+ },
+ {
+  "id": "D159204",
+  "name": "UpdateWipeNMI_c",
+  "level": "L2",
+  "flags": [
+   "DP_SENSITIVE"
+  ],
+  "contract": {
+   "mf": 1,
+   "xf": 0,
+   "dp": 0,
+   "db": 126
+  },
+  "observed": [],
+  "verdict": "not_hit"
+ },
+ {
+  "id": "D159792",
+  "name": "LoadPlayerGfxWorld_c",
+  "level": "DELEG",
+  "flags": [],
+  "contract": {
+   "mf": 1,
+   "xf": 0,
+   "dp": 0,
+   "db": 0
+  },
+  "observed": [],
+  "verdict": "not_hit"
+ },
+ {
+  "id": "D1597A2",
+  "name": "LoadPlayerGfxSub_c",
+  "level": "DELEG",
+  "flags": [],
+  "contract": {
+   "mf": 1,
+   "xf": 0,
+   "dp": 0,
+   "db": 0
+  },
+  "observed": [],
+  "verdict": "not_hit"
+ },
+ {
+  "id": "D1599FB",
+  "name": "GiveGil_c",
+  "level": "L2",
+  "flags": [
+   "DP_SENSITIVE"
+  ],
+  "contract": {
+   "mf": 1,
+   "xf": 0,
+   "dp": 0,
+   "db": 153
+  },
+  "observed": [],
+  "verdict": "not_hit"
+ },
+ {
+  "id": "D159AE9",
+  "name": "GetTreasureTiles_c",
+  "level": "L2",
+  "flags": [
+   "DP_SENSITIVE"
+  ],
+  "contract": {
+   "mf": 0,
+   "xf": 0,
+   "dp": 0,
+   "db": 127
+  },
+  "observed": [],
+  "verdict": "not_hit"
+ },
+ {
+  "id": "D159B5B",
+  "name": "GetTreasurePtr_c",
+  "level": "L2",
+  "flags": [
+   "DP_SENSITIVE"
+  ],
+  "contract": {
+   "mf": 1,
+   "xf": 1,
+   "dp": 0,
+   "db": 155
+  },
+  "observed": [],
+  "verdict": "not_hit"
+ },
+ {
+  "id": "D15AF24",
+  "name": "CloseYesNoWindow_c",
+  "level": "L2",
+  "flags": [
+   "DMA_TRIGGER",
+   "DP_SENSITIVE"
+  ],
+  "contract": {
+   "mf": 1,
+   "xf": 0,
+   "dp": 0,
+   "db": 0
+  },
+  "observed": [],
+  "verdict": "not_hit"
+ },
+ {
+  "id": "D15B09C",
+  "name": "ScrollItemListDown_c",
+  "level": "L2",
+  "flags": [
+   "WAIT_BLOCKING",
+   "DP_SENSITIVE"
+  ],
+  "contract": {
+   "mf": 1,
+   "xf": 0,
+   "dp": 0,
+   "db": 0
+  },
+  "observed": [],
+  "verdict": "not_hit"
+ },
+ {
+  "id": "D15B143",
+  "name": "TfrBGGfx_c",
+  "level": "L3",
+  "flags": [
+   "DMA_TRIGGER"
+  ],
+  "contract": {
+   "mf": 1,
+   "xf": 0,
+   "dp": 0,
+   "db": 177
+  },
+  "observed": [],
+  "verdict": "not_hit"
+ },
+ {
+  "id": "D15B41B",
+  "name": "GetDlgPtr1H_c",
+  "level": "DELEG",
+  "flags": [],
+  "contract": {
+   "mf": 1,
+   "xf": 0,
+   "dp": 0,
+   "db": 126
+  },
+  "observed": [],
+  "verdict": "not_hit"
+ },
+ {
+  "id": "D15B6F1",
+  "name": "InitDlgIRQ_c",
+  "level": "L2",
+  "flags": [
+   "DP_SENSITIVE"
+  ],
+  "contract": {
+   "mf": 1,
+   "xf": 0,
+   "dp": 0,
+   "db": 182
+  },
+  "observed": [],
+  "verdict": "not_hit"
+ },
+ {
+  "id": "D15B8C9",
+  "name": "_15b8c9_c",
+  "level": "L2",
+  "flags": [],
+  "contract": {
+   "mf": 1,
+   "xf": 0,
+   "dp": 0,
+   "db": 184
+  },
+  "observed": [],
+  "verdict": "not_hit"
+ },
+ {
+  "id": "D15BB6A",
+  "name": "_15bb6a_c",
+  "level": "L2",
+  "flags": [],
+  "contract": {
+   "mf": 1,
+   "xf": 0,
+   "dp": 0,
+   "db": 187
+  },
+  "observed": [],
+  "verdict": "not_hit"
+ },
+ {
+  "id": "D15C37F",
+  "name": "Pow10Hi_c",
+  "level": "L2",
+  "flags": [],
+  "contract": {
+   "mf": 1,
+   "xf": 0,
+   "dp": 0,
+   "db": 0
+  },
+  "observed": [],
+  "verdict": "not_hit"
+ },
+ {
+  "id": "D16C59A",
+  "name": "AfterCutscene_c",
+  "level": "L2",
+  "flags": [],
+  "contract": {
+   "mf": 1,
+   "xf": 0,
+   "dp": 0,
+   "db": 0
+  },
+  "observed": [],
+  "verdict": "not_hit"
+ },
+ {
+  "id": "D16C8BC",
+  "name": "Special_2d_c",
+  "level": "L2",
+  "flags": [
+   "TAIL_JML",
+   "DP_SENSITIVE"
+  ],
+  "contract": {
+   "mf": 1,
+   "xf": 0,
+   "dp": 0,
+   "db": 126
+  },
+  "observed": [],
+  "verdict": "not_hit"
+ },
+ {
+  "id": "D16CB05",
+  "name": "_00cb05_c",
+  "level": "L2",
+  "flags": [
+   "DP_SENSITIVE"
+  ],
+  "contract": {
+   "mf": 1,
+   "xf": 0,
+   "dp": 0,
+   "db": 126
+  },
+  "observed": [],
+  "verdict": "not_hit"
+ },
+ {
+  "id": "D16CB72",
+  "name": "_00cb72_c",
+  "level": "L2",
+  "flags": [
+   "DP_SENSITIVE"
+  ],
+  "contract": {
+   "mf": 1,
+   "xf": 0,
+   "dp": 0,
+   "db": 203
+  },
+  "observed": [],
+  "verdict": "not_hit"
+ },
+ {
+  "id": "D16CFC4",
+  "name": "Special_1d_c",
+  "level": "L2",
+  "flags": [
+   "TAIL_JML"
+  ],
+  "contract": {
+   "mf": 1,
+   "xf": 0,
+   "dp": 0,
+   "db": 207
+  },
+  "observed": [],
+  "verdict": "not_hit"
+ },
+ {
+  "id": "D16CFD0",
+  "name": "Special_1c_c",
+  "level": "L2",
+  "flags": [
+   "TAIL_JML",
+   "DP_SENSITIVE"
+  ],
+  "contract": {
+   "mf": 1,
+   "xf": 0,
+   "dp": 0,
+   "db": 0
+  },
+  "observed": [],
+  "verdict": "not_hit"
+ },
+ {
+  "id": "D16D263",
+  "name": "LoadOverworldLeviathan_c",
+  "level": "L2",
+  "flags": [],
+  "contract": {
+   "mf": 1,
+   "xf": 0,
+   "dp": 0,
+   "db": 126
+  },
+  "observed": [],
+  "verdict": "not_hit"
+ },
+ {
+  "id": "D16D342",
+  "name": "Special_0d_c",
+  "level": "L2",
+  "flags": [
+   "TAIL_JML"
+  ],
+  "contract": {
+   "mf": 1,
+   "xf": 0,
+   "dp": 0,
+   "db": 126
+  },
+  "observed": [],
+  "verdict": "not_hit"
+ },
+ {
+  "id": "D16D36D",
+  "name": "LoadMapStack_c",
+  "level": "L2",
+  "flags": [
+   "DP_SENSITIVE"
+  ],
+  "contract": {
+   "mf": 1,
+   "xf": 0,
+   "dp": 0,
+   "db": 126
+  },
+  "observed": [],
+  "verdict": "not_hit"
+ },
+ {
+  "id": "D16D758",
+  "name": "DrawDestroyedDamcyan_c",
+  "level": "DELEG",
+  "flags": [],
+  "contract": {
+   "mf": 1,
+   "xf": 0,
+   "dp": 0,
+   "db": 0
+  },
+  "observed": [],
+  "verdict": "not_hit"
+ },
+ {
+  "id": "D16D831",
+  "name": "Special_1e_c",
+  "level": "L2",
+  "flags": [
+   "TAIL_JML",
+   "DP_SENSITIVE"
+  ],
+  "contract": {
+   "mf": 1,
+   "xf": 0,
+   "dp": 0,
+   "db": 216
+  },
+  "observed": [],
+  "verdict": "not_hit"
+ },
+ {
+  "id": "D16D9D6",
+  "name": "Special_06_c",
+  "level": "DELEG",
+  "flags": [
+   "TAIL_JML"
+  ],
+  "contract": {
+   "mf": 1,
+   "xf": 0,
+   "dp": 0,
+   "db": 0
+  },
+  "observed": [],
+  "verdict": "not_hit"
+ },
+ {
+  "id": "D16DB71",
+  "name": "DrawRedWings_c",
+  "level": "DELEG",
+  "flags": [],
+  "contract": {
+   "mf": 1,
+   "xf": 0,
+   "dp": 0,
+   "db": 0
+  },
+  "observed": [],
+  "verdict": "not_hit"
+ },
+ {
+  "id": "D16DBBE",
+  "name": "IncBrightness_c",
+  "level": "L2",
+  "flags": [
+   "DP_SENSITIVE"
+  ],
+  "contract": {
+   "mf": 1,
+   "xf": 0,
+   "dp": 0,
+   "db": 0
+  },
+  "observed": [],
+  "verdict": "not_hit"
+ },
+ {
+  "id": "D16DBD2",
+  "name": "LoadOverworldIntro_c",
+  "level": "L2",
+  "flags": [
+   "DP_SENSITIVE"
+  ],
+  "contract": {
+   "mf": 1,
+   "xf": 0,
+   "dp": 0,
+   "db": 0
+  },
+  "observed": [],
+  "verdict": "not_hit"
+ },
+ {
+  "id": "D16DE1B",
+  "name": "_00de1b_c",
+  "level": "L2",
+  "flags": [
+   "DP_SENSITIVE"
+  ],
+  "contract": {
+   "mf": 1,
+   "xf": 0,
+   "dp": 0,
+   "db": 0
+  },
+  "observed": [],
+  "verdict": "not_hit"
+ },
+ {
+  "id": "D16DF53",
+  "name": "_00df53_c",
+  "level": "L2",
+  "flags": [
+   "DP_SENSITIVE"
+  ],
+  "contract": {
+   "mf": 1,
+   "xf": 0,
+   "dp": 0,
+   "db": 223
+  },
+  "observed": [],
+  "verdict": "not_hit"
+ },
+ {
+  "id": "D16F533",
+  "name": "UpdateBG2Scroll_c",
+  "level": "L2",
+  "flags": [],
+  "contract": {
+   "mf": 0,
+   "xf": 0,
+   "dp": 202,
+   "db": 10
+  },
+  "observed": [],
+  "verdict": "not_hit"
+ },
+ {
+  "id": "D16F922",
+  "name": "_00f922_c",
+  "level": "L2",
+  "flags": [
+   "DP_SENSITIVE"
+  ],
+  "contract": {
+   "mf": 1,
+   "xf": 0,
+   "dp": 0,
+   "db": 249
+  },
+  "observed": [],
+  "verdict": "not_hit"
+ },
+ {
+  "id": "D16FB93",
+  "name": "TfrBG2Tilemap_c",
+  "level": "L2",
+  "flags": [
+   "DMA_TRIGGER",
+   "DP_SENSITIVE"
+  ],
+  "contract": {
+   "mf": 1,
+   "xf": 0,
+   "dp": 0,
+   "db": 126
+  },
+  "observed": [],
+  "verdict": "not_hit"
+ },
+ {
+  "id": "D16FFAB",
+  "name": "DecodeBG1Tilemap_c",
+  "level": "L2",
+  "flags": [
+   "DP_SENSITIVE"
+  ],
+  "contract": {
+   "mf": 1,
+   "xf": 0,
+   "dp": 0,
+   "db": 255
+  },
+  "observed": [],
+  "verdict": "not_hit"
+ },
+ {
+  "id": "D1EA03E",
+  "name": "BoardChoco_c",
+  "level": "L2",
+  "flags": [
+   "DP_SENSITIVE"
+  ],
+  "contract": {
+   "mf": 1,
+   "xf": 0,
+   "dp": 0,
+   "db": 0
+  },
+  "observed": [],
+  "verdict": "not_hit"
+ },
+ {
+  "id": "D00883D",
+  "name": "_00883d_c",
+  "level": "L1",
+  "flags": [],
+  "contract": null,
+  "observed": [],
+  "verdict": "no_contract"
+ },
+ {
+  "id": "D00885E",
+  "name": "_00885e_c",
+  "level": "L1",
+  "flags": [],
+  "contract": null,
+  "observed": [],
+  "verdict": "no_contract"
+ },
+ {
+  "id": "D00AAD8",
+  "name": "SetPlayerNPCMap_c",
+  "level": "L1",
+  "flags": [],
+  "contract": null,
+  "observed": [],
+  "verdict": "no_contract"
+ },
+ {
+  "id": "D00C2FF",
+  "name": "ClearNpcMapCell_c",
+  "level": "L2",
+  "flags": [],
+  "contract": null,
+  "observed": [
+   {
+    "dp": 1536,
+    "db": 0,
+    "m": 1,
+    "x": 0,
+    "hits": 11400,
+    "fixtures": [
+     "009-first-free-roam",
+     "014-baron-castle-exterior"
+    ]
+   }
+  ],
+  "verdict": "no_contract"
+ },
+ {
+  "id": "D00C347",
+  "name": "SetNpcMapCell_c",
+  "level": "L2",
+  "flags": [],
+  "contract": null,
+  "observed": [
+   {
+    "dp": 1536,
+    "db": 0,
+    "m": 1,
+    "x": 0,
+    "hits": 11400,
+    "fixtures": [
+     "009-first-free-roam",
+     "014-baron-castle-exterior"
+    ]
+   }
+  ],
+  "verdict": "no_contract"
+ },
+ {
+  "id": "D00C357",
+  "name": "SetNpcMapPtr_c",
+  "level": "L2",
+  "flags": [],
+  "contract": null,
+  "observed": [
+   {
+    "dp": 58656,
+    "db": 5,
+    "m": 0,
+    "x": 0,
+    "hits": 394,
+    "fixtures": [
+     "002-combat"
+    ]
+   }
+  ],
+  "verdict": "no_contract"
+ },
+ {
+  "id": "D00F535",
+  "name": "UpdateBG2ScrollSkip_c",
+  "level": "L2",
+  "flags": [],
+  "contract": null,
+  "observed": [
+   {
+    "dp": 1536,
+    "db": 0,
+    "m": 1,
+    "x": 0,
+    "hits": 4218,
+    "fixtures": [
+     "005-pre-combat",
+     "007-title-screen",
+     "008-overworld-mode7",
+     "009-first-free-roam",
+     "010-castle-exit-anim",
+     "011-worldmap-entry",
+     "012-first-worldmap-combat",
+     "013-airship-dialogue-pre-combat",
+     "014-baron-castle-exterior"
+    ]
+   }
+  ],
+  "verdict": "no_contract"
+ },
+ {
+  "id": "D01CA85",
+  "name": "TfrVRAM_c",
+  "level": "L1",
+  "flags": [
+   "DMA_TRIGGER"
+  ],
+  "contract": null,
+  "observed": [],
+  "verdict": "no_contract"
+ },
+ {
+  "id": "D0285D2",
+  "name": "HardMult_btlgfx_c",
+  "level": "L2",
+  "flags": [],
+  "contract": null,
+  "observed": [
+   {
+    "dp": 0,
+    "db": 126,
+    "m": 1,
+    "x": 0,
+    "hits": 16353,
+    "fixtures": [
+     "005-pre-combat",
+     "006-in-combat",
+     "012-first-worldmap-combat"
+    ]
+   }
+  ],
+  "verdict": "no_contract"
+ },
+ {
+  "id": "D0290A0",
+  "name": "TfrBG2MenuTile_c",
+  "level": "L1",
+  "flags": [],
+  "contract": null,
+  "observed": [
+   {
+    "dp": 0,
+    "db": 126,
+    "m": 1,
+    "x": 0,
+    "hits": 74,
+    "fixtures": [
+     "005-pre-combat",
+     "012-first-worldmap-combat"
+    ]
+   }
+  ],
+  "verdict": "no_contract"
+ },
+ {
+  "id": "D02A491",
+  "name": "IncrTextPtr_c",
+  "level": "L2",
+  "flags": [],
+  "contract": null,
+  "observed": [
+   {
+    "dp": 0,
+    "db": 126,
+    "m": 1,
+    "x": 0,
+    "hits": 16481,
+    "fixtures": [
+     "005-pre-combat",
+     "006-in-combat",
+     "012-first-worldmap-combat"
+    ]
+   }
+  ],
+  "verdict": "no_contract"
+ },
+ {
+  "id": "D02BB0B",
+  "name": "BackAttackYOffset_s_c",
+  "level": "L2",
+  "flags": [],
+  "contract": null,
+  "observed": [
+   {
+    "dp": 0,
+    "db": 126,
+    "m": 1,
+    "x": 0,
+    "hits": 49050,
+    "fixtures": [
+     "005-pre-combat",
+     "006-in-combat",
+     "012-first-worldmap-combat"
+    ]
+   }
+  ],
+  "verdict": "no_contract"
+ },
+ {
+  "id": "D02BB1A",
+  "name": "BackAttackYOffset_l_c",
+  "level": "L2",
+  "flags": [],
+  "contract": null,
+  "observed": [
+   {
+    "dp": 0,
+    "db": 126,
+    "m": 1,
+    "x": 0,
+    "hits": 6540,
+    "fixtures": [
+     "005-pre-combat",
+     "006-in-combat",
+     "012-first-worldmap-combat"
+    ]
+   }
+  ],
+  "verdict": "no_contract"
+ },
+ {
+  "id": "D02DA73",
+  "name": "DrawMonsterSprite_c",
+  "level": "L2",
+  "flags": [],
+  "contract": null,
+  "observed": [],
+  "verdict": "no_contract"
+ },
+ {
+  "id": "D02DAFE",
+  "name": "InitMonsterAnim_c",
+  "level": "L2",
+  "flags": [],
+  "contract": null,
+  "observed": [],
+  "verdict": "no_contract"
+ },
+ {
+  "id": "D02DCED",
+  "name": "BuildOAMEntries_c",
+  "level": "L2",
+  "flags": [],
+  "contract": null,
+  "observed": [
+   {
+    "dp": 0,
+    "db": 126,
+    "m": 1,
+    "x": 0,
+    "hits": 6958,
+    "fixtures": [
+     "005-pre-combat",
+     "006-in-combat",
+     "012-first-worldmap-combat"
+    ]
+   }
+  ],
+  "verdict": "no_contract"
+ },
+ {
+  "id": "D02DDA5",
+  "name": "CheckSpriteVisible_c",
+  "level": "L2",
+  "flags": [],
+  "contract": null,
+  "observed": [],
+  "verdict": "no_contract"
+ },
+ {
+  "id": "D02DDDC",
+  "name": "UpdateMonsterAnim_c",
+  "level": "L1",
+  "flags": [],
+  "contract": null,
+  "observed": [
+   {
+    "dp": 0,
+    "db": 126,
+    "m": 1,
+    "x": 0,
+    "hits": 8175,
+    "fixtures": [
+     "005-pre-combat",
+     "006-in-combat",
+     "012-first-worldmap-combat"
+    ]
+   }
+  ],
+  "verdict": "no_contract"
+ },
+ {
+  "id": "D088690",
+  "name": "LoadTitleGfx_c",
+  "level": "L1",
+  "flags": [
+   "DP_SENSITIVE"
+  ],
+  "contract": null,
+  "observed": [],
+  "verdict": "no_contract"
+ },
+ {
+  "id": "D1591CA",
+  "name": "UpdateWipeIRQ_c",
+  "level": "L1",
+  "flags": [],
+  "contract": null,
+  "observed": [],
+  "verdict": "no_contract"
+ },
+ {
+  "id": "D15B3DC",
+  "name": "_15b3dc_c",
+  "level": "L1",
+  "flags": [],
+  "contract": null,
+  "observed": [
+   {
+    "dp": 1536,
+    "db": 0,
+    "m": 1,
+    "x": 0,
+    "hits": 600,
+    "fixtures": [
+     "011-worldmap-entry"
+    ]
+   }
+  ],
+  "verdict": "no_contract"
+ },
+ {
+  "id": "D15C163",
+  "name": "_15c163_c",
+  "level": "L3",
+  "flags": [],
+  "contract": null,
+  "observed": [
+   {
+    "dp": 1536,
+    "db": 0,
+    "m": 1,
+    "x": 0,
+    "hits": 4219,
+    "fixtures": [
+     "005-pre-combat",
+     "007-title-screen",
+     "008-overworld-mode7",
+     "009-first-free-roam",
+     "010-castle-exit-anim",
+     "011-worldmap-entry",
+     "012-first-worldmap-combat",
+     "013-airship-dialogue-pre-combat",
+     "014-baron-castle-exterior"
+    ]
+   }
+  ],
+  "verdict": "no_contract"
+ },
+ {
+  "id": "D15CA5E",
+  "name": "_15ca5e_c",
+  "level": "EXCL",
+  "flags": [
+   "DP_SENSITIVE"
+  ],
+  "contract": null,
+  "observed": [
+   {
+    "dp": 1536,
+    "db": 0,
+    "m": 1,
+    "x": 0,
+    "hits": 4218,
+    "fixtures": [
+     "005-pre-combat",
+     "007-title-screen",
+     "008-overworld-mode7",
+     "009-first-free-roam",
+     "010-castle-exit-anim",
+     "011-worldmap-entry",
+     "012-first-worldmap-combat",
+     "013-airship-dialogue-pre-combat",
+     "014-baron-castle-exterior"
+    ]
+   }
+  ],
+  "verdict": "no_contract"
+ },
+ {
+  "id": "D15CA85",
+  "name": "_15ca85_c",
+  "level": "L1",
+  "flags": [],
+  "contract": null,
+  "observed": [],
+  "verdict": "no_contract"
+ },
+ {
+  "id": "D15CADC",
+  "name": "_15cadc_c",
+  "level": "EXCL",
+  "flags": [
+   "DP_SENSITIVE"
+  ],
+  "contract": null,
+  "observed": [
+   {
+    "dp": 5020,
+    "db": 19,
+    "m": 1,
+    "x": 0,
+    "hits": 1,
+    "fixtures": [
+     "001-scene-after-leaving"
+    ]
+   },
+   {
+    "dp": 64076,
+    "db": 250,
+    "m": 1,
+    "x": 0,
+    "hits": 1,
+    "fixtures": [
+     "001-scene-after-leaving"
+    ]
+   },
+   {
+    "dp": 31397,
+    "db": 122,
+    "m": 1,
+    "x": 0,
+    "hits": 1,
+    "fixtures": [
+     "001-scene-after-leaving"
+    ]
+   },
+   {
+    "dp": 11051,
+    "db": 171,
+    "m": 1,
+    "x": 0,
+    "hits": 4,
+    "fixtures": [
+     "001-scene-after-leaving",
+     "003-world-map",
+     "004-menu"
+    ]
+   },
+   {
+    "dp": 36507,
+    "db": 142,
+    "m": 1,
+    "x": 0,
+    "hits": 1,
+    "fixtures": [
+     "003-world-map"
+    ]
+   },
+   {
+    "dp": 2779,
+    "db": 10,
+    "m": 1,
+    "x": 0,
+    "hits": 1,
+    "fixtures": [
+     "003-world-map"
+    ]
+   },
+   {
+    "dp": 10157,
+    "db": 39,
+    "m": 1,
+    "x": 0,
+    "hits": 1,
+    "fixtures": [
+     "003-world-map"
+    ]
+   },
+   {
+    "dp": 8725,
+    "db": 34,
+    "m": 1,
+    "x": 0,
+    "hits": 1,
+    "fixtures": [
+     "003-world-map"
+    ]
+   },
+   {
+    "dp": 4258,
+    "db": 16,
+    "m": 1,
+    "x": 0,
+    "hits": 1,
+    "fixtures": [
+     "004-menu"
+    ]
+   },
+   {
+    "dp": 58304,
+    "db": 227,
+    "m": 1,
+    "x": 0,
+    "hits": 1,
+    "fixtures": [
+     "004-menu"
+    ]
+   },
+   {
+    "dp": 56000,
+    "db": 218,
+    "m": 1,
+    "x": 0,
+    "hits": 1,
+    "fixtures": [
+     "004-menu"
+    ]
+   },
+   {
+    "dp": 4850,
+    "db": 18,
+    "m": 1,
+    "x": 0,
+    "hits": 1,
+    "fixtures": [
+     "004-menu"
+    ]
+   },
+   {
+    "dp": 1413,
+    "db": 5,
+    "m": 1,
+    "x": 0,
+    "hits": 1,
+    "fixtures": [
+     "004-menu"
+    ]
+   },
+   {
+    "dp": 10503,
+    "db": 41,
+    "m": 1,
+    "x": 0,
+    "hits": 1,
+    "fixtures": [
+     "004-menu"
+    ]
+   },
+   {
+    "dp": 1536,
+    "db": 0,
+    "m": 1,
+    "x": 0,
+    "hits": 4218,
+    "fixtures": [
+     "005-pre-combat",
+     "007-title-screen",
+     "008-overworld-mode7",
+     "009-first-free-roam",
+     "010-castle-exit-anim",
+     "011-worldmap-entry",
+     "012-first-worldmap-combat",
+     "013-airship-dialogue-pre-combat",
+     "014-baron-castle-exterior"
+    ]
+   }
+  ],
+  "verdict": "no_contract"
+ }
+]

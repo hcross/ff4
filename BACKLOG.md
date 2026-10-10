@@ -57,6 +57,14 @@
       spike under `FF4_SPIKE_STRICT=1`, histogram the diverging fields,
       then fix or justify (`// STRICT:` line) — contract-only spikes proved
       blind to exit-state divergence on `Div16_c`.
+- [ ] 🧑/🤖 **Dead dispatch entries (F16, 2026-10-10)**: 129/204 entries can
+      never fire (`registry/DEAD_ENTRIES.md`). Decide via ADR: retire,
+      re-key to the true PC (off-by-N / wrong bank), and/or hook
+      `jsr (abs,x)`/`jmp (abs,x)` behind a per-routine gate.
+- [ ] 🤖 **Entry-state mismatches (2026-10-10)**: 11 CONTRACTs whose
+      `entry_mode` the game contradicts (`registry/ENTRY_STATE.md`) —
+      systematic LLM error: `db=` copied from the routine's address high
+      byte (`TfrSprites` db=FE, `UpdateCtrl_ext` db=FD, `TfrInvertPal` db=EE).
 - [ ] 🤖 **Spike liveness (mutation) check**: prove each spike can FAIL by
       running it against a deliberately broken body — vacuous spikes
       (compare-0-to-0, unfuzzed inputs) pass anything.

@@ -58,6 +58,26 @@ an infra problem, not something to route around with a manual workaround.
 The W0-1 postmortem (stale absolute paths after the submodule move) is the
 concrete example of what NOT diagnosing this first led to.
 
+## 1b — Evidence audits (seconds to minutes; run after any dispatch-table change)
+
+```sh
+# Real CPU entry state (D/DB/m/x) of every dispatched routine over the 14
+# fixtures vs each CONTRACT's entry_mode (~10 s) -> registry/ENTRY_STATE.md
+python3 registry/check_entry_state.py
+
+# Entries that can never fire: no direct JSR/JSL caller, no fixture hit,
+# no native C parent (F16) -> registry/DEAD_ENTRIES.md (needs the above first)
+python3 registry/check_dead_entries.py
+
+# Strict full-state re-run of every L2/L3 spike (F15; tens of minutes)
+python3 ff4-port/translator/strict_audit.py      # -> translator/runs/strict_audit/
+python3 ff4-port/translator/mutation_audit.py    # spike liveness, needs the above
+```
+
+A routine listed `DEAD` in DEAD_ENTRIES.md does not run natively whatever
+its registry level says; don't spend effort promoting it before it is
+re-keyed (F16).
+
 ## 2 — What to work on next
 
 ```sh
