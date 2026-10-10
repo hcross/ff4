@@ -6,16 +6,15 @@ A dispatch entry runs only when a JSR/JSL targets exactly its PC. `DEAD` = no di
 | Verdict | Count |
 |---|---|
 | DEAD_PADDING | 0 |
-| DEAD | 120 |
+| DEAD | 119 |
 | native_callee | 1 |
-| static_only | 32 |
-| live | 43 |
+| static_only | 30 |
+| live | 46 |
 
 | ID | Function | Verdict | Static callers | Fixture hits | Caller at PC± | C callers | ROM bytes |
 |---|---|---|---|---|---|---|---|
 | D00808E | `AfterBattle_c` | DEAD | 0 | 0 |  |  | `22 df c8 15 20 02` |
 | D0080A0 | `FieldMain_c` | DEAD | 0 | 0 |  |  | `64 79 64 7a 64 7b` |
-| D00AA58 | `CheckTilePass_c` | DEAD | 0 | 0 | +2 |  | `d4 60 a5 b1 f0 03` |
 | D00AAD8 | `SetPlayerNPCMap_c` | DEAD | 0 | 0 | +2 |  | `fa 60 a5 ab 0a a8` |
 | D00AB13 | `ClearPlayerNPCMap_c` | DEAD | 0 | 0 | +2 |  | `01 00 a5 a1 29 04` |
 | D00AC7D | `CheckVehicleBlock_c` | DEAD | 0 | 0 | +2 |  | `f6 60 ad 09 07 aa` |
@@ -164,5 +163,3 @@ A dispatch entry runs only when a JSR/JSL targets exactly its PC. `DEAD` = no di
 | D13EBB8 | `_13ebb8_c` | static_only | 1 | 0 |  |  | `ad 1f 7d d0 57 a5` |
 | D13EF4C | `_13ef4c_c` | static_only | 1 | 0 |  |  | `9c 21 7d 9c 23 7d` |
 | D14FD00 | `InitCtrl_ext2_c` | static_only | 1 | 0 |  |  | `4c d9 fd 4c 12 fd` |
-| D15B143 | `TfrBGGfx_c` | static_only | 2 | 0 |  |  | `a9 18 8d 01 43 a2` |
-| D15CA85 | `_15ca85_c` | static_only | 10 | 0 |  | LoadTitleGfx, TfrVRAM, _00883d | `a9 80 8d 15 21 9c` |

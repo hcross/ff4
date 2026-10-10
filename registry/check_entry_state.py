@@ -73,9 +73,13 @@ def contract_mode(src: Path) -> dict | None:
     return out
 
 
-def probe(lss: Path, frames: int) -> list[tuple]:
-    r = subprocess.run([str(PROBE), str(ROM), "--load", str(lss), "--frames", str(frames)],
-                       capture_output=True, text=True, timeout=1800)
+def probe(lss: Path, frames: int, walk: bool = False) -> list[tuple]:
+    # Two passes per fixture: idle, and a scripted DPAD walk -- field movement
+    # routines (CheckTilePass, ...) only run while the player moves.
+    cmd = [str(PROBE), str(ROM), "--load", str(lss), "--frames", str(frames)]
+    if walk:
+        cmd += ["--walk-square", "30"]
+    r = subprocess.run(cmd, capture_output=True, text=True, timeout=1800)
     return [(m[0], int(m[1], 16), int(m[2], 16), int(m[3]), int(m[4]), int(m[5]), lss.stem)
             for m in _ENTRY_RE.findall(r.stdout)]
 
@@ -92,7 +96,8 @@ def main(argv=None) -> int:
 
     fixtures = sorted(FIXTURES.glob("*.lss"))
     with ThreadPoolExecutor(max_workers=8) as ex:
-        rows = [row for rs in ex.map(lambda f: probe(f, args.frames), fixtures) for row in rs]
+        jobs = [(f, w) for f in fixtures for w in (False, True)]
+        rows = [row for rs in ex.map(lambda j: probe(j[0], args.frames, j[1]), jobs) for row in rs]
     seen = defaultdict(lambda: defaultdict(lambda: [0, set()]))  # pc -> (dp,db,m,x) -> [hits, fixtures]
     for pc, dp, db, m, x, hits, fx in rows:
         slot = seen[pc][(dp, db, m, x)]
@@ -147,7 +152,7 @@ def main(argv=None) -> int:
         "# Dispatch entry state vs CONTRACT",
         "",
         f"Observed with `ff4-port/desktop/ff4-entry-probe` over {len(fixtures)} fixtures × "
-        f"{args.frames} frames, dispatch enabled (the state each native body actually receives). "
+        f"{args.frames} frames (idle + scripted DPAD walk), dispatch enabled (the state each native body actually receives). "
         "`MISMATCH` = a CONTRACT `entry_mode` field the game contradicts: the routine's spike "
         "replays a state the game never enters — re-spike under the observed state before "
         "trusting its level. `not_hit` = no fixture exercises it (no evidence).",

@@ -128,13 +128,25 @@
       "id": "D00AA58",
       "pc": "00AA58",
       "name": "CheckTilePass_c",
-      "level": "L2",
+      "level": "RETIRED",
       "start": "00AA42",
       "end": "00AA59",
       "file_start": 10818,
       "file_end": 10841,
       "resolved": false,
       "source_label": "OpenDoor (containing; pc not on a label)"
+    },
+    {
+      "id": "D00AA5A",
+      "pc": "00AA5A",
+      "name": "CheckTilePass_c",
+      "level": "L2",
+      "start": "00AA5A",
+      "end": "00AA95",
+      "file_start": 10842,
+      "file_end": 10901,
+      "resolved": true,
+      "source_label": "CheckTilePass"
     },
     {
       "id": "D00AAD8",

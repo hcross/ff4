@@ -16,7 +16,7 @@
     "db": 126,
     "m": 1,
     "x": 0,
-    "hits": 437,
+    "hits": 874,
     "fixtures": [
      "005-pre-combat",
      "006-in-combat",
@@ -28,7 +28,7 @@
     "db": 126,
     "m": 0,
     "x": 0,
-    "hits": 2,
+    "hits": 4,
     "fixtures": [
      "005-pre-combat",
      "012-first-worldmap-combat"
@@ -60,7 +60,7 @@
     "db": 17,
     "m": 1,
     "x": 0,
-    "hits": 1,
+    "hits": 2,
     "fixtures": [
      "002-combat"
     ]
@@ -70,7 +70,7 @@
     "db": 126,
     "m": 1,
     "x": 0,
-    "hits": 1635,
+    "hits": 3270,
     "fixtures": [
      "005-pre-combat",
      "006-in-combat",
@@ -103,9 +103,10 @@
     "db": 0,
     "m": 1,
     "x": 0,
-    "hits": 1,
+    "hits": 7,
     "fixtures": [
-     "008-overworld-mode7"
+     "008-overworld-mode7",
+     "011-worldmap-entry"
     ]
    }
   ],
@@ -130,7 +131,7 @@
     "db": 0,
     "m": 1,
     "x": 0,
-    "hits": 2286,
+    "hits": 4221,
     "fixtures": [
      "008-overworld-mode7",
      "009-first-free-roam",
@@ -158,9 +159,36 @@
     "db": 0,
     "m": 1,
     "x": 0,
-    "hits": 4086,
+    "hits": 5462,
     "fixtures": [
      "008-overworld-mode7",
+     "009-first-free-roam",
+     "011-worldmap-entry",
+     "014-baron-castle-exterior"
+    ]
+   }
+  ],
+  "verdict": "ok"
+ },
+ {
+  "id": "D00AA5A",
+  "name": "CheckTilePass_c",
+  "level": "L2",
+  "flags": [],
+  "contract": {
+   "mf": 1,
+   "xf": 0,
+   "dp": 1536,
+   "db": 0
+  },
+  "observed": [
+   {
+    "dp": 1536,
+    "db": 0,
+    "m": 1,
+    "x": 0,
+    "hits": 348,
+    "fixtures": [
      "009-first-free-roam",
      "011-worldmap-entry",
      "014-baron-castle-exterior"
@@ -186,9 +214,10 @@
     "db": 0,
     "m": 1,
     "x": 0,
-    "hits": 1200,
+    "hits": 2539,
     "fixtures": [
      "009-first-free-roam",
+     "011-worldmap-entry",
      "014-baron-castle-exterior"
     ]
    }
@@ -212,7 +241,7 @@
     "db": 0,
     "m": 1,
     "x": 0,
-    "hits": 4218,
+    "hits": 8298,
     "fixtures": [
      "005-pre-combat",
      "007-title-screen",
@@ -247,7 +276,7 @@
     "db": 126,
     "m": 1,
     "x": 0,
-    "hits": 36,
+    "hits": 72,
     "fixtures": [
      "005-pre-combat",
      "006-in-combat",
@@ -276,7 +305,7 @@
     "db": 0,
     "m": 1,
     "x": 0,
-    "hits": 2,
+    "hits": 4,
     "fixtures": [
      "005-pre-combat",
      "012-first-worldmap-combat"
@@ -302,7 +331,7 @@
     "db": 126,
     "m": 1,
     "x": 0,
-    "hits": 49,
+    "hits": 97,
     "fixtures": [
      "005-pre-combat",
      "006-in-combat",
@@ -329,7 +358,7 @@
     "db": 126,
     "m": 1,
     "x": 0,
-    "hits": 1944,
+    "hits": 3888,
     "fixtures": [
      "005-pre-combat",
      "006-in-combat",
@@ -356,7 +385,7 @@
     "db": 126,
     "m": 1,
     "x": 0,
-    "hits": 18,
+    "hits": 36,
     "fixtures": [
      "005-pre-combat",
      "006-in-combat",
@@ -383,7 +412,7 @@
     "db": 126,
     "m": 1,
     "x": 0,
-    "hits": 4,
+    "hits": 8,
     "fixtures": [
      "005-pre-combat",
      "006-in-combat"
@@ -409,7 +438,7 @@
     "db": 126,
     "m": 1,
     "x": 0,
-    "hits": 1,
+    "hits": 2,
     "fixtures": [
      "012-first-worldmap-combat"
     ]
@@ -436,7 +465,7 @@
     "db": 126,
     "m": 1,
     "x": 0,
-    "hits": 1,
+    "hits": 2,
     "fixtures": [
      "006-in-combat"
     ]
@@ -463,7 +492,7 @@
     "db": 126,
     "m": 1,
     "x": 0,
-    "hits": 1,
+    "hits": 2,
     "fixtures": [
      "006-in-combat"
     ]
@@ -488,7 +517,7 @@
     "db": 126,
     "m": 1,
     "x": 0,
-    "hits": 2,
+    "hits": 4,
     "fixtures": [
      "005-pre-combat",
      "012-first-worldmap-combat"
@@ -514,7 +543,7 @@
     "db": 126,
     "m": 1,
     "x": 0,
-    "hits": 34,
+    "hits": 68,
     "fixtures": [
      "005-pre-combat",
      "006-in-combat",
@@ -541,7 +570,7 @@
     "db": 126,
     "m": 1,
     "x": 0,
-    "hits": 15,
+    "hits": 30,
     "fixtures": [
      "005-pre-combat",
      "006-in-combat",
@@ -568,7 +597,7 @@
     "db": 126,
     "m": 1,
     "x": 0,
-    "hits": 22,
+    "hits": 44,
     "fixtures": [
      "005-pre-combat",
      "006-in-combat",
@@ -595,7 +624,7 @@
     "db": 126,
     "m": 1,
     "x": 0,
-    "hits": 12,
+    "hits": 24,
     "fixtures": [
      "005-pre-combat",
      "006-in-combat"
@@ -621,7 +650,7 @@
     "db": 126,
     "m": 1,
     "x": 0,
-    "hits": 6,
+    "hits": 12,
     "fixtures": [
      "005-pre-combat",
      "006-in-combat"
@@ -647,7 +676,7 @@
     "db": 126,
     "m": 1,
     "x": 0,
-    "hits": 10,
+    "hits": 20,
     "fixtures": [
      "005-pre-combat",
      "006-in-combat"
@@ -673,7 +702,7 @@
     "db": 126,
     "m": 1,
     "x": 0,
-    "hits": 6,
+    "hits": 12,
     "fixtures": [
      "005-pre-combat",
      "006-in-combat"
@@ -699,7 +728,7 @@
     "db": 126,
     "m": 1,
     "x": 0,
-    "hits": 6,
+    "hits": 12,
     "fixtures": [
      "005-pre-combat",
      "006-in-combat"
@@ -725,11 +754,38 @@
     "db": 126,
     "m": 1,
     "x": 0,
-    "hits": 1569,
+    "hits": 3138,
     "fixtures": [
      "005-pre-combat",
      "006-in-combat",
      "012-first-worldmap-combat"
+    ]
+   }
+  ],
+  "verdict": "ok"
+ },
+ {
+  "id": "D15B143",
+  "name": "TfrBGGfx_c",
+  "level": "L3",
+  "flags": [
+   "DMA_TRIGGER"
+  ],
+  "contract": {
+   "mf": 1,
+   "xf": 0,
+   "dp": 1536,
+   "db": 0
+  },
+  "observed": [
+   {
+    "dp": 1536,
+    "db": 0,
+    "m": 1,
+    "x": 0,
+    "hits": 2,
+    "fixtures": [
+     "011-worldmap-entry"
     ]
    }
   ],
@@ -754,9 +810,10 @@
     "db": 0,
     "m": 1,
     "x": 0,
-    "hits": 1,
+    "hits": 5,
     "fixtures": [
-     "008-overworld-mode7"
+     "008-overworld-mode7",
+     "011-worldmap-entry"
     ]
    }
   ],
@@ -779,7 +836,7 @@
     "db": 0,
     "m": 1,
     "x": 0,
-    "hits": 3619,
+    "hits": 7115,
     "fixtures": [
      "005-pre-combat",
      "007-title-screen",
@@ -788,6 +845,7 @@
      "010-castle-exit-anim",
      "011-worldmap-entry",
      "012-first-worldmap-combat",
+     "013-airship-dialogue-pre-combat",
      "014-baron-castle-exterior"
     ]
    }
@@ -852,22 +910,6 @@
    "xf": 0,
    "dp": 1536,
    "db": 0
-  },
-  "observed": [],
-  "verdict": "not_hit"
- },
- {
-  "id": "D00AA58",
-  "name": "CheckTilePass_c",
-  "level": "L2",
-  "flags": [
-   "DP_SENSITIVE"
-  ],
-  "contract": {
-   "mf": 1,
-   "xf": 0,
-   "dp": 0,
-   "db": 170
   },
   "observed": [],
   "verdict": "not_hit"
@@ -2512,22 +2554,6 @@
   "verdict": "not_hit"
  },
  {
-  "id": "D15B143",
-  "name": "TfrBGGfx_c",
-  "level": "L3",
-  "flags": [
-   "DMA_TRIGGER"
-  ],
-  "contract": {
-   "mf": 1,
-   "xf": 0,
-   "dp": 0,
-   "db": 177
-  },
-  "observed": [],
-  "verdict": "not_hit"
- },
- {
   "id": "D15B41B",
   "name": "GetDlgPtr1H_c",
   "level": "DELEG",
@@ -2984,9 +3010,10 @@
     "db": 0,
     "m": 1,
     "x": 0,
-    "hits": 11400,
+    "hits": 22703,
     "fixtures": [
      "009-first-free-roam",
+     "011-worldmap-entry",
      "014-baron-castle-exterior"
     ]
    }
@@ -3005,9 +3032,10 @@
     "db": 0,
     "m": 1,
     "x": 0,
-    "hits": 11400,
+    "hits": 22713,
     "fixtures": [
      "009-first-free-roam",
+     "011-worldmap-entry",
      "014-baron-castle-exterior"
     ]
    }
@@ -3026,9 +3054,21 @@
     "db": 5,
     "m": 0,
     "x": 0,
-    "hits": 394,
+    "hits": 788,
     "fixtures": [
      "002-combat"
+    ]
+   },
+   {
+    "dp": 1536,
+    "db": 0,
+    "m": 1,
+    "x": 0,
+    "hits": 348,
+    "fixtures": [
+     "009-first-free-roam",
+     "011-worldmap-entry",
+     "014-baron-castle-exterior"
     ]
    }
   ],
@@ -3046,7 +3086,7 @@
     "db": 0,
     "m": 1,
     "x": 0,
-    "hits": 4218,
+    "hits": 8300,
     "fixtures": [
      "005-pre-combat",
      "007-title-screen",
@@ -3085,7 +3125,7 @@
     "db": 126,
     "m": 1,
     "x": 0,
-    "hits": 16353,
+    "hits": 32719,
     "fixtures": [
      "005-pre-combat",
      "006-in-combat",
@@ -3107,7 +3147,7 @@
     "db": 126,
     "m": 1,
     "x": 0,
-    "hits": 74,
+    "hits": 148,
     "fixtures": [
      "005-pre-combat",
      "012-first-worldmap-combat"
@@ -3128,7 +3168,7 @@
     "db": 126,
     "m": 1,
     "x": 0,
-    "hits": 16481,
+    "hits": 32950,
     "fixtures": [
      "005-pre-combat",
      "006-in-combat",
@@ -3150,7 +3190,7 @@
     "db": 126,
     "m": 1,
     "x": 0,
-    "hits": 49050,
+    "hits": 98100,
     "fixtures": [
      "005-pre-combat",
      "006-in-combat",
@@ -3172,7 +3212,7 @@
     "db": 126,
     "m": 1,
     "x": 0,
-    "hits": 6540,
+    "hits": 13080,
     "fixtures": [
      "005-pre-combat",
      "006-in-combat",
@@ -3212,7 +3252,7 @@
     "db": 126,
     "m": 1,
     "x": 0,
-    "hits": 6958,
+    "hits": 13916,
     "fixtures": [
      "005-pre-combat",
      "006-in-combat",
@@ -3243,7 +3283,7 @@
     "db": 126,
     "m": 1,
     "x": 0,
-    "hits": 8175,
+    "hits": 16350,
     "fixtures": [
      "005-pre-combat",
      "006-in-combat",
@@ -3285,7 +3325,7 @@
     "db": 0,
     "m": 1,
     "x": 0,
-    "hits": 600,
+    "hits": 710,
     "fixtures": [
      "011-worldmap-entry"
     ]
@@ -3305,7 +3345,7 @@
     "db": 0,
     "m": 1,
     "x": 0,
-    "hits": 4219,
+    "hits": 8301,
     "fixtures": [
      "005-pre-combat",
      "007-title-screen",
@@ -3335,7 +3375,7 @@
     "db": 0,
     "m": 1,
     "x": 0,
-    "hits": 4218,
+    "hits": 8298,
     "fixtures": [
      "005-pre-combat",
      "007-title-screen",
@@ -3357,7 +3397,18 @@
   "level": "L1",
   "flags": [],
   "contract": null,
-  "observed": [],
+  "observed": [
+   {
+    "dp": 1536,
+    "db": 0,
+    "m": 1,
+    "x": 0,
+    "hits": 2,
+    "fixtures": [
+     "011-worldmap-entry"
+    ]
+   }
+  ],
   "verdict": "no_contract"
  },
  {
@@ -3374,7 +3425,7 @@
     "db": 19,
     "m": 1,
     "x": 0,
-    "hits": 1,
+    "hits": 2,
     "fixtures": [
      "001-scene-after-leaving"
     ]
@@ -3384,7 +3435,7 @@
     "db": 250,
     "m": 1,
     "x": 0,
-    "hits": 1,
+    "hits": 2,
     "fixtures": [
      "001-scene-after-leaving"
     ]
@@ -3394,7 +3445,7 @@
     "db": 122,
     "m": 1,
     "x": 0,
-    "hits": 1,
+    "hits": 2,
     "fixtures": [
      "001-scene-after-leaving"
     ]
@@ -3404,7 +3455,7 @@
     "db": 171,
     "m": 1,
     "x": 0,
-    "hits": 4,
+    "hits": 8,
     "fixtures": [
      "001-scene-after-leaving",
      "003-world-map",
@@ -3416,7 +3467,7 @@
     "db": 142,
     "m": 1,
     "x": 0,
-    "hits": 1,
+    "hits": 2,
     "fixtures": [
      "003-world-map"
     ]
@@ -3426,7 +3477,7 @@
     "db": 10,
     "m": 1,
     "x": 0,
-    "hits": 1,
+    "hits": 2,
     "fixtures": [
      "003-world-map"
     ]
@@ -3436,7 +3487,7 @@
     "db": 39,
     "m": 1,
     "x": 0,
-    "hits": 1,
+    "hits": 2,
     "fixtures": [
      "003-world-map"
     ]
@@ -3446,7 +3497,7 @@
     "db": 34,
     "m": 1,
     "x": 0,
-    "hits": 1,
+    "hits": 2,
     "fixtures": [
      "003-world-map"
     ]
@@ -3456,7 +3507,7 @@
     "db": 16,
     "m": 1,
     "x": 0,
-    "hits": 1,
+    "hits": 2,
     "fixtures": [
      "004-menu"
     ]
@@ -3466,7 +3517,7 @@
     "db": 227,
     "m": 1,
     "x": 0,
-    "hits": 1,
+    "hits": 2,
     "fixtures": [
      "004-menu"
     ]
@@ -3476,7 +3527,7 @@
     "db": 218,
     "m": 1,
     "x": 0,
-    "hits": 1,
+    "hits": 2,
     "fixtures": [
      "004-menu"
     ]
@@ -3486,7 +3537,7 @@
     "db": 18,
     "m": 1,
     "x": 0,
-    "hits": 1,
+    "hits": 2,
     "fixtures": [
      "004-menu"
     ]
@@ -3496,7 +3547,7 @@
     "db": 5,
     "m": 1,
     "x": 0,
-    "hits": 1,
+    "hits": 2,
     "fixtures": [
      "004-menu"
     ]
@@ -3506,7 +3557,7 @@
     "db": 41,
     "m": 1,
     "x": 0,
-    "hits": 1,
+    "hits": 2,
     "fixtures": [
      "004-menu"
     ]
@@ -3516,7 +3567,7 @@
     "db": 0,
     "m": 1,
     "x": 0,
-    "hits": 4218,
+    "hits": 8298,
     "fixtures": [
      "005-pre-combat",
      "007-title-screen",
