@@ -33,8 +33,8 @@
       → **L2**); 2 compile_error remain.
 - [ ] 🤖 Handle the 2 `fail` (real divergences): `CheckMenu_c` (1/200),
       `TfrBGAnimGfx_c` (2/200, DMA) — via WF-VALID
-- [ ] 🤖 2 `compile_error`: `RandXA_c` (depends on `Div16_c` not included + 3-arg
-      call); `TfrVRAM_c` (`#include dispatch_all.h` missing from the spike build)
+- [ ] 🤖 2 `compile_error`: ~~`RandXA_c`~~ (L2 2026-10-10, strict-equivalent,
+      F15); `TfrVRAM_c` (now hits CONTRACT_MMIO_MISMATCH, ESCALATION T2)
 - [ ] 🤖 Add a CONTRACT to the 8 `no_contract`; custom spikes for the 11
       `no_source` (btlgfx bundled in `battle/btlgfx_prim.c`/`btlgfx_monsters.c`)
 - [ ] 🤖 Fill in Table 2 (oracle validation) as WF-VALID progresses
@@ -53,6 +53,13 @@
 - [ ] 🤖 Wire `generate_spike.py` onto the current `port/` tree and re-validate
       in bulk (credit the L2s in the registry — cf. §5 Reprise)
 - [ ] 🤖 Automate the release oracle (GDB batch) to minimize the human (WF-RELEASE §5)
+- [ ] 🤖 **Strict re-audit of every L2** (F15, 2026-10-10): re-run each L2
+      spike under `FF4_SPIKE_STRICT=1`, histogram the diverging fields,
+      then fix or justify (`// STRICT:` line) — contract-only spikes proved
+      blind to exit-state divergence on `Div16_c`.
+- [ ] 🤖 **Spike liveness (mutation) check**: prove each spike can FAIL by
+      running it against a deliberately broken body — vacuous spikes
+      (compare-0-to-0, unfuzzed inputs) pass anything.
 
 ## 4. MemPalace documentation
 

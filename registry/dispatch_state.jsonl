@@ -44,7 +44,7 @@
 {"id": "D03805F", "pc": "03805F", "addr_display": "$03:805F", "name": "DrawMP_c", "module": "battle", "level": "L2", "notes": "fuzzed spike, 0 fails", "flags": ["WAIT_BLOCKING"], "updated": null}
 {"id": "D038085", "pc": "038085", "addr_display": "$03:8085", "name": "ExecBtlGfx_c", "module": "battle", "level": "RETIRED", "notes": "BLOCKING animation (Wait*) \u2014 removed from the dispatch 2026-06-30, must remain interpreted (cf. distribution above)", "flags": [], "updated": null}
 {"id": "D0382CB", "pc": "0382CB", "addr_display": "$03:82CB", "name": "InitHWRegs_c", "module": "field", "level": "L3", "notes": "wram_diff=0 verified + hardcore PASS", "flags": ["DMA_TRIGGER"], "updated": null}
-{"id": "D038379", "pc": "038379", "addr_display": "$03:8379", "name": "RandXA_c", "module": "battle", "level": "L1", "notes": "spike does not compile (inter-routine dependency / include)", "flags": [], "updated": null}
+{"id": "D038379", "pc": "038379", "addr_display": "$03:8379", "name": "RandXA_c", "module": "battle", "level": "L2", "notes": "fuzzed spike, 5000/5000 pass (qualify.py) (evidence: ff4-port/translator/runs/qualify_evidence/D038379_RandXA.txt)", "flags": [], "updated": "2026-10-10"}
 {"id": "D0383B9", "pc": "0383B9", "addr_display": "$03:83B9", "name": "Mult16_c", "module": "battle", "level": "L3", "notes": "wram_diff=0 verified (oracle artefact)", "flags": [], "updated": null}
 {"id": "D0383E0", "pc": "0383E0", "addr_display": "$03:83E0", "name": "Mult8_c", "module": "battle", "level": "L2", "notes": "fuzzed spike, 0 fails", "flags": [], "updated": null}
 {"id": "D038407", "pc": "038407", "addr_display": "$03:8407", "name": "Div16_c", "module": "battle", "level": "L2", "notes": "fuzzed spike, 0 fails", "flags": [], "updated": null}

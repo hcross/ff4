@@ -100,6 +100,32 @@ ROM for `parity_compare`), not to recompile the C.
 > `REVERSED_FUNCTION` address) and add a one-line spike-only `void <stem>_c`
 > shim. Evidence: `ff4-port/translator/runs/D009F6E_updatelocaltiles_spike.txt`.
 
+#### Strict full-state mode — run it before trusting a green spike
+
+The contract compare observes **one** thing: a single `output_ram` slot, or
+`SPIKE_OUTPUT_REG` registers, or the WRAM region — never all of them. But the
+dispatch hook (`cpu.c`) restores **no** CPU state after a dispatched body: the
+interpreted caller resumes with whatever A/X/Y/NZVC/m/x the C left behind. A
+body can therefore pass its spike while diverging on everything the contract
+does not name (F15: `Div16_c` passed 2000/2000 while getting the remainder,
+the rotated dividend, A, X, m and NZV wrong at exit). Every generated spike
+carries a strict mode:
+
+```sh
+FF4_SPIKE_STRICT=1    ./parity/ff4-spike-<suffix>-<name> <rom> 20000   # report
+FF4_SPIKE_STRICT=gate ./parity/ff4-spike-<suffix>-<name> <rom> 20000   # also fail exit code
+```
+
+It diffs the whole post-call WRAM (stack page + `SPIKE_MASK` excluded) and
+A/X/Y/DP/DB/m/x/NZVC, and seeds the registers the CONTRACT does not declare
+with per-trial noise (otherwise "never sets X=0 at exit" hides whenever X was
+already 0). The trailing `=== strict ===` line histograms which fields
+diverged. A strict failure is not automatically a bug — a register the callers
+provably overwrite is dead — but each field must be either fixed or justified;
+record the verdict as a `// STRICT:` line next to the CONTRACT. Size `--run`
+trials to the rarest path (RandXA's full-range branch is 1/65536 → 400k).
+Range inputs (`0x1900..19FF=label`) are fuzzed byte by byte.
+
 ### 5. Boundary coverage *(to be formalised on top of the spikes)*
 The spike covers the state reached by the test savestate(s). For **edge
 cases** (0, max values, incoming carry, overflows, extreme indices)

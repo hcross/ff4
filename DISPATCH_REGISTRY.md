@@ -32,7 +32,7 @@ leaving 2 compile_error (inter-routine dependency / include).
 > isolated than L3 (in-game oracle). **FAILs** = real divergences to investigate (WF-VALID).
 
 <!-- REGISTRY:DISTRIBUTION:START -->
-**Distribution** (generated from `registry/dispatch_state.jsonl` — do not hand-edit; edit the JSONL via `registry/registry_promote.py` and re-run `python registry/render_registry.py`): L1=12 · L2=170 · L3=7 · EXCL=3 · DELEG=12 · RETIRED=11 (total 204).
+**Distribution** (generated from `registry/dispatch_state.jsonl` — do not hand-edit; edit the JSONL via `registry/registry_promote.py` and re-run `python registry/render_registry.py`): L1=11 · L2=171 · L3=7 · EXCL=3 · DELEG=12 · RETIRED=11 (total 204).
 <!-- REGISTRY:DISTRIBUTION:END -->
 `ExecBtlGfx` (D038085) REMOVED from the dispatch on 2026-06-30 (206→205): BLOCKING
 animation (multi-frame WaitVblank/WaitFrame) incompatible with the synchronous
@@ -118,7 +118,7 @@ The 23 L1: 11 `no_source` (bundled btlgfx → custom spike), 8 `no_contract`
 | `D03805F` | $03:805F | `DrawMP_c` | battle | L2 | fuzzed spike, 0 fails |
 | `D038085` | $03:8085 | `ExecBtlGfx_c` | battle | RETIRED | BLOCKING animation (Wait*) — removed from the dispatch 2026-06-30, must remain interpreted (cf. distribution above) |
 | `D0382CB` | $03:82CB | `InitHWRegs_c` | field | L3 | wram_diff=0 verified + hardcore PASS |
-| `D038379` | $03:8379 | `RandXA_c` | battle | L1 | spike does not compile (inter-routine dependency / include) |
+| `D038379` | $03:8379 | `RandXA_c` | battle | L2 | fuzzed spike, 5000/5000 pass (qualify.py) (evidence: ff4-port/translator/runs/qualify_evidence/D038379_RandXA.txt) |
 | `D0383B9` | $03:83B9 | `Mult16_c` | battle | L3 | wram_diff=0 verified (oracle artefact) |
 | `D0383E0` | $03:83E0 | `Mult8_c` | battle | L2 | fuzzed spike, 0 fails |
 | `D038407` | $03:8407 | `Div16_c` | battle | L2 | fuzzed spike, 0 fails |
