@@ -8,7 +8,7 @@ A dispatch entry runs only when a JSR/JSL targets exactly its PC. `DEAD` = no di
 | DEAD_PADDING | 0 |
 | DEAD | 120 |
 | native_callee | 1 |
-| static_only | 31 |
+| static_only | 32 |
 | live | 43 |
 
 | ID | Function | Verdict | Static callers | Fixture hits | Caller at PC± | C callers | ROM bytes |
@@ -139,6 +139,7 @@ A dispatch entry runs only when a JSR/JSL targets exactly its PC. `DEAD` = no di
 | D00885E | `_00885e_c` | static_only | 2 | 0 |  |  | `a9 80 8d 15 21 a6` |
 | D009FC2 | `GetTileProps_c` | static_only | 5 | 0 |  | UpdateLocalTiles | `ad 00 17 c9 03 f0` |
 | D00BDB2 | `CalcObjScreenPos_c` | static_only | 1 | 0 |  |  | `da 5a 64 d7 a6 af` |
+| D00EE37 | `TfrInvertPal_c` | static_only | 1 | 0 |  |  | `9c 0b 42 9c 21 21` |
 | D00FFBC | `InitCharProp_ext_c` | static_only | 1 | 0 |  |  | `20 f0 94 6b 46 49` |
 | D02DA73 | `DrawMonsterSprite_c` | static_only | 1 | 0 |  |  | `da 5a a5 47 aa bd` |
 | D02DAFE | `InitMonsterAnim_c` | static_only | 1 | 0 |  |  | `da a5 47 0a 0a aa` |

@@ -281,6 +281,18 @@
       "source_label": "Special_23 (containing; pc not on a label)"
     },
     {
+      "id": "D00EE37",
+      "pc": "00EE37",
+      "name": "TfrInvertPal_c",
+      "level": "L2",
+      "start": "00EE37",
+      "end": "00EE5D",
+      "file_start": 28215,
+      "file_end": 28253,
+      "resolved": true,
+      "source_label": "TfrInvertPal"
+    },
+    {
       "id": "D00F533",
       "pc": "00F533",
       "name": "UpdateBG2Scroll_c",

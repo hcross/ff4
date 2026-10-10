@@ -862,14 +862,12 @@
   "id": "D008302",
   "name": "UpdatePlayerSpeed_c",
   "level": "L2",
-  "flags": [
-   "DP_SENSITIVE"
-  ],
+  "flags": [],
   "contract": {
    "mf": 1,
    "xf": 0,
-   "dp": 0,
-   "db": 131
+   "dp": 1536,
+   "db": 0
   },
   "observed": [],
   "verdict": "not_hit"
@@ -1010,6 +1008,22 @@
   "verdict": "not_hit"
  },
  {
+  "id": "D00EE37",
+  "name": "TfrInvertPal_c",
+  "level": "L2",
+  "flags": [
+   "DMA_TRIGGER"
+  ],
+  "contract": {
+   "mf": 1,
+   "xf": 0,
+   "dp": 1536,
+   "db": 0
+  },
+  "observed": [],
+  "verdict": "not_hit"
+ },
+ {
   "id": "D00FFBC",
   "name": "InitCharProp_ext_c",
   "level": "L2",
@@ -1019,20 +1033,6 @@
    "xf": 0,
    "dp": 0,
    "db": 0
-  },
-  "observed": [],
-  "verdict": "not_hit"
- },
- {
-  "id": "D00FFE0",
-  "name": "Vectors_c",
-  "level": "L2",
-  "flags": [],
-  "contract": {
-   "mf": 1,
-   "xf": 0,
-   "dp": 0,
-   "db": 255
   },
   "observed": [],
   "verdict": "not_hit"
@@ -1911,140 +1911,6 @@
    "xf": 0,
    "dp": 0,
    "db": 126
-  },
-  "observed": [],
-  "verdict": "not_hit"
- },
- {
-  "id": "D12E7D3",
-  "name": "EventCmd_d7_c",
-  "level": "L2",
-  "flags": [
-   "TAIL_JML",
-   "DP_SENSITIVE"
-  ],
-  "contract": {
-   "mf": 1,
-   "xf": 0,
-   "dp": 0,
-   "db": 231
-  },
-  "observed": [],
-  "verdict": "not_hit"
- },
- {
-  "id": "D12EB47",
-  "name": "EventCmd_e0_c",
-  "level": "L2",
-  "flags": [
-   "TAIL_JML",
-   "DP_SENSITIVE"
-  ],
-  "contract": {
-   "mf": 1,
-   "xf": 0,
-   "dp": 0,
-   "db": 0
-  },
-  "observed": [],
-  "verdict": "not_hit"
- },
- {
-  "id": "D12EC06",
-  "name": "EventCmd_e6_c",
-  "level": "L2",
-  "flags": [
-   "DP_SENSITIVE"
-  ],
-  "contract": {
-   "mf": 1,
-   "xf": 0,
-   "dp": 0,
-   "db": 236
-  },
-  "observed": [],
-  "verdict": "not_hit"
- },
- {
-  "id": "D12EC3E",
-  "name": "EventCmd_dd_c",
-  "level": "L2",
-  "flags": [
-   "TAIL_JML",
-   "DP_SENSITIVE"
-  ],
-  "contract": {
-   "mf": 1,
-   "xf": 0,
-   "dp": 0,
-   "db": 236
-  },
-  "observed": [],
-  "verdict": "not_hit"
- },
- {
-  "id": "D12ED1D",
-  "name": "SetCurrGil_c",
-  "level": "L2",
-  "flags": [
-   "DP_SENSITIVE"
-  ],
-  "contract": {
-   "mf": 1,
-   "xf": 0,
-   "dp": 0,
-   "db": 237
-  },
-  "observed": [],
-  "verdict": "not_hit"
- },
- {
-  "id": "D12EE1C",
-  "name": "EventCmd_d0_c",
-  "level": "L2",
-  "flags": [
-   "TAIL_JML",
-   "DP_SENSITIVE"
-  ],
-  "contract": {
-   "mf": 1,
-   "xf": 0,
-   "dp": 0,
-   "db": 238
-  },
-  "observed": [],
-  "verdict": "not_hit"
- },
- {
-  "id": "D12EE25",
-  "name": "EventCmd_d1_c",
-  "level": "L2",
-  "flags": [
-   "WAIT_BLOCKING",
-   "TAIL_JML",
-   "DP_SENSITIVE"
-  ],
-  "contract": {
-   "mf": 1,
-   "xf": 0,
-   "dp": 0,
-   "db": 238
-  },
-  "observed": [],
-  "verdict": "not_hit"
- },
- {
-  "id": "D12EE35",
-  "name": "TfrInvertPal_c",
-  "level": "L2",
-  "flags": [
-   "DMA_TRIGGER"
-  ],
-  "contract": {
-   "mf": 1,
-   "xf": 0,
-   "dp": 0,
-   "db": 238
   },
   "observed": [],
   "verdict": "not_hit"
