@@ -57,10 +57,12 @@
       spike under `FF4_SPIKE_STRICT=1`, histogram the diverging fields,
       then fix or justify (`// STRICT:` line) — contract-only spikes proved
       blind to exit-state divergence on `Div16_c`.
-- [ ] 🧑/🤖 **Dead dispatch entries (F16, 2026-10-10)**: 129/204 entries can
-      never fire (`registry/DEAD_ENTRIES.md`). Decide via ADR: retire,
-      re-key to the true PC (off-by-N / wrong bank), and/or hook
-      `jsr (abs,x)`/`jmp (abs,x)` behind a per-routine gate.
+- [x] 🧑 **Dead dispatch entries (F16)** — decided 2026-10-10, ADR-009 in
+      ff4-port: retire padding entries (done: 9, table 204 → 195), re-key
+      proven ones progressively, hook jump tables only after measuring.
+- [ ] 🤖 Re-key the proven off-by-N / wrong-bank entries one by one (strict
+      spike at the true PC, oracle, device) — start with TfrInvertPal
+      `$00:EE37` and the 5 off-by-2 field routines (`registry/DEAD_ENTRIES.md`).
 - [ ] 🤖 **Entry-state mismatches (2026-10-10)**: 11 CONTRACTs whose
       `entry_mode` the game contradicts (`registry/ENTRY_STATE.md`) —
       systematic LLM error: `db=` copied from the routine's address high

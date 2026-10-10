@@ -32,7 +32,7 @@ leaving 2 compile_error (inter-routine dependency / include).
 > isolated than L3 (in-game oracle). **FAILs** = real divergences to investigate (WF-VALID).
 
 <!-- REGISTRY:DISTRIBUTION:START -->
-**Distribution** (generated from `registry/dispatch_state.jsonl` — do not hand-edit; edit the JSONL via `registry/registry_promote.py` and re-run `python registry/render_registry.py`): L1=11 · L2=171 · L3=7 · EXCL=3 · DELEG=12 · RETIRED=11 (total 204).
+**Distribution** (generated from `registry/dispatch_state.jsonl` — do not hand-edit; edit the JSONL via `registry/registry_promote.py` and re-run `python registry/render_registry.py`): L1=11 · L2=162 · L3=7 · EXCL=3 · DELEG=12 · RETIRED=20 (total 195).
 <!-- REGISTRY:DISTRIBUTION:END -->
 `ExecBtlGfx` (D038085) REMOVED from the dispatch on 2026-06-30 (206→205): BLOCKING
 animation (multi-frame WaitVblank/WaitFrame) incompatible with the synchronous
@@ -98,7 +98,7 @@ The 23 L1: 11 `no_source` (bundled btlgfx → custom spike), 8 `no_contract`
 | `D00F533` | $00:F533 | `UpdateBG2Scroll_c` | field | RETIRED | dead entry -- $00:F533 is not an instruction boundary (mid-operand byte of the preceding routine's LDX $43 at $00:F532; $00:F534=RTS), confirmed by direct ROM inspection. Never a valid call target. The disassembly's two-entry model (F533=full/F535=skip) was off by 2 bytes; see D00F535 for the real, sole entry point. Retired 2026-07-05. |
 | `D00F535` | $00:F535 | `UpdateBG2ScrollSkip_c` | field | L2 | FIXED: guard source was cpu->a (wrong), changed to ram[dp+0xC9] matching the real $00:F535 asm (LDA $C9), confirmed by direct ROM-byte inspection. Dead sibling entry D00F533 retired same day. Region-compare spike 5000/5000 pass. (evidence: ff4-port/translator/runs/D00F535_updatebg2scrollskip_FIXED_revalidation.txt) |
 | `D00FFBC` | $00:FFBC | `InitCharProp_ext_c` | field | L2 | hardcore PASS |
-| `D00FFE0` | $00:FFE0 | `Vectors_c` | field | L2 | fuzzed spike, 0 fails |
+| `D00FFE0` | $00:FFE0 | `Vectors_c` | field | RETIRED | never fired: PC holds $FF padding, no JSR/JSL target (F16, ADR-009); real routine in bank $00, re-key needs requalification (evidence: registry/DEAD_ENTRIES.md) |
 | `D018010` | $01:8010 | `UpdateCtrlField_ext_c` | menu | L2 | hardcore PASS; input reimpl. (F5) |
 | `D01CA85` | $01:CA85 | `TfrVRAM_c` | field | L1 | spike does not compile (inter-routine dependency / include) |
 | `D01D718` | $01:D718 | `FadeIn_c` | field | DELEG | delegate wrapper — equivalent by construction (executes the asm) |
@@ -196,14 +196,14 @@ The 23 L1: 11 `no_source` (bundled btlgfx → custom spike), 8 `no_contract`
 | `D12E35B` | $12:E35B | `WaitVblankEvent_c` | field | L2 | fuzzed spike, 0 fails |
 | `D12E55A` | $12:E55A | `FindEventTerminator_c` | field | DELEG | delegate wrapper — equivalent by construction (executes the asm) |
 | `D12E613` | $12:E613 | `EventCmd_d8_c` | field | L2 | fuzzed spike, 0 fails |
-| `D12E7D3` | $12:E7D3 | `EventCmd_d7_c` | field | L2 | fuzzed spike, 0 fails |
-| `D12EB47` | $12:EB47 | `EventCmd_e0_c` | field | L2 | fuzzed spike, 0 fails |
-| `D12EC06` | $12:EC06 | `EventCmd_e6_c` | field | L2 | fuzzed spike, 0 fails |
-| `D12EC3E` | $12:EC3E | `EventCmd_dd_c` | field | L2 | fuzzed spike, 0 fails |
-| `D12ED1D` | $12:ED1D | `SetCurrGil_c` | field | L2 | fuzzed spike, 0 fails |
-| `D12EE1C` | $12:EE1C | `EventCmd_d0_c` | field | L2 | fuzzed spike, 0 fails |
-| `D12EE25` | $12:EE25 | `EventCmd_d1_c` | field | L2 | fuzzed spike, 0 fails |
-| `D12EE35` | $12:EE35 | `TfrInvertPal_c` | field | L2 | fuzzed spike, 0 fails |
+| `D12E7D3` | $12:E7D3 | `EventCmd_d7_c` | field | RETIRED | never fired: PC holds $FF padding, no JSR/JSL target (F16, ADR-009); real routine in bank $00, re-key needs requalification (evidence: registry/DEAD_ENTRIES.md) |
+| `D12EB47` | $12:EB47 | `EventCmd_e0_c` | field | RETIRED | never fired: PC holds $FF padding, no JSR/JSL target (F16, ADR-009); real routine in bank $00, re-key needs requalification (evidence: registry/DEAD_ENTRIES.md) |
+| `D12EC06` | $12:EC06 | `EventCmd_e6_c` | field | RETIRED | never fired: PC holds $FF padding, no JSR/JSL target (F16, ADR-009); real routine in bank $00, re-key needs requalification (evidence: registry/DEAD_ENTRIES.md) |
+| `D12EC3E` | $12:EC3E | `EventCmd_dd_c` | field | RETIRED | never fired: PC holds $FF padding, no JSR/JSL target (F16, ADR-009); real routine in bank $00, re-key needs requalification (evidence: registry/DEAD_ENTRIES.md) |
+| `D12ED1D` | $12:ED1D | `SetCurrGil_c` | field | RETIRED | never fired: PC holds $FF padding, no JSR/JSL target (F16, ADR-009); real routine in bank $00, re-key needs requalification (evidence: registry/DEAD_ENTRIES.md) |
+| `D12EE1C` | $12:EE1C | `EventCmd_d0_c` | field | RETIRED | never fired: PC holds $FF padding, no JSR/JSL target (F16, ADR-009); real routine in bank $00, re-key needs requalification (evidence: registry/DEAD_ENTRIES.md) |
+| `D12EE25` | $12:EE25 | `EventCmd_d1_c` | field | RETIRED | never fired: PC holds $FF padding, no JSR/JSL target (F16, ADR-009); real routine in bank $00, re-key needs requalification (evidence: registry/DEAD_ENTRIES.md) |
+| `D12EE35` | $12:EE35 | `TfrInvertPal_c` | field | RETIRED | never fired: PC holds $FF padding, no JSR/JSL target (F16, ADR-009); real routine in bank $00, re-key needs requalification (evidence: registry/DEAD_ENTRIES.md) |
 | `D13BFE3` | $13:BFE3 | `_00bfe3_c` | field | L2 | fuzzed spike, 0 fails |
 | `D13C11F` | $13:C11F | `ReloadNPCs_c` | field | L2 | fuzzed spike, 0 fails |
 | `D13D730` | $13:D730 | `LoadTheEndGfx_c` | cutscene | L2 | fuzzed spike, 0 fails |

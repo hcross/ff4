@@ -5,7 +5,7 @@ A dispatch entry runs only when a JSR/JSL targets exactly its PC. `DEAD` = no di
 
 | Verdict | Count |
 |---|---|
-| DEAD_PADDING | 9 |
+| DEAD_PADDING | 0 |
 | DEAD | 120 |
 | native_callee | 1 |
 | static_only | 31 |
@@ -13,15 +13,6 @@ A dispatch entry runs only when a JSR/JSL targets exactly its PC. `DEAD` = no di
 
 | ID | Function | Verdict | Static callers | Fixture hits | Caller at PC± | C callers | ROM bytes |
 |---|---|---|---|---|---|---|---|
-| D00FFE0 | `Vectors_c` | DEAD_PADDING | 0 | 0 |  |  | `ff ff ff ff ff ff` |
-| D12E7D3 | `EventCmd_d7_c` | DEAD_PADDING | 0 | 0 |  |  | `ff ff ff ff ff ff` |
-| D12EB47 | `EventCmd_e0_c` | DEAD_PADDING | 0 | 0 |  |  | `ff ff ff ff ff ff` |
-| D12EC06 | `EventCmd_e6_c` | DEAD_PADDING | 0 | 0 |  |  | `ff ff ff ff ff ff` |
-| D12EC3E | `EventCmd_dd_c` | DEAD_PADDING | 0 | 0 |  |  | `ff ff ff ff ff ff` |
-| D12ED1D | `SetCurrGil_c` | DEAD_PADDING | 0 | 0 |  |  | `ff ff ff ff ff ff` |
-| D12EE1C | `EventCmd_d0_c` | DEAD_PADDING | 0 | 0 |  |  | `ff ff ff ff ff ff` |
-| D12EE25 | `EventCmd_d1_c` | DEAD_PADDING | 0 | 0 |  |  | `ff ff ff ff ff ff` |
-| D12EE35 | `TfrInvertPal_c` | DEAD_PADDING | 0 | 0 |  |  | `ff ff ff ff ff ff` |
 | D00808E | `AfterBattle_c` | DEAD | 0 | 0 |  |  | `22 df c8 15 20 02` |
 | D0080A0 | `FieldMain_c` | DEAD | 0 | 0 |  |  | `64 79 64 7a 64 7b` |
 | D00AA58 | `CheckTilePass_c` | DEAD | 0 | 0 | +2 |  | `d4 60 a5 b1 f0 03` |

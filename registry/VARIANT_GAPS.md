@@ -29,7 +29,7 @@ moment it enters the table.
 
 ## FF4 J2e EN v3.21 (`j2e-en-v321`, CRC32 `F135CAE6`)
 
-67 of 204 live table entries gated (13 proven invalidations, 54 fail-closed); 12 DELEG wrappers exempt. Patch footprint: 89473 bytes over 4886 ranges.
+58 of 195 live table entries gated (12 proven invalidations, 46 fail-closed); 12 DELEG wrappers exempt. Patch footprint: 89473 bytes over 4886 ranges.
 
 Spike sanity (j2e-en-v321): 94/125 not-gated entries confirmed by `patches/spike_check.py`; 12 have no locatable/CONTRACT-bearing spike source; 19 not yet checked (`python3 patches/spike_check.py --sweep --variant j2e-en-v321`).
 
@@ -41,7 +41,6 @@ Spike sanity (j2e-en-v321): 94/125 not-gated entries confirmed by `patches/spike
 | D00883D | `_00883d_c` | L1 | code range modified |
 | D00885E | `_00885e_c` | L1 | code range modified |
 | D00FFBC | `InitCharProp_ext_c` | L2 | code range modified |
-| D00FFE0 | `Vectors_c` | L2 | code range modified |
 | D01DFD2 | `LoadBattleSpeedPosText_c` | L2 | code range modified |
 | D02A491 | `IncrTextPtr_c` | L2 | code range modified |
 | D02DDDC | `UpdateMonsterAnim_c` | L1 | code range modified |
@@ -66,14 +65,6 @@ Spike sanity (j2e-en-v321): 94/125 not-gated entries confirmed by `patches/spike
 | D0E8B3C | `CheckBattle_c` | L2 |
 | D12E35B | `WaitVblankEvent_c` | L2 |
 | D12E613 | `EventCmd_d8_c` | L2 |
-| D12E7D3 | `EventCmd_d7_c` | L2 |
-| D12EB47 | `EventCmd_e0_c` | L2 |
-| D12EC06 | `EventCmd_e6_c` | L2 |
-| D12EC3E | `EventCmd_dd_c` | L2 |
-| D12ED1D | `SetCurrGil_c` | L2 |
-| D12EE1C | `EventCmd_d0_c` | L2 |
-| D12EE25 | `EventCmd_d1_c` | L2 |
-| D12EE35 | `TfrInvertPal_c` | L2 |
 | D13BFE3 | `_00bfe3_c` | L2 |
 | D13C11F | `ReloadNPCs_c` | L2 |
 | D1585AB | `InitWorld_c` | L2 |
