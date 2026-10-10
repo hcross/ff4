@@ -5,31 +5,28 @@ Observed with `ff4-port/desktop/ff4-entry-probe` over 14 fixtures × 600 frames,
 
 | Verdict | Count |
 |---|---|
-| MISMATCH | 11 |
-| ok | 17 |
+| MISMATCH | 2 |
+| ok | 26 |
 | not_hit | 143 |
 | no_contract | 25 |
 
 | ID | Routine | Level | Verdict | CONTRACT entry_mode | Observed (dp db m x : hits) |
 |---|---|---|---|---|---|
-| D00834E | `InitMapRAM_c` | L3 | MISMATCH (dp) | mf=1 xf=0 dp=C db=0 | 0600 00 1 0 : 1 |
-| D018010 | `UpdateCtrlField_ext_c` | L2 | MISMATCH (db,dp,mf) | mf=0 xf=0 dp=0 db=7E | 0600 00 1 0 : 4218 |
-| D0382CB | `InitHWRegs_c` | L3 | MISMATCH (dp) | mf=1 xf=0 dp=0 db=0 | 0600 00 1 0 : 2 |
-| D0383B9 | `Mult16_c` | L3 | MISMATCH (mf) | mf=0 xf=0 dp=0 db=7E | 0000 7E 1 0 : 437<br>0000 7E 0 0 : 2 |
-| D038407 | `Div16_c` | L2 | MISMATCH (mf) | mf=0 xf=0 dp=0 db=7E | 0000 7E 1 0 : 18 |
-| D0384E3 | `Add16_c` | L2 | MISMATCH (mf) | mf=0 xf=0 dp=0 db=7E | 0000 7E 1 0 : 4 |
-| D0387D8 | `CheckFanfare_c` | L2 | MISMATCH (mf) | mf=0 xf=0 dp=0 db=7E | 0000 7E 1 0 : 1 |
-| D03FE03 | `TfrSprites_c` | EXCL | MISMATCH (db,dp) | mf=1 xf=0 dp=0 db=FE | 0000 7E 1 0 : 1635<br>114C 11 1 0 : 1 |
-| D14FD03 | `UpdateCtrl_ext_c` | L2 | MISMATCH (db,dp) | mf=1 xf=0 dp=0 db=FD | 0037 7E 1 0 : 1569 |
-| D15C144 | `_15c144_c` | L2 | MISMATCH (dp) | mf=1 xf=0 dp=0 db=0 | 0600 00 1 0 : 1 |
-| D15C23D | `_15c23d_c` | L3 | MISMATCH (dp) | mf=1 xf=0 dp=0 db=0 | 0600 00 1 0 : 3619 |
+| D0383B9 | `Mult16_c` | L3 | MISMATCH (mf) | mf=1 xf=0 dp=0 db=7E | 0000 7E 1 0 : 437<br>0000 7E 0 0 : 2 |
+| D03FE03 | `TfrSprites_c` | EXCL | MISMATCH (db,dp) | mf=1 xf=0 dp=0 db=7E | 0000 7E 1 0 : 1635<br>114C 11 1 0 : 1 |
+| D00834E | `InitMapRAM_c` | L3 | ok | mf=1 xf=0 dp=600 db=0 | 0600 00 1 0 : 1 |
 | D009179 | `ResetAllSprites_c` | L2 | ok | mf=1 xf=0 dp=600 db=0 | 0600 00 1 0 : 2286 |
 | D009F6E | `UpdateLocalTiles_c` | L2 | ok | mf=1 xf=0 dp=600 db=0 | 0600 00 1 0 : 4086 |
 | D00BB6A | `DrawNpcs_c` | L2 | ok | mf=1 xf=0 dp=600 db=0 | 0600 00 1 0 : 1200 |
+| D018010 | `UpdateCtrlField_ext_c` | L2 | ok | mf=1 xf=0 dp=600 db=0 | 0600 00 1 0 : 4218 |
 | D03805F | `DrawMP_c` | L2 | ok | mf=1 xf=0 dp=0 db=7E | 0000 7E 1 0 : 36 |
+| D0382CB | `InitHWRegs_c` | L3 | ok | mf=1 xf=0 dp=600 db=0 | 0600 00 1 0 : 2 |
 | D038379 | `RandXA_c` | L2 | ok | mf=1 xf=0 dp=0 db=7E | 0000 7E 1 0 : 49 |
 | D0383E0 | `Mult8_c` | L2 | ok | mf=1 xf=0 dp=0 db=7E | 0000 7E 1 0 : 1944 |
+| D038407 | `Div16_c` | L2 | ok | mf=1 xf=0 dp=0 db=7E | 0000 7E 1 0 : 18 |
+| D0384E3 | `Add16_c` | L2 | ok | mf=1 xf=0 dp=0 db=7E | 0000 7E 1 0 : 4 |
 | D03858B | `Rand99_c` | L2 | ok | mf=1 xf=0 dp=0 db=7E | 0000 7E 1 0 : 1 |
+| D0387D8 | `CheckFanfare_c` | L2 | ok | mf=1 xf=0 dp=0 db=7E | 0000 7E 1 0 : 1 |
 | D038803 | `CheckWinAnim_c` | L2 | ok | mf=1 xf=0 dp=0 db=7E | 0000 7E 1 0 : 1 |
 | D0395CE | `InitCharRows_c` | L3 | ok | mf=1 xf=0 dp=0 db=7E | 0000 7E 1 0 : 2 |
 | D039741 | `GetPendingAction_c` | L2 | ok | mf=1 xf=0 dp=0 db=7E | 0000 7E 1 0 : 34 |
@@ -40,5 +37,8 @@ Observed with `ff4-port/desktop/ff4-entry-probe` over 14 fixtures × 600 frames,
 | D03E030 | `RemoveTarget_c` | L2 | ok | mf=1 xf=0 dp=0 db=7E | 0000 7E 1 0 : 10 |
 | D03E100 | `CheckStrongElem_c` | L2 | ok | mf=1 xf=0 dp=0 db=7E | 0000 7E 1 0 : 6 |
 | D03E133 | `CheckWeakElem_c` | L2 | ok | mf=1 xf=0 dp=0 db=7E | 0000 7E 1 0 : 6 |
+| D14FD03 | `UpdateCtrl_ext_c` | L2 | ok | mf=1 xf=0 dp=37 db=7E | 0037 7E 1 0 : 1569 |
+| D15C144 | `_15c144_c` | L2 | ok | mf=1 xf=0 dp=600 db=0 | 0600 00 1 0 : 1 |
+| D15C23D | `_15c23d_c` | L3 | ok | mf=1 xf=0 dp=600 db=0 | 0600 00 1 0 : 3619 |
 
 Not hit by any fixture (143): D00808E, D0080A0, D008302, D009FC2, D00AA58, D00AB13, D00AC7D, D00BDB2, D00BE47, D00C0C4, D00C3BD, D00CB5F, D00EE37, D00FFBC, D01D718, D01DFD2, D038009, D0384FC, D038579, D03859B, D0385A6, D0385B1, D0387E4, D039788, D039E65, D039E71, D039F1C, D039F75, D03B33F, D03BA04, D03BA67, D03BA74, D03BA81, D03BA8E, D03BAEF, D03BAFE, D03BB0D, D03BB6B, D03BDA9, D03BE1E, D03BE31, D03BEE4, D03BF05, D03BFF6, D03C03B, D03C042, D03C049, D03C06C, D03D378, D03D466, D03D613, D03D83F, D03D863, D03D972, D03D9EC, D03DA0C, D03DC9B, D03DCBB, D03DCD6, D03DD06, D03DD65, D03DD95, D03DDB1, D03DDC9, D03DDDD, D03DFD2, D03E43B, D03E4D9, D08885E, D0E8B3C, D12E35B, D12E55A, D12E613, D13BFE3, D13C11F, D13D730, D13DB10, D13DB23, D13E07D, D13E139, D13E247, D13E2DC, D13E512, D13EB24, D13EB60, D13EBB8, D13EF4C, D13FE36, D14F58E, D14F626, D14F63E, D14F6D6, D14F796, D14F7B6, D14FA16, D14FB1E, D14FD00, D1585AB, D1589ED, D158B2A, D158D5D, D158DFC, D158E05, D158E47, D158E57, D158F34, D159104, D159204, D159792, D1597A2, D1599FB, D159AE9, D159B5B, D15AF24, D15B09C, D15B143, D15B41B, D15B6F1, D15B8C9, D15BB6A, D15C37F, D16C59A, D16C8BC, D16CB05, D16CB72, D16CFC4, D16CFD0, D16D263, D16D342, D16D36D, D16D758, D16D831, D16D9D6, D16DB71, D16DBBE, D16DBD2, D16DE1B, D16DF53, D16F533, D16F922, D16FB93, D16FFAB, D1EA03E

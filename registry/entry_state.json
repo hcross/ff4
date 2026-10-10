@@ -1,110 +1,11 @@
 [
  {
-  "id": "D00834E",
-  "name": "InitMapRAM_c",
-  "level": "L3",
-  "flags": [
-   "DMA_TRIGGER"
-  ],
-  "contract": {
-   "mf": 1,
-   "xf": 0,
-   "dp": 12,
-   "db": 0
-  },
-  "observed": [
-   {
-    "dp": 1536,
-    "db": 0,
-    "m": 1,
-    "x": 0,
-    "hits": 1,
-    "fixtures": [
-     "008-overworld-mode7"
-    ]
-   }
-  ],
-  "verdict": "MISMATCH",
-  "mismatch_fields": [
-   "dp"
-  ]
- },
- {
-  "id": "D018010",
-  "name": "UpdateCtrlField_ext_c",
-  "level": "L2",
-  "flags": [],
-  "contract": {
-   "mf": 0,
-   "xf": 0,
-   "dp": 0,
-   "db": 126
-  },
-  "observed": [
-   {
-    "dp": 1536,
-    "db": 0,
-    "m": 1,
-    "x": 0,
-    "hits": 4218,
-    "fixtures": [
-     "005-pre-combat",
-     "007-title-screen",
-     "008-overworld-mode7",
-     "009-first-free-roam",
-     "010-castle-exit-anim",
-     "011-worldmap-entry",
-     "012-first-worldmap-combat",
-     "013-airship-dialogue-pre-combat",
-     "014-baron-castle-exterior"
-    ]
-   }
-  ],
-  "verdict": "MISMATCH",
-  "mismatch_fields": [
-   "db",
-   "dp",
-   "mf"
-  ]
- },
- {
-  "id": "D0382CB",
-  "name": "InitHWRegs_c",
-  "level": "L3",
-  "flags": [
-   "DMA_TRIGGER"
-  ],
-  "contract": {
-   "mf": 1,
-   "xf": 0,
-   "dp": 0,
-   "db": 0
-  },
-  "observed": [
-   {
-    "dp": 1536,
-    "db": 0,
-    "m": 1,
-    "x": 0,
-    "hits": 2,
-    "fixtures": [
-     "005-pre-combat",
-     "012-first-worldmap-combat"
-    ]
-   }
-  ],
-  "verdict": "MISMATCH",
-  "mismatch_fields": [
-   "dp"
-  ]
- },
- {
   "id": "D0383B9",
   "name": "Mult16_c",
   "level": "L3",
   "flags": [],
   "contract": {
-   "mf": 0,
+   "mf": 1,
    "xf": 0,
    "dp": 0,
    "db": 126
@@ -140,95 +41,6 @@
   ]
  },
  {
-  "id": "D038407",
-  "name": "Div16_c",
-  "level": "L2",
-  "flags": [],
-  "contract": {
-   "mf": 0,
-   "xf": 0,
-   "dp": 0,
-   "db": 126
-  },
-  "observed": [
-   {
-    "dp": 0,
-    "db": 126,
-    "m": 1,
-    "x": 0,
-    "hits": 18,
-    "fixtures": [
-     "005-pre-combat",
-     "006-in-combat",
-     "012-first-worldmap-combat"
-    ]
-   }
-  ],
-  "verdict": "MISMATCH",
-  "mismatch_fields": [
-   "mf"
-  ]
- },
- {
-  "id": "D0384E3",
-  "name": "Add16_c",
-  "level": "L2",
-  "flags": [],
-  "contract": {
-   "mf": 0,
-   "xf": 0,
-   "dp": 0,
-   "db": 126
-  },
-  "observed": [
-   {
-    "dp": 0,
-    "db": 126,
-    "m": 1,
-    "x": 0,
-    "hits": 4,
-    "fixtures": [
-     "005-pre-combat",
-     "006-in-combat"
-    ]
-   }
-  ],
-  "verdict": "MISMATCH",
-  "mismatch_fields": [
-   "mf"
-  ]
- },
- {
-  "id": "D0387D8",
-  "name": "CheckFanfare_c",
-  "level": "L2",
-  "flags": [
-   "TAIL_JML"
-  ],
-  "contract": {
-   "mf": 0,
-   "xf": 0,
-   "dp": 0,
-   "db": 126
-  },
-  "observed": [
-   {
-    "dp": 0,
-    "db": 126,
-    "m": 1,
-    "x": 0,
-    "hits": 1,
-    "fixtures": [
-     "006-in-combat"
-    ]
-   }
-  ],
-  "verdict": "MISMATCH",
-  "mismatch_fields": [
-   "mf"
-  ]
- },
- {
   "id": "D03FE03",
   "name": "TfrSprites_c",
   "level": "EXCL",
@@ -240,7 +52,7 @@
    "mf": 1,
    "xf": 0,
    "dp": 0,
-   "db": 254
+   "db": 126
   },
   "observed": [
    {
@@ -273,47 +85,16 @@
   ]
  },
  {
-  "id": "D14FD03",
-  "name": "UpdateCtrl_ext_c",
-  "level": "L2",
-  "flags": [],
-  "contract": {
-   "mf": 1,
-   "xf": 0,
-   "dp": 0,
-   "db": 253
-  },
-  "observed": [
-   {
-    "dp": 55,
-    "db": 126,
-    "m": 1,
-    "x": 0,
-    "hits": 1569,
-    "fixtures": [
-     "005-pre-combat",
-     "006-in-combat",
-     "012-first-worldmap-combat"
-    ]
-   }
-  ],
-  "verdict": "MISMATCH",
-  "mismatch_fields": [
-   "db",
-   "dp"
-  ]
- },
- {
-  "id": "D15C144",
-  "name": "_15c144_c",
-  "level": "L2",
+  "id": "D00834E",
+  "name": "InitMapRAM_c",
+  "level": "L3",
   "flags": [
-   "DP_SENSITIVE"
+   "DMA_TRIGGER"
   ],
   "contract": {
    "mf": 1,
    "xf": 0,
-   "dp": 0,
+   "dp": 1536,
    "db": 0
   },
   "observed": [
@@ -328,45 +109,7 @@
     ]
    }
   ],
-  "verdict": "MISMATCH",
-  "mismatch_fields": [
-   "dp"
-  ]
- },
- {
-  "id": "D15C23D",
-  "name": "_15c23d_c",
-  "level": "L3",
-  "flags": [],
-  "contract": {
-   "mf": 1,
-   "xf": 0,
-   "dp": 0,
-   "db": 0
-  },
-  "observed": [
-   {
-    "dp": 1536,
-    "db": 0,
-    "m": 1,
-    "x": 0,
-    "hits": 3619,
-    "fixtures": [
-     "005-pre-combat",
-     "007-title-screen",
-     "008-overworld-mode7",
-     "009-first-free-roam",
-     "010-castle-exit-anim",
-     "011-worldmap-entry",
-     "012-first-worldmap-combat",
-     "014-baron-castle-exterior"
-    ]
-   }
-  ],
-  "verdict": "MISMATCH",
-  "mismatch_fields": [
-   "dp"
-  ]
+  "verdict": "ok"
  },
  {
   "id": "D009179",
@@ -453,6 +196,39 @@
   "verdict": "ok"
  },
  {
+  "id": "D018010",
+  "name": "UpdateCtrlField_ext_c",
+  "level": "L2",
+  "flags": [],
+  "contract": {
+   "mf": 1,
+   "xf": 0,
+   "dp": 1536,
+   "db": 0
+  },
+  "observed": [
+   {
+    "dp": 1536,
+    "db": 0,
+    "m": 1,
+    "x": 0,
+    "hits": 4218,
+    "fixtures": [
+     "005-pre-combat",
+     "007-title-screen",
+     "008-overworld-mode7",
+     "009-first-free-roam",
+     "010-castle-exit-anim",
+     "011-worldmap-entry",
+     "012-first-worldmap-combat",
+     "013-airship-dialogue-pre-combat",
+     "014-baron-castle-exterior"
+    ]
+   }
+  ],
+  "verdict": "ok"
+ },
+ {
   "id": "D03805F",
   "name": "DrawMP_c",
   "level": "L2",
@@ -475,6 +251,34 @@
     "fixtures": [
      "005-pre-combat",
      "006-in-combat",
+     "012-first-worldmap-combat"
+    ]
+   }
+  ],
+  "verdict": "ok"
+ },
+ {
+  "id": "D0382CB",
+  "name": "InitHWRegs_c",
+  "level": "L3",
+  "flags": [
+   "DMA_TRIGGER"
+  ],
+  "contract": {
+   "mf": 1,
+   "xf": 0,
+   "dp": 1536,
+   "db": 0
+  },
+  "observed": [
+   {
+    "dp": 1536,
+    "db": 0,
+    "m": 1,
+    "x": 0,
+    "hits": 2,
+    "fixtures": [
+     "005-pre-combat",
      "012-first-worldmap-combat"
     ]
    }
@@ -536,6 +340,59 @@
   "verdict": "ok"
  },
  {
+  "id": "D038407",
+  "name": "Div16_c",
+  "level": "L2",
+  "flags": [],
+  "contract": {
+   "mf": 1,
+   "xf": 0,
+   "dp": 0,
+   "db": 126
+  },
+  "observed": [
+   {
+    "dp": 0,
+    "db": 126,
+    "m": 1,
+    "x": 0,
+    "hits": 18,
+    "fixtures": [
+     "005-pre-combat",
+     "006-in-combat",
+     "012-first-worldmap-combat"
+    ]
+   }
+  ],
+  "verdict": "ok"
+ },
+ {
+  "id": "D0384E3",
+  "name": "Add16_c",
+  "level": "L2",
+  "flags": [],
+  "contract": {
+   "mf": 1,
+   "xf": 0,
+   "dp": 0,
+   "db": 126
+  },
+  "observed": [
+   {
+    "dp": 0,
+    "db": 126,
+    "m": 1,
+    "x": 0,
+    "hits": 4,
+    "fixtures": [
+     "005-pre-combat",
+     "006-in-combat"
+    ]
+   }
+  ],
+  "verdict": "ok"
+ },
+ {
   "id": "D03858B",
   "name": "Rand99_c",
   "level": "L2",
@@ -555,6 +412,33 @@
     "hits": 1,
     "fixtures": [
      "012-first-worldmap-combat"
+    ]
+   }
+  ],
+  "verdict": "ok"
+ },
+ {
+  "id": "D0387D8",
+  "name": "CheckFanfare_c",
+  "level": "L2",
+  "flags": [
+   "TAIL_JML"
+  ],
+  "contract": {
+   "mf": 1,
+   "xf": 0,
+   "dp": 0,
+   "db": 126
+  },
+  "observed": [
+   {
+    "dp": 0,
+    "db": 126,
+    "m": 1,
+    "x": 0,
+    "hits": 1,
+    "fixtures": [
+     "006-in-combat"
     ]
    }
   ],
@@ -819,6 +703,92 @@
     "fixtures": [
      "005-pre-combat",
      "006-in-combat"
+    ]
+   }
+  ],
+  "verdict": "ok"
+ },
+ {
+  "id": "D14FD03",
+  "name": "UpdateCtrl_ext_c",
+  "level": "L2",
+  "flags": [],
+  "contract": {
+   "mf": 1,
+   "xf": 0,
+   "dp": 55,
+   "db": 126
+  },
+  "observed": [
+   {
+    "dp": 55,
+    "db": 126,
+    "m": 1,
+    "x": 0,
+    "hits": 1569,
+    "fixtures": [
+     "005-pre-combat",
+     "006-in-combat",
+     "012-first-worldmap-combat"
+    ]
+   }
+  ],
+  "verdict": "ok"
+ },
+ {
+  "id": "D15C144",
+  "name": "_15c144_c",
+  "level": "L2",
+  "flags": [
+   "DP_SENSITIVE"
+  ],
+  "contract": {
+   "mf": 1,
+   "xf": 0,
+   "dp": 1536,
+   "db": 0
+  },
+  "observed": [
+   {
+    "dp": 1536,
+    "db": 0,
+    "m": 1,
+    "x": 0,
+    "hits": 1,
+    "fixtures": [
+     "008-overworld-mode7"
+    ]
+   }
+  ],
+  "verdict": "ok"
+ },
+ {
+  "id": "D15C23D",
+  "name": "_15c23d_c",
+  "level": "L3",
+  "flags": [],
+  "contract": {
+   "mf": 1,
+   "xf": 0,
+   "dp": 1536,
+   "db": 0
+  },
+  "observed": [
+   {
+    "dp": 1536,
+    "db": 0,
+    "m": 1,
+    "x": 0,
+    "hits": 3619,
+    "fixtures": [
+     "005-pre-combat",
+     "007-title-screen",
+     "008-overworld-mode7",
+     "009-first-free-roam",
+     "010-castle-exit-anim",
+     "011-worldmap-entry",
+     "012-first-worldmap-combat",
+     "014-baron-castle-exterior"
     ]
    }
   ],
