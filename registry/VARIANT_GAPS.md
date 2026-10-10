@@ -29,9 +29,9 @@ moment it enters the table.
 
 ## FF4 J2e EN v3.21 (`j2e-en-v321`, CRC32 `F135CAE6`)
 
-57 of 196 live table entries gated (12 proven invalidations, 45 fail-closed); 12 DELEG wrappers exempt. Patch footprint: 89473 bytes over 4886 ranges.
+55 of 196 live table entries gated (12 proven invalidations, 43 fail-closed); 12 DELEG wrappers exempt. Patch footprint: 89473 bytes over 4886 ranges.
 
-Spike sanity (j2e-en-v321): 96/127 not-gated entries confirmed by `patches/spike_check.py`; 12 have no locatable/CONTRACT-bearing spike source; 19 not yet checked (`python3 patches/spike_check.py --sweep --variant j2e-en-v321`).
+Spike sanity (j2e-en-v321): 98/129 not-gated entries confirmed by `patches/spike_check.py`; 12 have no locatable/CONTRACT-bearing spike source; 19 not yet checked (`python3 patches/spike_check.py --sweep --variant j2e-en-v321`).
 
 ### Proven invalidations
 
@@ -54,8 +54,6 @@ Spike sanity (j2e-en-v321): 96/127 not-gated entries confirmed by `patches/spike
 
 | ID | Routine | Level |
 |---|---|---|
-| D00AAD8 | `SetPlayerNPCMap_c` | L1 |
-| D00AB13 | `ClearPlayerNPCMap_c` | L2 |
 | D00C0C4 | `PlayerSpriteTiles_c` | L2 |
 | D00C3BD | `UpdateWhalePal_c` | L2 |
 | D00CB5F | `TfrBGAnimGfx_c` | L1 |

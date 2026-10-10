@@ -198,6 +198,60 @@
   "verdict": "ok"
  },
  {
+  "id": "D00AADA",
+  "name": "SetPlayerNPCMap_c",
+  "level": "L2",
+  "flags": [],
+  "contract": {
+   "mf": 1,
+   "xf": 0,
+   "dp": 1536,
+   "db": 0
+  },
+  "observed": [
+   {
+    "dp": 1536,
+    "db": 0,
+    "m": 1,
+    "x": 0,
+    "hits": 1608,
+    "fixtures": [
+     "009-first-free-roam",
+     "011-worldmap-entry",
+     "014-baron-castle-exterior"
+    ]
+   }
+  ],
+  "verdict": "ok"
+ },
+ {
+  "id": "D00AB15",
+  "name": "ClearPlayerNPCMap_c",
+  "level": "L2",
+  "flags": [],
+  "contract": {
+   "mf": 1,
+   "xf": 0,
+   "dp": 1536,
+   "db": 0
+  },
+  "observed": [
+   {
+    "dp": 1536,
+    "db": 0,
+    "m": 1,
+    "x": 0,
+    "hits": 1608,
+    "fixtures": [
+     "009-first-free-roam",
+     "011-worldmap-entry",
+     "014-baron-castle-exterior"
+    ]
+   }
+  ],
+  "verdict": "ok"
+ },
+ {
   "id": "D00BB6A",
   "name": "DrawNpcs_c",
   "level": "L2",
@@ -910,22 +964,6 @@
    "xf": 0,
    "dp": 1536,
    "db": 0
-  },
-  "observed": [],
-  "verdict": "not_hit"
- },
- {
-  "id": "D00AB13",
-  "name": "ClearPlayerNPCMap_c",
-  "level": "L2",
-  "flags": [
-   "DP_SENSITIVE"
-  ],
-  "contract": {
-   "mf": 1,
-   "xf": 0,
-   "dp": 0,
-   "db": 171
   },
   "observed": [],
   "verdict": "not_hit"
@@ -2990,15 +3028,6 @@
   "verdict": "no_contract"
  },
  {
-  "id": "D00AAD8",
-  "name": "SetPlayerNPCMap_c",
-  "level": "L1",
-  "flags": [],
-  "contract": null,
-  "observed": [],
-  "verdict": "no_contract"
- },
- {
   "id": "D00C2FF",
   "name": "ClearNpcMapCell_c",
   "level": "L2",
@@ -3010,7 +3039,7 @@
     "db": 0,
     "m": 1,
     "x": 0,
-    "hits": 22703,
+    "hits": 21095,
     "fixtures": [
      "009-first-free-roam",
      "011-worldmap-entry",
@@ -3032,7 +3061,7 @@
     "db": 0,
     "m": 1,
     "x": 0,
-    "hits": 22713,
+    "hits": 21105,
     "fixtures": [
      "009-first-free-roam",
      "011-worldmap-entry",

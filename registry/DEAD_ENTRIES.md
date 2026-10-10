@@ -6,17 +6,15 @@ A dispatch entry runs only when a JSR/JSL targets exactly its PC. `DEAD` = no di
 | Verdict | Count |
 |---|---|
 | DEAD_PADDING | 0 |
-| DEAD | 119 |
+| DEAD | 117 |
 | native_callee | 1 |
 | static_only | 30 |
-| live | 46 |
+| live | 48 |
 
 | ID | Function | Verdict | Static callers | Fixture hits | Caller at PC± | C callers | ROM bytes |
 |---|---|---|---|---|---|---|---|
 | D00808E | `AfterBattle_c` | DEAD | 0 | 0 |  |  | `22 df c8 15 20 02` |
 | D0080A0 | `FieldMain_c` | DEAD | 0 | 0 |  |  | `64 79 64 7a 64 7b` |
-| D00AAD8 | `SetPlayerNPCMap_c` | DEAD | 0 | 0 | +2 |  | `fa 60 a5 ab 0a a8` |
-| D00AB13 | `ClearPlayerNPCMap_c` | DEAD | 0 | 0 | +2 |  | `01 00 a5 a1 29 04` |
 | D00AC7D | `CheckVehicleBlock_c` | DEAD | 0 | 0 | +2 |  | `f6 60 ad 09 07 aa` |
 | D00BE47 | `CalcVehicleSpritePos_c` | DEAD | 0 | 0 |  |  | `98 bf 9e 00 09 a5` |
 | D00C0C4 | `PlayerSpriteTiles_c` | DEAD | 0 | 0 |  |  | `9d 03 09 68 10 03` |
